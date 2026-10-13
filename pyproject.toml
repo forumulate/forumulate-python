@@ -1,0 +1,23 @@
+[project]
+name = "forumulate"
+version = "1.0.0"
+description = "Forumulate SDK for Python"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.8"
+dependencies = ["requests>=2.20"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Typing :: Typed",
+]
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["forumulate*"]
+
+[tool.setuptools.package-data]
+forumulate = ["py.typed"]
