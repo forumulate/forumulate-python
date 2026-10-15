@@ -41,8 +41,8 @@ class OrgsCaptchaResource:
         *,
         provider: str,
         site_key: str,
-        secret: str,
         idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        secret: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -115,7 +115,7 @@ class OrgsHealthResource:
 
 
 class OrgsSettingsResource:
-    """``client.orgs.settings`` (3 operations)."""
+    """``client.orgs.settings`` (4 operations)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
@@ -153,7 +153,7 @@ class OrgsSettingsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[SettingView]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -162,7 +162,28 @@ class OrgsSettingsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="settings",
+            items_key=None,
+        )
+
+    def one(
+        self,
+        org_id: str,
+        key: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> OrgsSettingsOneResponse:
+        """Read one org setting
+
+        ``GET /orgs/{orgId}/settings/{key}``
+        """
+        return self._client._request(
+            "GET",
+            f"/orgs/{_path(org_id)}/settings/{_path(key)}",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
         )
 
     def set(
@@ -218,7 +239,7 @@ class OrgsSettingsResource:
 
 
 class OrgsResource:
-    """``client.orgs`` (30 operations; captcha, health, settings)."""
+    """``client.orgs`` (31 operations; captcha, health, settings)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
@@ -525,6 +546,34 @@ class OrgsResource:
             timeout=timeout,
         )
 
+    def set_legal_edition_note(
+        self,
+        org_id: str,
+        kind: str,
+        version: str,
+        *,
+        change_note: Optional[str],
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> OrgsSetLegalEditionNoteResponse:
+        """Replace the edition
+
+        ``PUT /orgs/{orgId}/legal/{kind}/editions/{version}``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "PUT",
+            f"/orgs/{_path(org_id)}/legal/{_path(kind)}/editions/{_path(version)}",
+            query=_query({}, extra_query),
+            body=_body({"changeNote": change_note}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
     def legal_embed_acceptances_csv(
         self,
         org_id: str,
@@ -631,7 +680,7 @@ class OrgsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[OrgsSuggestedLegalResponseSuggestedItem]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``suggested_legal`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -640,7 +689,7 @@ class OrgsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="suggested",
+            items_key=None,
         )
 
     def reorder_legal(
@@ -795,7 +844,7 @@ class OrgsResource:
         version: Union[int, NotGiven] = NOT_GIVEN,
         exported_at: Union[str, NotGiven] = NOT_GIVEN,
         organization: Union[Any, NotGiven] = NOT_GIVEN,
-        members: Union[Any, NotGiven] = NOT_GIVEN,
+        members: Union[List[OrgsImportParamsMember], NotGiven] = NOT_GIVEN,
         spaces: Union[List[OrgsImportParamsSpace], NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
@@ -847,7 +896,7 @@ class OrgsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[OrgSummaryDto]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -856,7 +905,7 @@ class OrgsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="orgs",
+            items_key=None,
         )
 
     def create(

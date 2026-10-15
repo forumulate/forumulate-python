@@ -23,6 +23,7 @@ class PublicBlogResource:
         email: str,
         idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
         captcha_token: Union[str, NotGiven] = NOT_GIVEN,
+        scope: Union[PublicBlogSubscribeParamsScope, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -38,7 +39,7 @@ class PublicBlogResource:
             "POST",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/blog/subscribe",
             query=_query({}, extra_query),
-            body=_body({"email": email, "captchaToken": captcha_token}, extra_body),
+            body=_body({"email": email, "captchaToken": captcha_token, "scope": scope}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -57,6 +58,14 @@ class PublicBlogResource:
         page: Union[int, NotGiven] = NOT_GIVEN,
         cursor: Union[str, NotGiven] = NOT_GIVEN,
         share: Union[str, NotGiven] = NOT_GIVEN,
+        pinned: Union[str, NotGiven] = NOT_GIVEN,
+        featured: Union[str, NotGiven] = NOT_GIVEN,
+        preview: Union[str, NotGiven] = NOT_GIVEN,
+        tags: Union[str, NotGiven] = NOT_GIVEN,
+        tag_match: Union[str, NotGiven] = NOT_GIVEN,
+        exclude: Union[List[str], NotGiven] = NOT_GIVEN,
+        offset: Union[int, NotGiven] = NOT_GIVEN,
+        locale: Union[str, NotGiven] = NOT_GIVEN,
         sort: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -68,11 +77,15 @@ class PublicBlogResource:
 
         :param limit: Articles per page.
         :param page: Which page of results to return, 1-based.
+        :param pinned: Use true or false (true/1/yes/on and false/0/no/off are accepted).
+        :param featured: Use true or false (true/1/yes/on and false/0/no/off are accepted).
+        :param exclude: Comma-separated post ids to leave out — a front page’s feeds de-duplicating each other.
+        :param offset: Skip this many posts before the page starts (added to the page’s own offset).
         """
         return self._client._request(
             "GET",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/blog",
-            query=_query({"limit": limit, "tag": tag, "authorId": author_id, "author": author, "series": series, "month": month, "page": page, "cursor": cursor, "share": share, "sort": sort}, extra_query),
+            query=_query({"limit": limit, "tag": tag, "authorId": author_id, "author": author, "series": series, "month": month, "page": page, "cursor": cursor, "share": share, "pinned": pinned, "featured": featured, "preview": preview, "tags": tags, "tagMatch": tag_match, "exclude": exclude, "offset": offset, "locale": locale, "sort": sort}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -90,20 +103,28 @@ class PublicBlogResource:
         month: Union[str, NotGiven] = NOT_GIVEN,
         page: Union[int, NotGiven] = NOT_GIVEN,
         share: Union[str, NotGiven] = NOT_GIVEN,
+        pinned: Union[str, NotGiven] = NOT_GIVEN,
+        featured: Union[str, NotGiven] = NOT_GIVEN,
+        preview: Union[str, NotGiven] = NOT_GIVEN,
+        tags: Union[str, NotGiven] = NOT_GIVEN,
+        tag_match: Union[str, NotGiven] = NOT_GIVEN,
+        exclude: Union[List[str], NotGiven] = NOT_GIVEN,
+        offset: Union[int, NotGiven] = NOT_GIVEN,
+        locale: Union[str, NotGiven] = NOT_GIVEN,
         sort: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ArticleSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``index`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/blog",
-            query=_query({"limit": limit, "tag": tag, "authorId": author_id, "author": author, "series": series, "month": month, "page": page, "share": share, "sort": sort}, extra_query),
+            query=_query({"limit": limit, "tag": tag, "authorId": author_id, "author": author, "series": series, "month": month, "page": page, "share": share, "pinned": pinned, "featured": featured, "preview": preview, "tags": tags, "tagMatch": tag_match, "exclude": exclude, "offset": offset, "locale": locale, "sort": sort}, extra_query),
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="articles",
+            items_key=None,
         )
 
     def tags(
@@ -141,7 +162,7 @@ class PublicBlogResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[PublicBlogTagsResponseTag]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``tags`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -150,7 +171,7 @@ class PublicBlogResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="tags",
+            items_key=None,
         )
 
     def search(
@@ -190,7 +211,7 @@ class PublicBlogResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[PublicBlogSearchResponseHit]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``search`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -199,7 +220,7 @@ class PublicBlogResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="hits",
+            items_key=None,
         )
 
     def rss(
@@ -322,7 +343,7 @@ class PublicBlogResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[PublicBlogArchiveResponseMonth]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``archive`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -331,7 +352,7 @@ class PublicBlogResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="months",
+            items_key=None,
         )
 
     def series(
@@ -345,7 +366,7 @@ class PublicBlogResource:
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
     ) -> PublicBlogSeriesResponse:
-        """List series in a space
+        """List series in a space (blog)
 
         ``GET /public/orgs/{orgId}/spaces/{spaceId}/blog/series``
 
@@ -369,7 +390,7 @@ class PublicBlogResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[PublicBlogSeriesResponseSery]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``series`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -378,7 +399,7 @@ class PublicBlogResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="series",
+            items_key=None,
         )
 
     def piece_markdown(
@@ -387,6 +408,7 @@ class PublicBlogResource:
         space_id: str,
         slug: str,
         *,
+        locale: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
@@ -398,7 +420,7 @@ class PublicBlogResource:
         return self._client._request(
             "GET",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/blog/t/{_path(slug)}.md",
-            query=_query({}, extra_query),
+            query=_query({"locale": locale}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -410,6 +432,7 @@ class PublicBlogResource:
         slug: str,
         *,
         share: Union[str, NotGiven] = NOT_GIVEN,
+        locale: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
@@ -421,7 +444,7 @@ class PublicBlogResource:
         return self._client._request(
             "GET",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/blog/t/{_path(slug)}",
-            query=_query({"share": share}, extra_query),
+            query=_query({"share": share, "locale": locale}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -486,8 +509,135 @@ class PublicBlogResource:
         )
 
 
+class PublicBlogMediaResource:
+    """``client.public.blog_media`` (1 operation)."""
+
+    def __init__(self, client: "BaseClient") -> None:
+        self._client = client
+
+    def media_zip(
+        self,
+        org_id: str,
+        space_id: str,
+        slug: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Any:
+        """A published post's library media as one zip
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/blog/t/{slug}/media.zip``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/blog/t/{_path(slug)}/media.zip",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+
+class PublicBlogTaxonomyResource:
+    """``client.public.blog_taxonomy`` (3 operations)."""
+
+    def __init__(self, client: "BaseClient") -> None:
+        self._client = client
+
+    def tag(
+        self,
+        org_id: str,
+        space_id: str,
+        tag: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicBlogTaxonomyTagResponse:
+        """Get the tag (public reader spaces blog)
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/blog/tags/{tag}``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/blog/tags/{_path(tag)}",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def author_list(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        limit: Union[int, NotGiven] = NOT_GIVEN,
+        cursor: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicBlogTaxonomyAuthorListResponse:
+        """List authors in a space (public reader blog)
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/blog/authors``
+
+        :param limit: Rows per page.
+        :param cursor: Where to continue from: pass back the `page.nextCursor` of the previous answer.
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/blog/authors",
+            query=_query({"limit": limit, "cursor": cursor}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def author_list_all(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        limit: Union[int, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Iterator[Any]:
+        """Iterate every item of ``author_list`` across all pages, following ``cursor``."""
+        yield from self._client._paginate(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/blog/authors",
+            query=_query({"limit": limit}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+            page_param="cursor",
+            items_key=None,
+        )
+
+    def author(
+        self,
+        org_id: str,
+        space_id: str,
+        ref: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicBlogTaxonomyAuthorResponse:
+        """Get the author (blog)
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/blog/authors/{ref}``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/blog/authors/{_path(ref)}",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+
 class PublicCardsResource:
-    """``client.public.cards`` (6 operations)."""
+    """``client.public.cards`` (7 operations)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
@@ -530,6 +680,28 @@ class PublicCardsResource:
         return self._client._request(
             "GET",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/pages/{_path(page_id)}/social-card.png",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def collection_social_card_png(
+        self,
+        org_id: str,
+        space_id: str,
+        collection: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Any:
+        """File of social card (c)
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/c/{collection}/social-card.png``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/c/{_path(collection)}/social-card.png",
             query=_query({}, extra_query),
             headers=extra_headers,
             timeout=timeout,
@@ -624,10 +796,32 @@ class PublicCardsResource:
 
 
 class PublicCareersResource:
-    """``client.public.careers`` (2 operations)."""
+    """``client.public.careers`` (3 operations)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
+
+    def form(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        page_id: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicCareersFormResponse:
+        """Get the form in a space (public reader careers)
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/careers/form``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/careers/form",
+            query=_query({"pageId": page_id}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
 
     def attach(
         self,
@@ -670,6 +864,10 @@ class PublicCareersResource:
         attachments: Union[List[PublicCareersApplyParamsAttachment], NotGiven] = NOT_GIVEN,
         website: Union[str, NotGiven] = NOT_GIVEN,
         captcha_token: Union[str, NotGiven] = NOT_GIVEN,
+        answers: Union[Dict[str, Any], NotGiven] = NOT_GIVEN,
+        eeo: Union[Dict[str, Any], NotGiven] = NOT_GIVEN,
+        consent: Union[bool, NotGiven] = NOT_GIVEN,
+        source: Union[Dict[str, Any], NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -685,14 +883,14 @@ class PublicCareersResource:
             "POST",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/careers/apply",
             query=_query({}, extra_query),
-            body=_body({"pageId": page_id, "name": name, "email": email, "coverLetter": cover_letter, "links": links, "attachments": attachments, "website": website, "captchaToken": captcha_token}, extra_body),
+            body=_body({"pageId": page_id, "name": name, "email": email, "coverLetter": cover_letter, "links": links, "attachments": attachments, "website": website, "captchaToken": captcha_token, "answers": answers, "eeo": eeo, "consent": consent, "source": source}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
 
 
 class PublicChangelogResource:
-    """``client.public.changelog`` (8 operations)."""
+    """``client.public.changelog`` (9 operations)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
@@ -735,6 +933,7 @@ class PublicChangelogResource:
         space_id: str,
         slug: str,
         *,
+        locale: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
@@ -746,7 +945,7 @@ class PublicChangelogResource:
         return self._client._request(
             "GET",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/changelog/t/{_path(slug)}.md",
-            query=_query({}, extra_query),
+            query=_query({"locale": locale}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -757,6 +956,8 @@ class PublicChangelogResource:
         space_id: str,
         slug: str,
         *,
+        more: Union[float, NotGiven] = NOT_GIVEN,
+        locale: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
@@ -768,7 +969,7 @@ class PublicChangelogResource:
         return self._client._request(
             "GET",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/changelog/t/{_path(slug)}",
-            query=_query({}, extra_query),
+            query=_query({"more": more, "locale": locale}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -809,6 +1010,7 @@ class PublicChangelogResource:
         email: str,
         idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
         captcha_token: Union[str, NotGiven] = NOT_GIVEN,
+        scope: Union[PublicChangelogSubscribeParamsScope, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -824,7 +1026,7 @@ class PublicChangelogResource:
             "POST",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/changelog/subscribe",
             query=_query({}, extra_query),
-            body=_body({"email": email, "captchaToken": captcha_token}, extra_body),
+            body=_body({"email": email, "captchaToken": captcha_token, "scope": scope}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -840,6 +1042,22 @@ class PublicChangelogResource:
         year: Union[str, NotGiven] = NOT_GIVEN,
         since: Union[str, NotGiven] = NOT_GIVEN,
         cursor: Union[str, NotGiven] = NOT_GIVEN,
+        match: Union[str, NotGiven] = NOT_GIVEN,
+        month: Union[str, NotGiven] = NOT_GIVEN,
+        version: Union[str, NotGiven] = NOT_GIVEN,
+        type: Union[str, NotGiven] = NOT_GIVEN,
+        channel: Union[str, NotGiven] = NOT_GIVEN,
+        family: Union[str, NotGiven] = NOT_GIVEN,
+        from_: Union[str, NotGiven] = NOT_GIVEN,
+        to: Union[str, NotGiven] = NOT_GIVEN,
+        breaking: Union[str, NotGiven] = NOT_GIVEN,
+        q: Union[str, NotGiven] = NOT_GIVEN,
+        pinned: Union[str, NotGiven] = NOT_GIVEN,
+        featured: Union[str, NotGiven] = NOT_GIVEN,
+        sort: Union[str, NotGiven] = NOT_GIVEN,
+        preview: Union[str, NotGiven] = NOT_GIVEN,
+        locale: Union[str, NotGiven] = NOT_GIVEN,
+        tag: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
@@ -851,11 +1069,14 @@ class PublicChangelogResource:
         :param limit: Releases per page.
         :param offset: Where in the archive to start.
         :param since: Use an ISO date (2026-01-31) or date-time (2026-01-31T09:00:00Z).
+        :param breaking: Use true or false (true/1/yes/on and false/0/no/off are accepted).
+        :param pinned: Use true or false (true/1/yes/on and false/0/no/off are accepted).
+        :param featured: Use true or false (true/1/yes/on and false/0/no/off are accepted).
         """
         return self._client._request(
             "GET",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/changelog",
-            query=_query({"limit": limit, "offset": offset, "share": share, "year": year, "since": since, "cursor": cursor}, extra_query),
+            query=_query({"limit": limit, "offset": offset, "share": share, "year": year, "since": since, "cursor": cursor, "match": match, "month": month, "version": version, "type": type, "channel": channel, "family": family, "from": from_, "to": to, "breaking": breaking, "q": q, "pinned": pinned, "featured": featured, "sort": sort, "preview": preview, "locale": locale, "tag": tag}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -870,6 +1091,22 @@ class PublicChangelogResource:
         share: Union[str, NotGiven] = NOT_GIVEN,
         year: Union[str, NotGiven] = NOT_GIVEN,
         since: Union[str, NotGiven] = NOT_GIVEN,
+        match: Union[str, NotGiven] = NOT_GIVEN,
+        month: Union[str, NotGiven] = NOT_GIVEN,
+        version: Union[str, NotGiven] = NOT_GIVEN,
+        type: Union[str, NotGiven] = NOT_GIVEN,
+        channel: Union[str, NotGiven] = NOT_GIVEN,
+        family: Union[str, NotGiven] = NOT_GIVEN,
+        from_: Union[str, NotGiven] = NOT_GIVEN,
+        to: Union[str, NotGiven] = NOT_GIVEN,
+        breaking: Union[str, NotGiven] = NOT_GIVEN,
+        q: Union[str, NotGiven] = NOT_GIVEN,
+        pinned: Union[str, NotGiven] = NOT_GIVEN,
+        featured: Union[str, NotGiven] = NOT_GIVEN,
+        sort: Union[str, NotGiven] = NOT_GIVEN,
+        preview: Union[str, NotGiven] = NOT_GIVEN,
+        locale: Union[str, NotGiven] = NOT_GIVEN,
+        tag: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
@@ -878,7 +1115,7 @@ class PublicChangelogResource:
         yield from self._client._paginate(
             "GET",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/changelog",
-            query=_query({"limit": limit, "offset": offset, "share": share, "year": year, "since": since}, extra_query),
+            query=_query({"limit": limit, "offset": offset, "share": share, "year": year, "since": since, "match": match, "month": month, "version": version, "type": type, "channel": channel, "family": family, "from": from_, "to": to, "breaking": breaking, "q": q, "pinned": pinned, "featured": featured, "sort": sort, "preview": preview, "locale": locale, "tag": tag}, extra_query),
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
@@ -906,6 +1143,27 @@ class PublicChangelogResource:
             timeout=timeout,
         )
 
+    def atom(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Any:
+        """Atom feed of the changelog
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/changelog/atom.xml``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/changelog/atom.xml",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
     def json_feed(
         self,
         org_id: str,
@@ -924,6 +1182,160 @@ class PublicChangelogResource:
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/changelog/feed.json",
             query=_query({}, extra_query),
             headers=extra_headers,
+            timeout=timeout,
+        )
+
+
+class PublicChangelogMarkdownResource:
+    """``client.public.changelog_markdown`` (1 operation)."""
+
+    def __init__(self, client: "BaseClient") -> None:
+        self._client = client
+
+    def whole(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Any:
+        """Read the whole changelog as markdown
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/changelog/changelog.md``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/changelog/changelog.md",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+
+class PublicChangelogWidgetResource:
+    """``client.public.changelog_widget`` (5 operations)."""
+
+    def __init__(self, client: "BaseClient") -> None:
+        self._client = client
+
+    def get(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        limit: Union[float, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> ChangelogWidgetResponse:
+        """Get the widget in a space
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/changelog/widget``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/changelog/widget",
+            query=_query({"limit": limit}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def hit(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        event: str,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        slug: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> ErrorEnvelope:
+        """Create the hit in a space
+
+        ``POST /public/orgs/{orgId}/spaces/{spaceId}/changelog/widget/hit``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "POST",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/changelog/widget/hit",
+            query=_query({}, extra_query),
+            body=_body({"event": event, "slug": slug}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+    def watching(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicChangelogWidgetWatchingResponse:
+        """Get the watch in a space
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/changelog/watch``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/changelog/watch",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def watch(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicChangelogWidgetWatchResponse:
+        """Replace the watch in a space
+
+        ``PUT /public/orgs/{orgId}/spaces/{spaceId}/changelog/watch``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "PUT",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/changelog/watch",
+            query=_query({}, extra_query),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+    def unwatch(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicChangelogWidgetUnwatchResponse:
+        """Delete the watch in a space
+
+        ``DELETE /public/orgs/{orgId}/spaces/{spaceId}/changelog/watch``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "DELETE",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/changelog/watch",
+            query=_query({}, extra_query),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
 
@@ -998,6 +1410,7 @@ class PublicContactResource:
         org_id: str,
         space_id: str,
         *,
+        preview: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
@@ -1009,7 +1422,7 @@ class PublicContactResource:
         return self._client._request(
             "GET",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/contact",
-            query=_query({}, extra_query),
+            query=_query({"preview": preview}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -1029,6 +1442,7 @@ class PublicContactResource:
         website: Union[str, NotGiven] = NOT_GIVEN,
         captcha_token: Union[str, NotGiven] = NOT_GIVEN,
         fields: Union[Dict[str, Any], NotGiven] = NOT_GIVEN,
+        source: Union[Dict[str, Any], NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -1044,7 +1458,7 @@ class PublicContactResource:
             "POST",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/contact",
             query=_query({}, extra_query),
-            body=_body({"name": name, "email": email, "subject": subject, "body": body, "department": department, "attachments": attachments, "website": website, "captchaToken": captcha_token, "fields": fields}, extra_body),
+            body=_body({"name": name, "email": email, "subject": subject, "body": body, "department": department, "attachments": attachments, "website": website, "captchaToken": captcha_token, "fields": fields, "source": source}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -1077,6 +1491,134 @@ class PublicContactResource:
         )
 
 
+class PublicCourseCatalogResource:
+    """``client.public.course_catalog`` (2 operations)."""
+
+    def __init__(self, client: "BaseClient") -> None:
+        self._client = client
+
+    def courses(
+        self,
+        org_id: str,
+        *,
+        path: Union[str, NotGiven] = NOT_GIVEN,
+        limit: Union[int, NotGiven] = NOT_GIVEN,
+        cursor: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicCourseCatalogCoursesResponse:
+        """List courses in an organization (public reader)
+
+        ``GET /public/orgs/{orgId}/courses``
+
+        :param limit: Rows per page.
+        :param cursor: Where to continue from: pass back the `page.nextCursor` of the previous answer.
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/courses",
+            query=_query({"path": path, "limit": limit, "cursor": cursor}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def courses_all(
+        self,
+        org_id: str,
+        *,
+        path: Union[str, NotGiven] = NOT_GIVEN,
+        limit: Union[int, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Iterator[Any]:
+        """Iterate every item of ``courses`` across all pages, following ``cursor``."""
+        yield from self._client._paginate(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/courses",
+            query=_query({"path": path, "limit": limit}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+            page_param="cursor",
+            items_key=None,
+        )
+
+    def paths(
+        self,
+        org_id: str,
+        *,
+        limit: Union[int, NotGiven] = NOT_GIVEN,
+        cursor: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicCourseCatalogPathsResponse:
+        """List course paths in an organization (public reader)
+
+        ``GET /public/orgs/{orgId}/course-paths``
+
+        :param limit: Rows per page.
+        :param cursor: Where to continue from: pass back the `page.nextCursor` of the previous answer.
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/course-paths",
+            query=_query({"limit": limit, "cursor": cursor}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def paths_all(
+        self,
+        org_id: str,
+        *,
+        limit: Union[int, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Iterator[Any]:
+        """Iterate every item of ``paths`` across all pages, following ``cursor``."""
+        yield from self._client._paginate(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/course-paths",
+            query=_query({"limit": limit}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+            page_param="cursor",
+            items_key=None,
+        )
+
+
+class PublicCourseCommerceResource:
+    """``client.public.course_commerce`` (1 operation)."""
+
+    def __init__(self, client: "BaseClient") -> None:
+        self._client = client
+
+    def quote(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        coupon: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> CourseQuote:
+        """Get the quote in a space
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/course/commerce/quote``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/course/commerce/quote",
+            query=_query({"coupon": coupon}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+
 class PublicCoursesResource:
     """``client.public.courses`` (3 operations)."""
 
@@ -1091,7 +1633,7 @@ class PublicCoursesResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> CourseOutline:
+    ) -> GatedOutline:
         """Get the outline in a space (public reader)
 
         ``GET /public/orgs/{orgId}/spaces/{spaceId}/course/outline``
@@ -1188,7 +1730,7 @@ class PublicCustomEmojiResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[PublicCustomEmojiListResponseEmojiItem]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -1197,7 +1739,7 @@ class PublicCustomEmojiResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="emoji",
+            items_key=None,
         )
 
 
@@ -1257,7 +1799,7 @@ class PublicDomainsResource:
 
 
 class PublicEventsResource:
-    """``client.public.events`` (4 operations)."""
+    """``client.public.events`` (8 operations)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
@@ -1269,7 +1811,12 @@ class PublicEventsResource:
         *,
         limit: Union[int, NotGiven] = NOT_GIVEN,
         scope: Union[str, NotGiven] = NOT_GIVEN,
+        tag: Union[str, NotGiven] = NOT_GIVEN,
+        mode: Union[str, NotGiven] = NOT_GIVEN,
+        from_: Union[str, NotGiven] = NOT_GIVEN,
+        to: Union[str, NotGiven] = NOT_GIVEN,
         cursor: Union[str, NotGiven] = NOT_GIVEN,
+        share: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
@@ -1279,11 +1826,13 @@ class PublicEventsResource:
         ``GET /public/orgs/{orgId}/spaces/{spaceId}/events``
 
         :param limit: Events per page, once a version is stated.
+        :param from_: Use an ISO date (2026-01-31) or date-time (2026-01-31T09:00:00Z).
+        :param to: Use an ISO date (2026-01-31) or date-time (2026-01-31T09:00:00Z).
         """
         return self._client._request(
             "GET",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/events",
-            query=_query({"limit": limit, "scope": scope, "cursor": cursor}, extra_query),
+            query=_query({"limit": limit, "scope": scope, "tag": tag, "mode": mode, "from": from_, "to": to, "cursor": cursor, "share": share}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -1295,19 +1844,24 @@ class PublicEventsResource:
         *,
         limit: Union[int, NotGiven] = NOT_GIVEN,
         scope: Union[str, NotGiven] = NOT_GIVEN,
+        tag: Union[str, NotGiven] = NOT_GIVEN,
+        mode: Union[str, NotGiven] = NOT_GIVEN,
+        from_: Union[str, NotGiven] = NOT_GIVEN,
+        to: Union[str, NotGiven] = NOT_GIVEN,
+        share: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[EventSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/events",
-            query=_query({"limit": limit, "scope": scope}, extra_query),
+            query=_query({"limit": limit, "scope": scope, "tag": tag, "mode": mode, "from": from_, "to": to, "share": share}, extra_query),
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="events",
+            items_key=None,
         )
 
     def feed(
@@ -1315,6 +1869,8 @@ class PublicEventsResource:
         org_id: str,
         space_id: str,
         *,
+        tag: Union[str, NotGiven] = NOT_GIVEN,
+        share: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
@@ -1326,8 +1882,100 @@ class PublicEventsResource:
         return self._client._request(
             "GET",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/events/calendar.ics",
+            query=_query({"tag": tag, "share": share}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def rss(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Any:
+        """RSS feed of the event
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/events/rss.xml``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/events/rss.xml",
             query=_query({}, extra_query),
             headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def atom(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Any:
+        """Atom feed of the event
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/events/atom.xml``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/events/atom.xml",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def json_feed(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Any:
+        """JSON feed of the event
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/events/feed.json``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/events/feed.json",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def subscribe(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        email: str,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        captcha_token: Union[str, NotGiven] = NOT_GIVEN,
+        scope: Union[PublicEventsSubscribeParamsScope, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicEventsSubscribeResponse:
+        """Subscribe the event
+
+        ``POST /public/orgs/{orgId}/spaces/{spaceId}/events/subscribe``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "POST",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/events/subscribe",
+            query=_query({}, extra_query),
+            body=_body({"email": email, "captchaToken": captcha_token, "scope": scope}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
 
@@ -1337,6 +1985,7 @@ class PublicEventsResource:
         space_id: str,
         handle: str,
         *,
+        share: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
@@ -1348,7 +1997,7 @@ class PublicEventsResource:
         return self._client._request(
             "GET",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/events/{_path(handle)}",
-            query=_query({}, extra_query),
+            query=_query({"share": share}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -1359,6 +2008,7 @@ class PublicEventsResource:
         space_id: str,
         handle: str,
         *,
+        share: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
@@ -1370,7 +2020,7 @@ class PublicEventsResource:
         return self._client._request(
             "GET",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/events/{_path(handle)}/calendar.ics",
-            query=_query({}, extra_query),
+            query=_query({"share": share}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -1415,7 +2065,7 @@ class PublicExtensionRegistryResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[RegistryListing]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -1424,7 +2074,7 @@ class PublicExtensionRegistryResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="extensions",
+            items_key=None,
         )
 
     def get(
@@ -1444,6 +2094,42 @@ class PublicExtensionRegistryResource:
             f"/registry/extensions/{_path(slug)}",
             query=_query({}, extra_query),
             headers=extra_headers,
+            timeout=timeout,
+        )
+
+
+class PublicFaqFollowResource:
+    """``client.public.faq_follow`` (1 operation)."""
+
+    def __init__(self, client: "BaseClient") -> None:
+        self._client = client
+
+    def follow(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        email: Union[str, NotGiven] = NOT_GIVEN,
+        captcha_token: Union[str, NotGiven] = NOT_GIVEN,
+        section: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicFaqFollowFollowResponse:
+        """Follow the FAQ
+
+        ``POST /public/orgs/{orgId}/spaces/{spaceId}/faq/follow``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "POST",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/faq/follow",
+            query=_query({}, extra_query),
+            body=_body({"email": email, "captchaToken": captcha_token, "section": section}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
 
@@ -1565,7 +2251,7 @@ class PublicForumDiscoveryResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[PublicForumDiscoveryBookmarksResponseTopic]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``bookmarks`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -1574,7 +2260,7 @@ class PublicForumDiscoveryResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="topics",
+            items_key=None,
         )
 
     def mention_suggest(
@@ -1614,7 +2300,7 @@ class PublicForumDiscoveryResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[PublicForumDiscoveryMentionSuggestResponseSuggestion]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``mention_suggest`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -1623,7 +2309,7 @@ class PublicForumDiscoveryResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="suggestions",
+            items_key=None,
         )
 
     def resolve_refs(
@@ -1672,10 +2358,37 @@ class PublicForumDiscoveryResource:
 
 
 class PublicForumFeedsResource:
-    """``client.public.forum.feeds`` (3 operations)."""
+    """``client.public.forum.feeds`` (4 operations)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
+
+    def new_count(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        since: Union[str, NotGiven] = NOT_GIVEN,
+        category: Union[str, NotGiven] = NOT_GIVEN,
+        include_subcategories: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicForumFeedsNewCountResponse:
+        """Get the new count in a space
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/forum/new-count``
+
+        :param since: Use an ISO date (2026-01-31) or date-time (2026-01-31T09:00:00Z).
+        :param include_subcategories: Use true or false (true/1/yes/on and false/0/no/off are accepted).
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/new-count",
+            query=_query({"since": since, "category": category, "includeSubcategories": include_subcategories}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
 
     def rss(
         self,
@@ -1742,7 +2455,7 @@ class PublicForumFeedsResource:
 
 
 class PublicForumPeopleResource:
-    """``client.public.forum.people`` (8 operations)."""
+    """``client.public.forum.people`` (7 operations)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
@@ -1756,6 +2469,7 @@ class PublicForumPeopleResource:
         page: Union[int, NotGiven] = NOT_GIVEN,
         cursor: Union[str, NotGiven] = NOT_GIVEN,
         limit: Union[int, NotGiven] = NOT_GIVEN,
+        scope: Union[str, NotGiven] = NOT_GIVEN,
         order: Union[str, NotGiven] = NOT_GIVEN,
         sort: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
@@ -1772,7 +2486,7 @@ class PublicForumPeopleResource:
         return self._client._request(
             "GET",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/directory",
-            query=_query({"search": search, "page": page, "cursor": cursor, "limit": limit, "order": order, "sort": sort}, extra_query),
+            query=_query({"search": search, "page": page, "cursor": cursor, "limit": limit, "scope": scope, "order": order, "sort": sort}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -1785,6 +2499,7 @@ class PublicForumPeopleResource:
         search: Union[str, NotGiven] = NOT_GIVEN,
         page: Union[int, NotGiven] = NOT_GIVEN,
         limit: Union[int, NotGiven] = NOT_GIVEN,
+        scope: Union[str, NotGiven] = NOT_GIVEN,
         order: Union[str, NotGiven] = NOT_GIVEN,
         sort: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
@@ -1795,11 +2510,11 @@ class PublicForumPeopleResource:
         yield from self._client._paginate(
             "GET",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/directory",
-            query=_query({"search": search, "page": page, "limit": limit, "order": order, "sort": sort}, extra_query),
+            query=_query({"search": search, "page": page, "limit": limit, "scope": scope, "order": order, "sort": sort}, extra_query),
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="members",
+            items_key=None,
         )
 
     def badges(
@@ -1837,7 +2552,7 @@ class PublicForumPeopleResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[PublicForumPeopleBadgesResponseBadge]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``badges`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -1846,7 +2561,7 @@ class PublicForumPeopleResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="badges",
+            items_key=None,
         )
 
     def leaderboard(
@@ -1888,28 +2603,6 @@ class PublicForumPeopleResource:
         return self._client._request(
             "GET",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/u/{_path(user_id)}",
-            query=_query({}, extra_query),
-            headers=extra_headers,
-            timeout=timeout,
-        )
-
-    def user_summary(
-        self,
-        org_id: str,
-        space_id: str,
-        user_id: str,
-        *,
-        extra_query: Optional[Mapping[str, Any]] = None,
-        extra_headers: Optional[Mapping[str, str]] = None,
-        timeout: Optional[float] = None,
-    ) -> UserSummary:
-        """Get the summary in a space
-
-        ``GET /public/orgs/{orgId}/spaces/{spaceId}/forum/u/{userId}/summary``
-        """
-        return self._client._request(
-            "GET",
-            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/u/{_path(user_id)}/summary",
             query=_query({}, extra_query),
             headers=extra_headers,
             timeout=timeout,
@@ -1999,7 +2692,7 @@ class PublicForumPeopleResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[PublicForumPeopleOnlineRosterResponseOnlineItem]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``online_roster`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -2008,12 +2701,12 @@ class PublicForumPeopleResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="online",
+            items_key=None,
         )
 
 
 class PublicForumTaxonomyResource:
-    """``client.public.forum.taxonomy`` (8 operations)."""
+    """``client.public.forum.taxonomy`` (7 operations)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
@@ -2023,6 +2716,7 @@ class PublicForumTaxonomyResource:
         org_id: str,
         space_id: str,
         *,
+        locale: Union[str, NotGiven] = NOT_GIVEN,
         limit: Union[int, NotGiven] = NOT_GIVEN,
         cursor: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
@@ -2033,13 +2727,14 @@ class PublicForumTaxonomyResource:
 
         ``GET /public/orgs/{orgId}/spaces/{spaceId}/forum/categories``
 
+        :param locale: Answer each category in this language: its `name` and `description` are replaced by the entry in its `translations` map for this code (exact, then by language: `pt-BR` → `pt`).
         :param limit: Rows per page.
         :param cursor: Where to continue from: pass back the `page.nextCursor` of the previous answer.
         """
         return self._client._request(
             "GET",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/categories",
-            query=_query({"limit": limit, "cursor": cursor}, extra_query),
+            query=_query({"locale": locale, "limit": limit, "cursor": cursor}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -2049,20 +2744,21 @@ class PublicForumTaxonomyResource:
         org_id: str,
         space_id: str,
         *,
+        locale: Union[str, NotGiven] = NOT_GIVEN,
         limit: Union[int, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[CategorySummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``categories_list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/categories",
-            query=_query({"limit": limit}, extra_query),
+            query=_query({"locale": locale, "limit": limit}, extra_query),
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="categories",
+            items_key=None,
         )
 
     def category_form_template(
@@ -2092,8 +2788,7 @@ class PublicForumTaxonomyResource:
         org_id: str,
         space_id: str,
         *,
-        limit: Union[int, NotGiven] = NOT_GIVEN,
-        cursor: Union[str, NotGiven] = NOT_GIVEN,
+        latest: Union[float, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
@@ -2101,84 +2796,13 @@ class PublicForumTaxonomyResource:
         """Get the overview in a space (public reader forum categories)
 
         ``GET /public/orgs/{orgId}/spaces/{spaceId}/forum/categories/overview``
-
-        :param limit: Rows per page.
-        :param cursor: Where to continue from: pass back the `page.nextCursor` of the previous answer.
         """
         return self._client._request(
             "GET",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/categories/overview",
-            query=_query({"limit": limit, "cursor": cursor}, extra_query),
+            query=_query({"latest": latest}, extra_query),
             headers=extra_headers,
             timeout=timeout,
-        )
-
-    def categories_overview_all(
-        self,
-        org_id: str,
-        space_id: str,
-        *,
-        limit: Union[int, NotGiven] = NOT_GIVEN,
-        extra_query: Optional[Mapping[str, Any]] = None,
-        extra_headers: Optional[Mapping[str, str]] = None,
-        timeout: Optional[float] = None,
-    ) -> Iterator[PublicForumTaxonomyCategoriesOverviewResponseCategory]:
-        """Iterate every item of ``categories_overview`` across all pages, following ``cursor``."""
-        yield from self._client._paginate(
-            "GET",
-            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/categories/overview",
-            query=_query({"limit": limit}, extra_query),
-            headers=extra_headers,
-            timeout=timeout,
-            page_param="cursor",
-            items_key="categories",
-        )
-
-    def tags(
-        self,
-        org_id: str,
-        space_id: str,
-        *,
-        limit: Union[int, NotGiven] = NOT_GIVEN,
-        cursor: Union[str, NotGiven] = NOT_GIVEN,
-        extra_query: Optional[Mapping[str, Any]] = None,
-        extra_headers: Optional[Mapping[str, str]] = None,
-        timeout: Optional[float] = None,
-    ) -> PublicForumTaxonomyTagsResponse:
-        """List tags in a space (public reader forum)
-
-        ``GET /public/orgs/{orgId}/spaces/{spaceId}/forum/tags``
-
-        :param limit: Rows per page.
-        :param cursor: Where to continue from: pass back the `page.nextCursor` of the previous answer.
-        """
-        return self._client._request(
-            "GET",
-            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/tags",
-            query=_query({"limit": limit, "cursor": cursor}, extra_query),
-            headers=extra_headers,
-            timeout=timeout,
-        )
-
-    def tags_all(
-        self,
-        org_id: str,
-        space_id: str,
-        *,
-        limit: Union[int, NotGiven] = NOT_GIVEN,
-        extra_query: Optional[Mapping[str, Any]] = None,
-        extra_headers: Optional[Mapping[str, str]] = None,
-        timeout: Optional[float] = None,
-    ) -> Iterator[PublicForumTaxonomyTagsResponseTag]:
-        """Iterate every item of ``tags`` across all pages, following ``cursor``."""
-        yield from self._client._paginate(
-            "GET",
-            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/tags",
-            query=_query({"limit": limit}, extra_query),
-            headers=extra_headers,
-            timeout=timeout,
-            page_param="cursor",
-            items_key="tags",
         )
 
     def tag_about(
@@ -2272,10 +2896,35 @@ class PublicForumTaxonomyResource:
 
 
 class PublicForumThreadsResource:
-    """``client.public.forum.threads`` (3 operations)."""
+    """``client.public.forum.threads`` (5 operations)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
+
+    def summary(
+        self,
+        org_id: str,
+        space_id: str,
+        slug: str,
+        *,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicForumThreadsSummaryResponse:
+        """Create the summary in a space
+
+        ``POST /public/orgs/{orgId}/spaces/{spaceId}/forum/t/{slug}/summary``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "POST",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/t/{_path(slug)}/summary",
+            query=_query({}, extra_query),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
 
     def stream(
         self,
@@ -2324,6 +2973,7 @@ class PublicForumThreadsResource:
         space_id: str,
         slug: str,
         *,
+        locale: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
@@ -2335,8 +2985,33 @@ class PublicForumThreadsResource:
         return self._client._request(
             "GET",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/t/{_path(slug)}.md",
-            query=_query({}, extra_query),
+            query=_query({"locale": locale}, extra_query),
             headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def view(
+        self,
+        org_id: str,
+        space_id: str,
+        slug: str,
+        *,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> ErrorEnvelope:
+        """Create the view in a space (forum t)
+
+        ``POST /public/orgs/{orgId}/spaces/{spaceId}/forum/t/{slug}/view``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "POST",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/t/{_path(slug)}/view",
+            query=_query({}, extra_query),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
 
@@ -2347,6 +3022,7 @@ class PublicForumThreadsResource:
         slug: str,
         *,
         share: Union[str, NotGiven] = NOT_GIVEN,
+        locale: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
@@ -2358,14 +3034,14 @@ class PublicForumThreadsResource:
         return self._client._request(
             "GET",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/t/{_path(slug)}",
-            query=_query({"share": share}, extra_query),
+            query=_query({"share": share, "locale": locale}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
 
 
 class PublicForumTopicsResource:
-    """``client.public.forum.topics`` (19 operations)."""
+    """``client.public.forum.topics`` (17 operations)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
@@ -2491,6 +3167,35 @@ class PublicForumTopicsResource:
             timeout=timeout,
         )
 
+    def vote(
+        self,
+        org_id: str,
+        space_id: str,
+        slug: str,
+        post_id: str,
+        *,
+        value: float,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicForumTopicsVoteResponse:
+        """Replace the vote in a space (public reader t)
+
+        ``PUT /public/orgs/{orgId}/spaces/{spaceId}/forum/t/{slug}/posts/{postId}/vote``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "PUT",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/t/{_path(slug)}/posts/{_path(post_id)}/vote",
+            query=_query({}, extra_query),
+            body=_body({"value": value}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
     def reactors(
         self,
         org_id: str,
@@ -2504,7 +3209,7 @@ class PublicForumTopicsResource:
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
     ) -> PublicForumTopicsReactorsResponse:
-        """List reactions in a space
+        """List reactions in a space (forum)
 
         ``GET /public/orgs/{orgId}/spaces/{spaceId}/forum/t/{slug}/posts/{postId}/reactions``
 
@@ -2530,7 +3235,7 @@ class PublicForumTopicsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[PublicForumTopicsReactorsResponseReaction]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``reactors`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -2539,7 +3244,7 @@ class PublicForumTopicsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="reactions",
+            items_key=None,
         )
 
     def flag(
@@ -2597,89 +3302,6 @@ class PublicForumTopicsResource:
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/t/{_path(slug)}/flag",
             query=_query({}, extra_query),
             body=_body({"flagType": flag_type, "reason": reason}, extra_body),
-            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
-            timeout=timeout,
-        )
-
-    def bookmark(
-        self,
-        org_id: str,
-        space_id: str,
-        slug: str,
-        *,
-        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
-        extra_query: Optional[Mapping[str, Any]] = None,
-        extra_headers: Optional[Mapping[str, str]] = None,
-        timeout: Optional[float] = None,
-    ) -> PublicForumTopicsBookmarkResponse:
-        """Create the bookmark in a space (public reader forum t)
-
-        ``POST /public/orgs/{orgId}/spaces/{spaceId}/forum/t/{slug}/bookmark``
-
-        :param idempotency_key: Makes this write safe to retry.
-        """
-        return self._client._request(
-            "POST",
-            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/t/{_path(slug)}/bookmark",
-            query=_query({}, extra_query),
-            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
-            timeout=timeout,
-        )
-
-    def bookmark_post(
-        self,
-        org_id: str,
-        space_id: str,
-        slug: str,
-        post_id: str,
-        *,
-        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
-        extra_query: Optional[Mapping[str, Any]] = None,
-        extra_headers: Optional[Mapping[str, str]] = None,
-        timeout: Optional[float] = None,
-    ) -> PublicForumTopicsBookmarkPostResponse:
-        """Create the bookmark in a space (public reader forum t posts)
-
-        ``POST /public/orgs/{orgId}/spaces/{spaceId}/forum/t/{slug}/posts/{postId}/bookmark``
-
-        :param idempotency_key: Makes this write safe to retry.
-        """
-        return self._client._request(
-            "POST",
-            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/t/{_path(slug)}/posts/{_path(post_id)}/bookmark",
-            query=_query({}, extra_query),
-            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
-            timeout=timeout,
-        )
-
-    def bookmark_reminder(
-        self,
-        org_id: str,
-        space_id: str,
-        slug: str,
-        *,
-        remind_at: Optional[str],
-        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
-        preset: Union[str, NotGiven] = NOT_GIVEN,
-        note: Union[Optional[str], NotGiven] = NOT_GIVEN,
-        name: Union[Optional[str], NotGiven] = NOT_GIVEN,
-        auto_delete: Union[bool, NotGiven] = NOT_GIVEN,
-        extra_query: Optional[Mapping[str, Any]] = None,
-        extra_body: Optional[Mapping[str, Any]] = None,
-        extra_headers: Optional[Mapping[str, str]] = None,
-        timeout: Optional[float] = None,
-    ) -> PublicForumTopicsBookmarkReminderResponse:
-        """Replace the reminder in a space (public reader t)
-
-        ``PUT /public/orgs/{orgId}/spaces/{spaceId}/forum/t/{slug}/bookmark/reminder``
-
-        :param idempotency_key: Makes this write safe to retry.
-        """
-        return self._client._request(
-            "PUT",
-            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/t/{_path(slug)}/bookmark/reminder",
-            query=_query({}, extra_query),
-            body=_body({"remindAt": remind_at, "preset": preset, "note": note, "name": name, "autoDelete": auto_delete}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -2834,7 +3456,7 @@ class PublicForumTopicsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[PostRevisionMeta]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``post_revisions`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -2843,7 +3465,7 @@ class PublicForumTopicsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="revisions",
+            items_key=None,
         )
 
     def post_revision_diff(
@@ -3130,11 +3752,21 @@ class PublicForumResource:
         tag: Union[str, NotGiven] = NOT_GIVEN,
         kind: Union[str, NotGiven] = NOT_GIVEN,
         category: Union[str, NotGiven] = NOT_GIVEN,
+        pinned: Union[str, NotGiven] = NOT_GIVEN,
+        featured: Union[str, NotGiven] = NOT_GIVEN,
+        bountied: Union[str, NotGiven] = NOT_GIVEN,
+        include_subcategories: Union[str, NotGiven] = NOT_GIVEN,
+        tags: Union[str, NotGiven] = NOT_GIVEN,
+        media: Union[str, NotGiven] = NOT_GIVEN,
+        previews: Union[str, NotGiven] = NOT_GIVEN,
         page: Union[int, NotGiven] = NOT_GIVEN,
         share: Union[str, NotGiven] = NOT_GIVEN,
         filter: Union[str, NotGiven] = NOT_GIVEN,
         period: Union[str, NotGiven] = NOT_GIVEN,
         cursor: Union[str, NotGiven] = NOT_GIVEN,
+        preview: Union[str, NotGiven] = NOT_GIVEN,
+        locale: Union[str, NotGiven] = NOT_GIVEN,
+        tag_match: Union[str, NotGiven] = NOT_GIVEN,
         solved: Union[str, NotGiven] = NOT_GIVEN,
         sort: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
@@ -3146,12 +3778,17 @@ class PublicForumResource:
         ``GET /public/orgs/{orgId}/spaces/{spaceId}/forum``
 
         :param limit: Topics per page.
+        :param pinned: Use true or false (true/1/yes/on and false/0/no/off are accepted).
+        :param featured: Use true or false (true/1/yes/on and false/0/no/off are accepted).
+        :param bountied: Use true or false (true/1/yes/on and false/0/no/off are accepted).
+        :param include_subcategories: Use true or false (true/1/yes/on and false/0/no/off are accepted).
+        :param media: Use true or false (true/1/yes/on and false/0/no/off are accepted).
         :param page: Which page of results to return, 1-based.
         """
         return self._client._request(
             "GET",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum",
-            query=_query({"limit": limit, "tag": tag, "kind": kind, "category": category, "page": page, "share": share, "filter": filter, "period": period, "cursor": cursor, "solved": solved, "sort": sort}, extra_query),
+            query=_query({"limit": limit, "tag": tag, "kind": kind, "category": category, "pinned": pinned, "featured": featured, "bountied": bountied, "includeSubcategories": include_subcategories, "tags": tags, "media": media, "previews": previews, "page": page, "share": share, "filter": filter, "period": period, "cursor": cursor, "preview": preview, "locale": locale, "tagMatch": tag_match, "solved": solved, "sort": sort}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -3165,25 +3802,484 @@ class PublicForumResource:
         tag: Union[str, NotGiven] = NOT_GIVEN,
         kind: Union[str, NotGiven] = NOT_GIVEN,
         category: Union[str, NotGiven] = NOT_GIVEN,
+        pinned: Union[str, NotGiven] = NOT_GIVEN,
+        featured: Union[str, NotGiven] = NOT_GIVEN,
+        bountied: Union[str, NotGiven] = NOT_GIVEN,
+        include_subcategories: Union[str, NotGiven] = NOT_GIVEN,
+        tags: Union[str, NotGiven] = NOT_GIVEN,
+        media: Union[str, NotGiven] = NOT_GIVEN,
+        previews: Union[str, NotGiven] = NOT_GIVEN,
         page: Union[int, NotGiven] = NOT_GIVEN,
         share: Union[str, NotGiven] = NOT_GIVEN,
         filter: Union[str, NotGiven] = NOT_GIVEN,
         period: Union[str, NotGiven] = NOT_GIVEN,
+        preview: Union[str, NotGiven] = NOT_GIVEN,
+        locale: Union[str, NotGiven] = NOT_GIVEN,
+        tag_match: Union[str, NotGiven] = NOT_GIVEN,
         solved: Union[str, NotGiven] = NOT_GIVEN,
         sort: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ArticleSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``index`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum",
-            query=_query({"limit": limit, "tag": tag, "kind": kind, "category": category, "page": page, "share": share, "filter": filter, "period": period, "solved": solved, "sort": sort}, extra_query),
+            query=_query({"limit": limit, "tag": tag, "kind": kind, "category": category, "pinned": pinned, "featured": featured, "bountied": bountied, "includeSubcategories": include_subcategories, "tags": tags, "media": media, "previews": previews, "page": page, "share": share, "filter": filter, "period": period, "preview": preview, "locale": locale, "tagMatch": tag_match, "solved": solved, "sort": sort}, extra_query),
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="topics",
+            items_key=None,
+        )
+
+
+class PublicForumAccountResource:
+    """``client.public.forum_account`` (3 operations)."""
+
+    def __init__(self, client: "BaseClient") -> None:
+        self._client = client
+
+    def list(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        limit: Union[int, NotGiven] = NOT_GIVEN,
+        unread: Union[str, NotGiven] = NOT_GIVEN,
+        cursor: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicForumAccountListResponse:
+        """The signed-in reader's notifications, newest first
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/forum/me/notifications``
+
+        :param limit: Rows per page.
+        :param unread: Use true or false (true/1/yes/on and false/0/no/off are accepted).
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/me/notifications",
+            query=_query({"limit": limit, "unread": unread, "cursor": cursor}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def list_all(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        limit: Union[int, NotGiven] = NOT_GIVEN,
+        unread: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Iterator[Any]:
+        """Iterate every item of ``list`` across all pages, following ``cursor``."""
+        yield from self._client._paginate(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/me/notifications",
+            query=_query({"limit": limit, "unread": unread}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+            page_param="cursor",
+            items_key=None,
+        )
+
+    def mark_read(
+        self,
+        org_id: str,
+        space_id: str,
+        id: str,
+        *,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicForumAccountMarkReadResponse:
+        """Mark one of the reader’s notifications read
+
+        ``POST /public/orgs/{orgId}/spaces/{spaceId}/forum/me/notifications/{id}/read``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "POST",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/me/notifications/{_path(id)}/read",
+            query=_query({}, extra_query),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+    def mark_all_read(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicForumAccountMarkAllReadResponse:
+        """Mark every one of the reader’s notifications read
+
+        ``POST /public/orgs/{orgId}/spaces/{spaceId}/forum/me/notifications/read-all``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "POST",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/me/notifications/read-all",
+            query=_query({}, extra_query),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+
+class PublicForumBookmarkResource:
+    """``client.public.forum_bookmark`` (4 operations)."""
+
+    def __init__(self, client: "BaseClient") -> None:
+        self._client = client
+
+    def bookmark(
+        self,
+        org_id: str,
+        space_id: str,
+        slug: str,
+        *,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicForumBookmarkBookmarkResponse:
+        """Create the bookmark in a space (public reader forum t)
+
+        ``POST /public/orgs/{orgId}/spaces/{spaceId}/forum/t/{slug}/bookmark``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "POST",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/t/{_path(slug)}/bookmark",
+            query=_query({}, extra_query),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+    def bookmark_post(
+        self,
+        org_id: str,
+        space_id: str,
+        slug: str,
+        post_id: str,
+        *,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicForumBookmarkBookmarkPostResponse:
+        """Create the bookmark in a space (public reader forum t posts)
+
+        ``POST /public/orgs/{orgId}/spaces/{spaceId}/forum/t/{slug}/posts/{postId}/bookmark``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "POST",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/t/{_path(slug)}/posts/{_path(post_id)}/bookmark",
+            query=_query({}, extra_query),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+    def bookmark_reminder(
+        self,
+        org_id: str,
+        space_id: str,
+        slug: str,
+        *,
+        remind_at: Optional[str],
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        preset: Union[str, NotGiven] = NOT_GIVEN,
+        note: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        name: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        auto_delete: Union[bool, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicForumBookmarkBookmarkReminderResponse:
+        """Replace the reminder in a space (public reader t)
+
+        ``PUT /public/orgs/{orgId}/spaces/{spaceId}/forum/t/{slug}/bookmark/reminder``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "PUT",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/t/{_path(slug)}/bookmark/reminder",
+            query=_query({}, extra_query),
+            body=_body({"remindAt": remind_at, "preset": preset, "note": note, "name": name, "autoDelete": auto_delete}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+    def dismiss_pin(
+        self,
+        org_id: str,
+        space_id: str,
+        slug: str,
+        *,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicForumBookmarkDismissPinResponse:
+        """Dismiss pin in a space (public reader t)
+
+        ``POST /public/orgs/{orgId}/spaces/{spaceId}/forum/t/{slug}/dismiss-pin``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "POST",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/t/{_path(slug)}/dismiss-pin",
+            query=_query({}, extra_query),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+
+class PublicForumCategoryResource:
+    """``client.public.forum_category`` (3 operations)."""
+
+    def __init__(self, client: "BaseClient") -> None:
+        self._client = client
+
+    def category(
+        self,
+        org_id: str,
+        space_id: str,
+        slug: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicForumCategoryCategoryResponse:
+        """Get the category
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/forum/category/{slug}``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/category/{_path(slug)}",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def notify(
+        self,
+        org_id: str,
+        space_id: str,
+        slug: str,
+        *,
+        level: Optional[str],
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicForumCategoryNotifyResponse:
+        """Create the notify in a space (public reader category)
+
+        ``POST /public/orgs/{orgId}/spaces/{spaceId}/forum/category/{slug}/notify``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "POST",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/category/{_path(slug)}/notify",
+            query=_query({}, extra_query),
+            body=_body({"level": level}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+    def tags(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicForumCategoryTagsResponse:
+        """List tags in a space (public reader forum)
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/forum/tags``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/tags",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+
+class PublicForumProfileResource:
+    """``client.public.forum_profile`` (1 operation)."""
+
+    def __init__(self, client: "BaseClient") -> None:
+        self._client = client
+
+    def user_summary(
+        self,
+        org_id: str,
+        space_id: str,
+        user_id: str,
+        *,
+        rail: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicUserSummary:
+        """Get the summary in a space
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/forum/u/{userId}/summary``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/u/{_path(user_id)}/summary",
+            query=_query({"rail": rail}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+
+class PublicForumSearchResource:
+    """``client.public.forum_search`` (1 operation)."""
+
+    def __init__(self, client: "BaseClient") -> None:
+        self._client = client
+
+    def full(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        limit: Union[int, NotGiven] = NOT_GIVEN,
+        offset: Union[int, NotGiven] = NOT_GIVEN,
+        q: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicForumSearchFullResponse:
+        """Search a public forum with Discourse operators (ranked, paged)
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/forum/search/full``
+
+        :param limit: Hits per page.
+        :param offset: Hits skipped.
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/search/full",
+            query=_query({"limit": limit, "offset": offset, "q": q}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def full_all(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        limit: Union[int, NotGiven] = NOT_GIVEN,
+        q: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Iterator[ForumSearchHit]:
+        """Iterate every item of ``full`` across all pages, following ``offset``."""
+        yield from self._client._paginate(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/search/full",
+            query=_query({"limit": limit, "q": q}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+            page_param="offset",
+            items_key="hits",
+        )
+
+
+class PublicGrowthResource:
+    """``client.public.growth`` (2 operations)."""
+
+    def __init__(self, client: "BaseClient") -> None:
+        self._client = client
+
+    def goal(
+        self,
+        org_id: str,
+        space_id: str,
+        page_id: str,
+        *,
+        goal: str,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        kind: Union[str, NotGiven] = NOT_GIVEN,
+        ab: Union[Dict[str, Any], NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicGrowthGoalResponse:
+        """Create the goal in a space
+
+        ``POST /public/orgs/{orgId}/spaces/{spaceId}/pages/{pageId}/goal``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "POST",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/pages/{_path(page_id)}/goal",
+            query=_query({}, extra_query),
+            body=_body({"goal": goal, "kind": kind, "ab": ab}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+    def exposure(
+        self,
+        org_id: str,
+        space_id: str,
+        page_id: str,
+        *,
+        ab: Dict[str, Any],
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicGrowthExposureResponse:
+        """Create the exposure in a space
+
+        ``POST /public/orgs/{orgId}/spaces/{spaceId}/pages/{pageId}/exposure``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "POST",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/pages/{_path(page_id)}/exposure",
+            query=_query({}, extra_query),
+            body=_body({"ab": ab}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
         )
 
 
@@ -3282,7 +4378,7 @@ class PublicIdentityResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[PublicIdentitySignupFieldsResponseField]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``signup_fields`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -3291,7 +4387,7 @@ class PublicIdentityResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="fields",
+            items_key=None,
         )
 
     def register(
@@ -3356,7 +4452,7 @@ class PublicIdentityResource:
 
 
 class PublicInteractionsResource:
-    """``client.public.interactions`` (9 operations)."""
+    """``client.public.interactions`` (10 operations)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
@@ -3503,7 +4599,7 @@ class PublicInteractionsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[CommentSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list_comments`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -3512,7 +4608,7 @@ class PublicInteractionsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="comments",
+            items_key=None,
         )
 
     def post_comment(
@@ -3643,9 +4739,10 @@ class PublicInteractionsResource:
         space_id: str,
         page_id: str,
         *,
-        rating: str,
         idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        rating: Union[str, NotGiven] = NOT_GIVEN,
         comment: Union[str, NotGiven] = NOT_GIVEN,
+        score: Union[int, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -3661,14 +4758,42 @@ class PublicInteractionsResource:
             "POST",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/pages/{_path(page_id)}/feedback",
             query=_query({}, extra_query),
-            body=_body({"rating": rating, "comment": comment}, extra_body),
+            body=_body({"rating": rating, "comment": comment, "score": score}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+    def faq_search_event(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        query: str,
+        hits: int,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> ErrorEnvelope:
+        """Create a search event in a space
+
+        ``POST /public/orgs/{orgId}/spaces/{spaceId}/faq/search-events``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "POST",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/faq/search-events",
+            query=_query({}, extra_query),
+            body=_body({"query": query, "hits": hits}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
 
 
 class PublicLegalResource:
-    """``client.public.legal`` (4 operations)."""
+    """``client.public.legal`` (11 operations)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
@@ -3742,11 +4867,158 @@ class PublicLegalResource:
             timeout=timeout,
         )
 
+    def edition(
+        self,
+        org_id: str,
+        kind: str,
+        edition: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicLegalEditionResponse:
+        """Get the version
+
+        ``GET /public/orgs/{orgId}/legal/{kind}/versions/{edition}``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/legal/{_path(kind)}/versions/{_path(edition)}",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def diff(
+        self,
+        org_id: str,
+        kind: str,
+        *,
+        from_: Union[str, NotGiven] = NOT_GIVEN,
+        to: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicLegalDiffResponse:
+        """Get the diff in an organization (public reader)
+
+        ``GET /public/orgs/{orgId}/legal/{kind}/diff``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/legal/{_path(kind)}/diff",
+            query=_query({"from": from_, "to": to}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def rss(
+        self,
+        org_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Any:
+        """RSS feed of the legal
+
+        ``GET /public/orgs/{orgId}/legal/rss.xml``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/legal/rss.xml",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def atom(
+        self,
+        org_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Any:
+        """Atom feed of the legal
+
+        ``GET /public/orgs/{orgId}/legal/atom.xml``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/legal/atom.xml",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def json_feed(
+        self,
+        org_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Any:
+        """JSON feed of the legal
+
+        ``GET /public/orgs/{orgId}/legal/feed.json``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/legal/feed.json",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def trust(
+        self,
+        org_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicLegalTrustResponse:
+        """JSON feed of trust
+
+        ``GET /public/orgs/{orgId}/legal/trust.json``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/legal/trust.json",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def subprocessors(
+        self,
+        org_id: str,
+        kind: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicLegalSubprocessorsResponse:
+        """List subprocessors in an organization
+
+        ``GET /public/orgs/{orgId}/legal/{kind}/subprocessors``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/legal/{_path(kind)}/subprocessors",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
     def get(
         self,
         org_id: str,
         kind: str,
         *,
+        locale: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
@@ -3758,7 +5030,7 @@ class PublicLegalResource:
         return self._client._request(
             "GET",
             f"/public/orgs/{_path(org_id)}/legal/{_path(kind)}",
-            query=_query({}, extra_query),
+            query=_query({"locale": locale}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -4011,7 +5283,7 @@ class PublicOneboxResource:
 
 
 class PublicOpenapiResource:
-    """``client.public.openapi`` (6 operations)."""
+    """``client.public.openapi`` (7 operations)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
@@ -4081,7 +5353,7 @@ class PublicOpenapiResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[PublicOpenapiLanguagesResponseLanguage]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``languages`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -4090,7 +5362,7 @@ class PublicOpenapiResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="languages",
+            items_key=None,
         )
 
     def download(
@@ -4135,6 +5407,29 @@ class PublicOpenapiResource:
             "GET",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/sdk/{_path(language)}/package",
             query=_query({"specId": spec_id}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def spec(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        spec_id: Union[str, NotGiven] = NOT_GIVEN,
+        format: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Any:
+        """Get the spec in a space
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/api-export/spec``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/api-export/spec",
+            query=_query({"specId": spec_id, "format": format}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -4233,7 +5528,7 @@ class PublicOrgsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="origins",
+            items_key=None,
         )
 
     def get(
@@ -4432,7 +5727,7 @@ class PublicRelationsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ResolvedRelation]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``resolve`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -4441,46 +5736,15 @@ class PublicRelationsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="items",
+            items_key=None,
         )
 
 
 class PublicRoadmapResource:
-    """``client.public.roadmap`` (9 operations)."""
+    """``client.public.roadmap`` (6 operations)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
-
-    def submit(
-        self,
-        org_id: str,
-        space_id: str,
-        *,
-        title: str,
-        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
-        content: Union[Dict[str, Any], NotGiven] = NOT_GIVEN,
-        author_name: Union[str, NotGiven] = NOT_GIVEN,
-        captcha_token: Union[str, NotGiven] = NOT_GIVEN,
-        markdown: Union[str, NotGiven] = NOT_GIVEN,
-        extra_query: Optional[Mapping[str, Any]] = None,
-        extra_body: Optional[Mapping[str, Any]] = None,
-        extra_headers: Optional[Mapping[str, str]] = None,
-        timeout: Optional[float] = None,
-    ) -> PublicRoadmapSubmitResponse:
-        """Create an item in a space (public reader roadmap)
-
-        ``POST /public/orgs/{orgId}/spaces/{spaceId}/roadmap/items``
-
-        :param idempotency_key: Makes this write safe to retry.
-        """
-        return self._client._request(
-            "POST",
-            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/roadmap/items",
-            query=_query({}, extra_query),
-            body=_body({"title": title, "content": content, "authorName": author_name, "captchaToken": captcha_token, "markdown": markdown}, extra_body),
-            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
-            timeout=timeout,
-        )
 
     def board(
         self,
@@ -4491,6 +5755,14 @@ class PublicRoadmapResource:
         cursor: Union[str, NotGiven] = NOT_GIVEN,
         page: Union[int, NotGiven] = NOT_GIVEN,
         share: Union[str, NotGiven] = NOT_GIVEN,
+        preview: Union[str, NotGiven] = NOT_GIVEN,
+        pinned: Union[str, NotGiven] = NOT_GIVEN,
+        featured: Union[str, NotGiven] = NOT_GIVEN,
+        sort: Union[str, NotGiven] = NOT_GIVEN,
+        tag: Union[str, NotGiven] = NOT_GIVEN,
+        status: Union[str, NotGiven] = NOT_GIVEN,
+        mine: Union[str, NotGiven] = NOT_GIVEN,
+        q: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
@@ -4501,11 +5773,14 @@ class PublicRoadmapResource:
 
         :param limit: Items per LANE — not lanes.
         :param page: Which page of results to return, 1-based.
+        :param pinned: Use true or false (true/1/yes/on and false/0/no/off are accepted).
+        :param featured: Use true or false (true/1/yes/on and false/0/no/off are accepted).
+        :param mine: Use true or false (true/1/yes/on and false/0/no/off are accepted).
         """
         return self._client._request(
             "GET",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/roadmap",
-            query=_query({"limit": limit, "cursor": cursor, "page": page, "share": share}, extra_query),
+            query=_query({"limit": limit, "cursor": cursor, "page": page, "share": share, "preview": preview, "pinned": pinned, "featured": featured, "sort": sort, "tag": tag, "status": status, "mine": mine, "q": q}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -4518,19 +5793,48 @@ class PublicRoadmapResource:
         limit: Union[int, NotGiven] = NOT_GIVEN,
         page: Union[int, NotGiven] = NOT_GIVEN,
         share: Union[str, NotGiven] = NOT_GIVEN,
+        preview: Union[str, NotGiven] = NOT_GIVEN,
+        pinned: Union[str, NotGiven] = NOT_GIVEN,
+        featured: Union[str, NotGiven] = NOT_GIVEN,
+        sort: Union[str, NotGiven] = NOT_GIVEN,
+        tag: Union[str, NotGiven] = NOT_GIVEN,
+        status: Union[str, NotGiven] = NOT_GIVEN,
+        mine: Union[str, NotGiven] = NOT_GIVEN,
+        q: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[PublicRoadmapBoardResponseLane]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``board`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/roadmap",
-            query=_query({"limit": limit, "page": page, "share": share}, extra_query),
+            query=_query({"limit": limit, "page": page, "share": share, "preview": preview, "pinned": pinned, "featured": featured, "sort": sort, "tag": tag, "status": status, "mine": mine, "q": q}, extra_query),
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="lanes",
+            items_key=None,
+        )
+
+    def votes(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicRoadmapVotesResponse:
+        """Your votes on a roadmap
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/roadmap/votes``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/roadmap/votes",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
         )
 
     def rss(
@@ -4591,7 +5895,7 @@ class PublicRoadmapResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[PublicRoadmapSearchResponseHit]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``search`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -4600,7 +5904,7 @@ class PublicRoadmapResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="hits",
+            items_key=None,
         )
 
     def piece_markdown(
@@ -4648,14 +5952,227 @@ class PublicRoadmapResource:
             timeout=timeout,
         )
 
+
+class PublicRoadmapItemResource:
+    """``client.public.roadmap_item`` (3 operations)."""
+
+    def __init__(self, client: "BaseClient") -> None:
+        self._client = client
+
+    def voters(
+        self,
+        org_id: str,
+        space_id: str,
+        slug: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicRoadmapItemVotersResponse:
+        """List voters in a space (public reader roadmap t)
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/roadmap/t/{slug}/voters``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/roadmap/t/{_path(slug)}/voters",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def react(
+        self,
+        org_id: str,
+        space_id: str,
+        slug: str,
+        post_id: str,
+        *,
+        emoji: str,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicRoadmapItemReactResponse:
+        """Create the react in a space (public reader roadmap t posts)
+
+        ``POST /public/orgs/{orgId}/spaces/{spaceId}/roadmap/t/{slug}/posts/{postId}/react``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "POST",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/roadmap/t/{_path(slug)}/posts/{_path(post_id)}/react",
+            query=_query({}, extra_query),
+            body=_body({"emoji": emoji}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+    def reactors(
+        self,
+        org_id: str,
+        space_id: str,
+        slug: str,
+        post_id: str,
+        *,
+        limit: Union[int, NotGiven] = NOT_GIVEN,
+        cursor: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicRoadmapItemReactorsResponse:
+        """List reactions in a space (roadmap)
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/roadmap/t/{slug}/posts/{postId}/reactions``
+
+        :param limit: Rows per page.
+        :param cursor: Where to continue from: pass back the `page.nextCursor` of the previous answer.
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/roadmap/t/{_path(slug)}/posts/{_path(post_id)}/reactions",
+            query=_query({"limit": limit, "cursor": cursor}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def reactors_all(
+        self,
+        org_id: str,
+        space_id: str,
+        slug: str,
+        post_id: str,
+        *,
+        limit: Union[int, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Iterator[Any]:
+        """Iterate every item of ``reactors`` across all pages, following ``cursor``."""
+        yield from self._client._paginate(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/roadmap/t/{_path(slug)}/posts/{_path(post_id)}/reactions",
+            query=_query({"limit": limit}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+            page_param="cursor",
+            items_key=None,
+        )
+
+
+class PublicRoadmapLanesResource:
+    """``client.public.roadmap_lanes`` (1 operation)."""
+
+    def __init__(self, client: "BaseClient") -> None:
+        self._client = client
+
+    def lanes(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        share: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicRoadmapLanesLanesResponse:
+        """List lanes in a space
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/roadmap/lanes``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/roadmap/lanes",
+            query=_query({"share": share}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+
+class PublicRoadmapVoteResource:
+    """``client.public.roadmap_vote`` (1 operation)."""
+
+    def __init__(self, client: "BaseClient") -> None:
+        self._client = client
+
+    def vote(
+        self,
+        org_id: str,
+        space_id: str,
+        slug: str,
+        *,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        importance: Union[float, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicRoadmapVoteVoteResponse:
+        """Create the vote in a space (public reader roadmap t)
+
+        ``POST /public/orgs/{orgId}/spaces/{spaceId}/roadmap/t/{slug}/vote``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "POST",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/roadmap/t/{_path(slug)}/vote",
+            query=_query({}, extra_query),
+            body=_body({"importance": importance}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+
+class PublicRoadmapWriteResource:
+    """``client.public.roadmap_write`` (7 operations)."""
+
+    def __init__(self, client: "BaseClient") -> None:
+        self._client = client
+
+    def submit(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        title: str,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        content: Union[Dict[str, Any], NotGiven] = NOT_GIVEN,
+        author_name: Union[str, NotGiven] = NOT_GIVEN,
+        captcha_token: Union[str, NotGiven] = NOT_GIVEN,
+        tags: Union[List[str], NotGiven] = NOT_GIVEN,
+        theme: Union[str, NotGiven] = NOT_GIVEN,
+        markdown: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicRoadmapWriteSubmitResponse:
+        """Create an item in a space (public reader roadmap)
+
+        ``POST /public/orgs/{orgId}/spaces/{spaceId}/roadmap/items``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "POST",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/roadmap/items",
+            query=_query({}, extra_query),
+            body=_body({"title": title, "content": content, "authorName": author_name, "captchaToken": captcha_token, "tags": tags, "theme": theme, "markdown": markdown}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
     def comment(
         self,
         org_id: str,
         space_id: str,
         slug: str,
         *,
-        author_name: str,
         idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        author_name: Union[str, NotGiven] = NOT_GIVEN,
         content: Union[Dict[str, Any], NotGiven] = NOT_GIVEN,
         parent_post_id: Union[Optional[str], NotGiven] = NOT_GIVEN,
         captcha_token: Union[str, NotGiven] = NOT_GIVEN,
@@ -4664,7 +6181,7 @@ class PublicRoadmapResource:
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> PublicRoadmapCommentResponse:
+    ) -> PublicRoadmapWriteCommentResponse:
         """Create the comment in a space (roadmap)
 
         ``POST /public/orgs/{orgId}/spaces/{spaceId}/roadmap/t/{slug}/comment``
@@ -4693,7 +6210,7 @@ class PublicRoadmapResource:
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> PublicRoadmapWatchResponse:
+    ) -> PublicRoadmapWriteWatchResponse:
         """Create the watch in a space
 
         ``POST /public/orgs/{orgId}/spaces/{spaceId}/roadmap/t/{slug}/watch``
@@ -4709,27 +6226,107 @@ class PublicRoadmapResource:
             timeout=timeout,
         )
 
-    def vote(
+    def follow_item(
         self,
         org_id: str,
         space_id: str,
         slug: str,
         *,
+        following: bool,
         idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicRoadmapWriteFollowItemResponse:
+        """Follow the topic
+
+        ``PUT /public/orgs/{orgId}/spaces/{spaceId}/roadmap/t/{slug}/follow``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "PUT",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/roadmap/t/{_path(slug)}/follow",
+            query=_query({}, extra_query),
+            body=_body({"following": following}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+    def board_follow_state(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> PublicRoadmapVoteResponse:
-        """Create the vote in a space (public reader roadmap t)
+    ) -> PublicRoadmapWriteBoardFollowStateResponse:
+        """Follow the roadmap
 
-        ``POST /public/orgs/{orgId}/spaces/{spaceId}/roadmap/t/{slug}/vote``
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/roadmap/follow``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/roadmap/follow",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def follow_board(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        following: bool,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicRoadmapWriteFollowBoardResponse:
+        """Follow the roadmap (replace)
+
+        ``PUT /public/orgs/{orgId}/spaces/{spaceId}/roadmap/follow``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "PUT",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/roadmap/follow",
+            query=_query({}, extra_query),
+            body=_body({"following": following}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+    def subscribe(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        email: str,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        captcha_token: Union[str, NotGiven] = NOT_GIVEN,
+        scope: Union[PublicRoadmapWriteSubscribeParamsScope, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicRoadmapWriteSubscribeResponse:
+        """Subscribe the roadmap
+
+        ``POST /public/orgs/{orgId}/spaces/{spaceId}/roadmap/subscribe``
 
         :param idempotency_key: Makes this write safe to retry.
         """
         return self._client._request(
             "POST",
-            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/roadmap/t/{_path(slug)}/vote",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/roadmap/subscribe",
             query=_query({}, extra_query),
+            body=_body({"email": email, "captchaToken": captcha_token, "scope": scope}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -4835,6 +6432,82 @@ class PublicSitesResource:
         )
 
 
+class PublicSpaceAuthorsResource:
+    """``client.public.space_authors`` (2 operations)."""
+
+    def __init__(self, client: "BaseClient") -> None:
+        self._client = client
+
+    def author_list(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        limit: Union[int, NotGiven] = NOT_GIVEN,
+        cursor: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicSpaceAuthorsAuthorListResponse:
+        """List authors in a space (public reader)
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/authors``
+
+        :param limit: Rows per page.
+        :param cursor: Where to continue from: pass back the `page.nextCursor` of the previous answer.
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/authors",
+            query=_query({"limit": limit, "cursor": cursor}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def author_list_all(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        limit: Union[int, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Iterator[Any]:
+        """Iterate every item of ``author_list`` across all pages, following ``cursor``."""
+        yield from self._client._paginate(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/authors",
+            query=_query({"limit": limit}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+            page_param="cursor",
+            items_key=None,
+        )
+
+    def author(
+        self,
+        org_id: str,
+        space_id: str,
+        ref: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicSpaceAuthorsAuthorResponse:
+        """Get the author
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/authors/{ref}``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/authors/{_path(ref)}",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+
 class PublicSpacesResource:
     """``client.public.spaces`` (2 operations)."""
 
@@ -4872,7 +6545,7 @@ class PublicSpacesResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[PublicSpacesListResponseSpace]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -4881,7 +6554,7 @@ class PublicSpacesResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="spaces",
+            items_key=None,
         )
 
     def address_index(
@@ -4907,7 +6580,7 @@ class PublicSpacesResource:
 
 
 class PublicStatusResource:
-    """``client.public.status`` (5 operations)."""
+    """``client.public.status`` (8 operations)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
@@ -4919,6 +6592,8 @@ class PublicStatusResource:
         *,
         email: str,
         idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        captcha_token: Union[str, NotGiven] = NOT_GIVEN,
+        scope: Union[PublicStatusSubscribeParamsScope, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -4934,7 +6609,7 @@ class PublicStatusResource:
             "POST",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/subscribe",
             query=_query({}, extra_query),
-            body=_body({"email": email}, extra_body),
+            body=_body({"email": email, "captchaToken": captcha_token, "scope": scope}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -4945,6 +6620,8 @@ class PublicStatusResource:
         space_id: str,
         *,
         share: Union[str, NotGiven] = NOT_GIVEN,
+        preview: Union[str, NotGiven] = NOT_GIVEN,
+        locale: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
@@ -4956,7 +6633,7 @@ class PublicStatusResource:
         return self._client._request(
             "GET",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status",
-            query=_query({"share": share}, extra_query),
+            query=_query({"share": share, "preview": preview, "locale": locale}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -4970,7 +6647,7 @@ class PublicStatusResource:
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
     ) -> Any:
-        """Get the badge svg in a space
+        """A status badge (SVG)
 
         ``GET /public/orgs/{orgId}/spaces/{spaceId}/status/badge.svg``
         """
@@ -5022,6 +6699,685 @@ class PublicStatusResource:
             query=_query({}, extra_query),
             headers=extra_headers,
             timeout=timeout,
+        )
+
+    def atom(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Any:
+        """Atom feed of the status
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/status/atom.xml``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/atom.xml",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def json_feed(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Any:
+        """JSON feed of the status
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/status/feed.json``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/feed.json",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def maintenance_ics(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Any:
+        """File of maintenance
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/status/maintenance.ics``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/maintenance.ics",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+
+class PublicStatusAccessResource:
+    """``client.public.status_access`` (2 operations)."""
+
+    def __init__(self, client: "BaseClient") -> None:
+        self._client = client
+
+    def facts(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> StatusAccessFacts:
+        """Whether a status page is gated
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/status/access``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/access",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def check(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicStatusAccessCheckResponse:
+        """May this reader read a status page?
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/status/access/check``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/access/check",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+
+class PublicStatusAlertsResource:
+    """``client.public.status_alerts`` (4 operations)."""
+
+    def __init__(self, client: "BaseClient") -> None:
+        self._client = client
+
+    def options(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        limit: Union[int, NotGiven] = NOT_GIVEN,
+        cursor: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> StatusReaderAlertOptions:
+        """Which alert channels a reader can subscribe with
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/status/alerts``
+
+        :param limit: Rows per page.
+        :param cursor: Where to continue from: pass back the `page.nextCursor` of the previous answer.
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/alerts",
+            query=_query({"limit": limit, "cursor": cursor}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def options_all(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        limit: Union[int, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Iterator[Any]:
+        """Iterate every item of ``options`` across all pages, following ``cursor``."""
+        yield from self._client._paginate(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/alerts",
+            query=_query({"limit": limit}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+            page_param="cursor",
+            items_key=None,
+        )
+
+    def start(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        kind: str,
+        target: str,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        scope: Union[PublicStatusAlertsStartParamsScope, NotGiven] = NOT_GIVEN,
+        captcha_token: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicStatusAlertsStartResponse:
+        """Subscribe a Slack hook, webhook or phone to this status page
+
+        ``POST /public/orgs/{orgId}/spaces/{spaceId}/status/alerts``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "POST",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/alerts",
+            query=_query({}, extra_query),
+            body=_body({"kind": kind, "target": target, "scope": scope, "captchaToken": captcha_token}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+    def verify(
+        self,
+        org_id: str,
+        space_id: str,
+        alert_id: str,
+        *,
+        code: str,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicStatusAlertsVerifyResponse:
+        """Confirm a reader alert with the code it was sent
+
+        ``POST /public/orgs/{orgId}/spaces/{spaceId}/status/alerts/{alertId}/verify``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "POST",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/alerts/{_path(alert_id)}/verify",
+            query=_query({}, extra_query),
+            body=_body({"code": code}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+    def unsubscribe(
+        self,
+        org_id: str,
+        space_id: str,
+        alert_id: str,
+        *,
+        token: str,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicStatusAlertsUnsubscribeResponse:
+        """Stop a reader alert, with the token every delivery carries
+
+        ``POST /public/orgs/{orgId}/spaces/{spaceId}/status/alerts/{alertId}/unsubscribe``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "POST",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/alerts/{_path(alert_id)}/unsubscribe",
+            query=_query({}, extra_query),
+            body=_body({"token": token}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+
+class PublicStatusEmbedsResource:
+    """``client.public.status_embeds`` (5 operations)."""
+
+    def __init__(self, client: "BaseClient") -> None:
+        self._client = client
+
+    def day(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> StatusDayHours:
+        """One component's day, in hourly buckets
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/status/day.json``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/day.json",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def latency(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> StatusLatency:
+        """A status page's response times
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/status/latency``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/latency",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def metric_series(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> StatusMetricsAnswer:
+        """A status page's custom metric series
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/status/metrics``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/metrics",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def widget_json(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> StatusWidgetAnswer:
+        """What is happening on a status page right now
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/status/widget.json``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/widget.json",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def widget_js(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Any:
+        """Get the widget JS in a space
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/status/widget.js``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/widget.js",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+
+class PublicStatusHooksResource:
+    """``client.public.status_hooks`` (1 operation)."""
+
+    def __init__(self, client: "BaseClient") -> None:
+        self._client = client
+
+    def receive(
+        self,
+        token: str,
+        *,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        body: Any = None,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Any:
+        """Receive a Datadog or PagerDuty alert for a status page
+
+        ``POST /public/status-hooks/{token}``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "POST",
+            f"/public/status-hooks/{_path(token)}",
+            query=_query({}, extra_query),
+            body=body,
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+
+class PublicStatusIncidentsResource:
+    """``client.public.status_incidents`` (2 operations)."""
+
+    def __init__(self, client: "BaseClient") -> None:
+        self._client = client
+
+    def archive(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> IncidentArchivePage:
+        """A status page's incident archive
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/status/incidents``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/incidents",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def one(
+        self,
+        org_id: str,
+        space_id: str,
+        incident_id: str,
+        *,
+        share: Union[str, NotGiven] = NOT_GIVEN,
+        locale: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicStatusIncidentsOneResponse:
+        """One incident on a status page
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/status/incidents/{incidentId}``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/incidents/{_path(incident_id)}",
+            query=_query({"share": share, "locale": locale}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+
+class PublicStatuspageResource:
+    """``client.public.statuspage`` (8 operations)."""
+
+    def __init__(self, client: "BaseClient") -> None:
+        self._client = client
+
+    def summary(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> V2Summary:
+        """Statuspage-compatible summary (API v2)
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/status/api/v2/summary.json``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/api/v2/summary.json",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def status(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> V2StatusAnswer:
+        """Statuspage-compatible overall status (API v2)
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/status/api/v2/status.json``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/api/v2/status.json",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def components(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> V2ComponentsAnswer:
+        """Statuspage-compatible components and groups (API v2)
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/status/api/v2/components.json``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/api/v2/components.json",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def incidents(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> V2IncidentsAnswer:
+        """Statuspage-compatible incidents (API v2)
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/status/api/v2/incidents.json``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/api/v2/incidents.json",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def unresolved(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> V2IncidentsAnswer:
+        """Statuspage-compatible unresolved incidents (API v2)
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/status/api/v2/incidents/unresolved.json``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/api/v2/incidents/unresolved.json",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def maintenances(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> V2MaintenancesAnswer:
+        """Statuspage-compatible scheduled maintenances (API v2)
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/status/api/v2/scheduled-maintenances.json``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/api/v2/scheduled-maintenances.json",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def upcoming(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> V2MaintenancesAnswer:
+        """Statuspage-compatible upcoming maintenance (API v2)
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/status/api/v2/scheduled-maintenances/upcoming.json``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/api/v2/scheduled-maintenances/upcoming.json",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def active(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> V2MaintenancesAnswer:
+        """Statuspage-compatible maintenance under way (API v2)
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/status/api/v2/scheduled-maintenances/active.json``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/api/v2/scheduled-maintenances/active.json",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+
+class PublicStatusSiblingsResource:
+    """``client.public.status_siblings`` (1 operation)."""
+
+    def __init__(self, client: "BaseClient") -> None:
+        self._client = client
+
+    def siblings(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        share: Union[str, NotGiven] = NOT_GIVEN,
+        limit: Union[int, NotGiven] = NOT_GIVEN,
+        cursor: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicStatusSiblingsSiblingsResponse:
+        """A status page's sibling pages
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/status/siblings``
+
+        :param limit: Rows per page.
+        :param cursor: Where to continue from: pass back the `page.nextCursor` of the previous answer.
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/siblings",
+            query=_query({"share": share, "limit": limit, "cursor": cursor}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def siblings_all(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        share: Union[str, NotGiven] = NOT_GIVEN,
+        limit: Union[int, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Iterator[Any]:
+        """Iterate every item of ``siblings`` across all pages, following ``cursor``."""
+        yield from self._client._paginate(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/siblings",
+            query=_query({"share": share, "limit": limit}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+            page_param="cursor",
+            items_key=None,
         )
 
 
@@ -5227,7 +7583,7 @@ class PublicTranslationsResource:
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
     ) -> PublicTranslationsMapResponse:
-        """Get the translation
+        """Get the translation (public reader i18n)
 
         ``GET /public/orgs/{orgId}/i18n/{locale}``
         """
@@ -5363,23 +7719,36 @@ class PublicVisitorAuthResource:
 
 
 class PublicResource:
-    """``client.public`` (29 operations; blog, cards, careers, changelog, consent, contact, courses, custom_emoji, domains, events, extension_registry, forms, forum, identity, interactions, legal, legal_gate, mcp, onebox, openapi, orgs, preview, reactions, reader_auth, reader_policy, relations, roadmap, sites, spaces, status, theme_component_registry, theme_registry, translations, visitor_auth)."""
+    """``client.public`` (34 operations; blog, blog_media, blog_taxonomy, cards, careers, changelog, changelog_markdown, changelog_widget, consent, contact, course_catalog, course_commerce, courses, custom_emoji, domains, events, extension_registry, faq_follow, forms, forum, forum_account, forum_bookmark, forum_category, forum_profile, forum_search, growth, identity, interactions, legal, legal_gate, mcp, onebox, openapi, orgs, preview, reactions, reader_auth, reader_policy, relations, roadmap, roadmap_item, roadmap_lanes, roadmap_vote, roadmap_write, sites, space_authors, spaces, status, status_access, status_alerts, status_embeds, status_hooks, status_incidents, statuspage, status_siblings, theme_component_registry, theme_registry, translations, visitor_auth)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
         self.blog = PublicBlogResource(client)
+        self.blog_media = PublicBlogMediaResource(client)
+        self.blog_taxonomy = PublicBlogTaxonomyResource(client)
         self.cards = PublicCardsResource(client)
         self.careers = PublicCareersResource(client)
         self.changelog = PublicChangelogResource(client)
+        self.changelog_markdown = PublicChangelogMarkdownResource(client)
+        self.changelog_widget = PublicChangelogWidgetResource(client)
         self.consent = PublicConsentResource(client)
         self.contact = PublicContactResource(client)
+        self.course_catalog = PublicCourseCatalogResource(client)
+        self.course_commerce = PublicCourseCommerceResource(client)
         self.courses = PublicCoursesResource(client)
         self.custom_emoji = PublicCustomEmojiResource(client)
         self.domains = PublicDomainsResource(client)
         self.events = PublicEventsResource(client)
         self.extension_registry = PublicExtensionRegistryResource(client)
+        self.faq_follow = PublicFaqFollowResource(client)
         self.forms = PublicFormsResource(client)
         self.forum = PublicForumResource(client)
+        self.forum_account = PublicForumAccountResource(client)
+        self.forum_bookmark = PublicForumBookmarkResource(client)
+        self.forum_category = PublicForumCategoryResource(client)
+        self.forum_profile = PublicForumProfileResource(client)
+        self.forum_search = PublicForumSearchResource(client)
+        self.growth = PublicGrowthResource(client)
         self.identity = PublicIdentityResource(client)
         self.interactions = PublicInteractionsResource(client)
         self.legal = PublicLegalResource(client)
@@ -5394,9 +7763,21 @@ class PublicResource:
         self.reader_policy = PublicReaderPolicyResource(client)
         self.relations = PublicRelationsResource(client)
         self.roadmap = PublicRoadmapResource(client)
+        self.roadmap_item = PublicRoadmapItemResource(client)
+        self.roadmap_lanes = PublicRoadmapLanesResource(client)
+        self.roadmap_vote = PublicRoadmapVoteResource(client)
+        self.roadmap_write = PublicRoadmapWriteResource(client)
         self.sites = PublicSitesResource(client)
+        self.space_authors = PublicSpaceAuthorsResource(client)
         self.spaces = PublicSpacesResource(client)
         self.status = PublicStatusResource(client)
+        self.status_access = PublicStatusAccessResource(client)
+        self.status_alerts = PublicStatusAlertsResource(client)
+        self.status_embeds = PublicStatusEmbedsResource(client)
+        self.status_hooks = PublicStatusHooksResource(client)
+        self.status_incidents = PublicStatusIncidentsResource(client)
+        self.statuspage = PublicStatuspageResource(client)
+        self.status_siblings = PublicStatusSiblingsResource(client)
         self.theme_component_registry = PublicThemeComponentRegistryResource(client)
         self.theme_registry = PublicThemeRegistryResource(client)
         self.translations = PublicTranslationsResource(client)
@@ -5430,7 +7811,7 @@ class PublicResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> PublicGateResponse:
+    ) -> ReaderGate:
         """Get the gate in a space
 
         ``GET /public/orgs/{orgId}/spaces/{spaceId}/gate``
@@ -5451,6 +7832,7 @@ class PublicResource:
         key: str,
         *,
         share: Union[str, NotGiven] = NOT_GIVEN,
+        locale: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
@@ -5462,7 +7844,7 @@ class PublicResource:
         return self._client._request(
             "GET",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/hubs/{_path(kind)}/{_path(key)}",
-            query=_query({"share": share}, extra_query),
+            query=_query({"share": share, "locale": locale}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -5473,6 +7855,7 @@ class PublicResource:
         space_id: str,
         *,
         limit: Union[int, NotGiven] = NOT_GIVEN,
+        collections: Union[str, NotGiven] = NOT_GIVEN,
         q: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -5487,7 +7870,7 @@ class PublicResource:
         return self._client._request(
             "GET",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/search",
-            query=_query({"limit": limit, "q": q}, extra_query),
+            query=_query({"limit": limit, "collections": collections, "q": q}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -5544,6 +7927,7 @@ class PublicResource:
         space_id: str,
         *,
         share: Union[str, NotGiven] = NOT_GIVEN,
+        locale: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
@@ -5555,7 +7939,7 @@ class PublicResource:
         return self._client._request(
             "GET",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/faq",
-            query=_query({"share": share}, extra_query),
+            query=_query({"share": share, "locale": locale}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -5604,7 +7988,7 @@ class PublicResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="origins",
+            items_key=None,
         )
 
     def script_origins(
@@ -5651,7 +8035,7 @@ class PublicResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="origins",
+            items_key=None,
         )
 
     def style_origins(
@@ -5839,7 +8223,7 @@ class PublicResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[SpaceUpdateRow]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``updates`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -5848,7 +8232,7 @@ class PublicResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="updates",
+            items_key=None,
         )
 
     def llms_txt(
@@ -5949,7 +8333,7 @@ class PublicResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[PublicTagsResponseTag]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``tags`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -5958,7 +8342,7 @@ class PublicResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="tags",
+            items_key=None,
         )
 
     def tag_pages(
@@ -5998,7 +8382,7 @@ class PublicResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[PublicTagPagesResponsePage]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``tag_pages`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -6007,7 +8391,7 @@ class PublicResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="pages",
+            items_key=None,
         )
 
     def page_markdown(
@@ -6016,6 +8400,7 @@ class PublicResource:
         space_id: str,
         page_id: str,
         *,
+        locale: Union[str, NotGiven] = NOT_GIVEN,
         form: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -6028,7 +8413,7 @@ class PublicResource:
         return self._client._request(
             "GET",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/pages/{_path(page_id)}.md",
-            query=_query({"form": form}, extra_query),
+            query=_query({"locale": locale, "form": form}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -6142,7 +8527,7 @@ class PublicResource:
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
     ) -> ErrorEnvelope:
-        """Create the view in a space
+        """Create the view in a space (pages)
 
         ``POST /public/orgs/{orgId}/spaces/{spaceId}/pages/{pageId}/view``
 
@@ -6152,6 +8537,121 @@ class PublicResource:
             "POST",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/pages/{_path(page_id)}/view",
             query=_query({}, extra_query),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+    def updates_rss_public_updates_rss(
+        self,
+        org_id: str,
+        space_id: str,
+        page_ref: str,
+        *,
+        locale: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Any:
+        """A docs page's Updates block as an RSS feed
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/pages/{pageRef}/updates.rss``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/pages/{_path(page_ref)}/updates.rss",
+            query=_query({"locale": locale}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def rss(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Any:
+        """A careers board's open roles as RSS (`?tag=` narrows to one team)
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/careers/rss.xml``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/careers/rss.xml",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def atom(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Any:
+        """A careers board's open roles as Atom (`?tag=` narrows to one team)
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/careers/atom.xml``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/careers/atom.xml",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def json_feed(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Any:
+        """A careers board's open roles as JSON Feed (`?tag=` narrows to one team)
+
+        ``GET /public/orgs/{orgId}/spaces/{spaceId}/careers/feed.json``
+        """
+        return self._client._request(
+            "GET",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/careers/feed.json",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def subscribe(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        email: str,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        captcha_token: Union[str, NotGiven] = NOT_GIVEN,
+        scope: Union[PublicSubscribeParamsScope, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> PublicSubscribeResponse:
+        """Join a careers board’s talent community (email when a role opens)
+
+        ``POST /public/orgs/{orgId}/spaces/{spaceId}/careers/subscribe``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "POST",
+            f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/careers/subscribe",
+            query=_query({}, extra_query),
+            body=_body({"email": email, "captchaToken": captcha_token, "scope": scope}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )

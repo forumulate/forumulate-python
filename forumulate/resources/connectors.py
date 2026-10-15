@@ -66,7 +66,7 @@ class ConnectorsKbResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ConnectorChunkedItem]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``chunks`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -75,7 +75,7 @@ class ConnectorsKbResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="items",
+            items_key=None,
         )
 
     def search(
@@ -235,7 +235,7 @@ class ConnectorsProvidersResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ChatProviderDef]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -244,7 +244,7 @@ class ConnectorsProvidersResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="providers",
+            items_key=None,
         )
 
 
@@ -291,7 +291,7 @@ class ConnectorsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ConnectorSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -300,7 +300,7 @@ class ConnectorsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="connectors",
+            items_key=None,
         )
 
     def install(
@@ -531,7 +531,7 @@ class ConnectorsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ConnectorActivityEntry]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``activity`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -540,5 +540,5 @@ class ConnectorsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="activity",
+            items_key=None,
         )

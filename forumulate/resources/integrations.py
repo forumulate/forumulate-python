@@ -290,7 +290,7 @@ class IntegrationsGithubResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="ips",
+            items_key=None,
         )
 
     def import_(
@@ -588,7 +588,7 @@ class IntegrationsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[IntegrationDef]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``catalog`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -597,7 +597,7 @@ class IntegrationsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="catalog",
+            items_key=None,
         )
 
     def list(
@@ -633,7 +633,7 @@ class IntegrationsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[InstalledSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -642,7 +642,7 @@ class IntegrationsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="installed",
+            items_key=None,
         )
 
     def install(

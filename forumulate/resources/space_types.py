@@ -46,7 +46,7 @@ class SpaceTypesResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[SpaceTypeSpec]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -55,7 +55,7 @@ class SpaceTypesResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="spaceTypes",
+            items_key=None,
         )
 
     def all_presets(

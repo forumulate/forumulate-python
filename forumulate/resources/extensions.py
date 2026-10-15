@@ -87,7 +87,7 @@ class ExtensionsApiResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ExtPageSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``space_pages`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -96,7 +96,7 @@ class ExtensionsApiResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="pages",
+            items_key=None,
         )
 
     def save_draft(
@@ -161,7 +161,7 @@ class ExtensionsApiResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ExtComment]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``comments`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -170,7 +170,7 @@ class ExtensionsApiResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="comments",
+            items_key=None,
         )
 
     def post_comment(
@@ -231,7 +231,7 @@ class ExtensionsApiResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ExtMember]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``members`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -240,7 +240,7 @@ class ExtensionsApiResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="members",
+            items_key=None,
         )
 
     def analytics(
@@ -620,7 +620,7 @@ class ExtensionsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[InstalledExtensionSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -629,7 +629,7 @@ class ExtensionsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="installed",
+            items_key=None,
         )
 
     def available(
@@ -665,7 +665,7 @@ class ExtensionsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[AvailableExtension]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``available`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -674,7 +674,7 @@ class ExtensionsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="available",
+            items_key=None,
         )
 
     def install(
@@ -817,7 +817,7 @@ class ExtensionsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ExtensionDelivery]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``deliveries`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -826,7 +826,7 @@ class ExtensionsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="deliveries",
+            items_key=None,
         )
 
     def rotate(

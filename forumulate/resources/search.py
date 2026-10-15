@@ -294,7 +294,7 @@ class SearchResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[SearchTagsResponseTag]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``tags`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -303,7 +303,7 @@ class SearchResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="tags",
+            items_key=None,
         )
 
     def tag(

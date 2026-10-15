@@ -51,7 +51,7 @@ class MembersResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[MemberRow]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -60,7 +60,7 @@ class MembersResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="members",
+            items_key=None,
         )
 
     def invite(
@@ -126,7 +126,7 @@ class MembersResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[InviteRow]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``invites`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -135,7 +135,7 @@ class MembersResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="invites",
+            items_key=None,
         )
 
     def revoke_invite(
@@ -226,7 +226,7 @@ class MembersResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[InviteLinkRow]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list_invite_links`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -235,7 +235,7 @@ class MembersResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="links",
+            items_key=None,
         )
 
     def create_invite_link(

@@ -50,7 +50,7 @@ class TranslationsOverridesResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[TranslationOverrideView]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -59,7 +59,7 @@ class TranslationsOverridesResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="overrides",
+            items_key=None,
         )
 
     def set(

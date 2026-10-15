@@ -48,7 +48,7 @@ class RolesCustomResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[CustomRoleView]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -57,7 +57,7 @@ class RolesCustomResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="roles",
+            items_key=None,
         )
 
     def create(

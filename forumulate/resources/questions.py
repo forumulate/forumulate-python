@@ -49,7 +49,7 @@ class QuestionsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[IngestedQuestion]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -58,7 +58,7 @@ class QuestionsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="questions",
+            items_key=None,
         )
 
     def ingest(
@@ -127,7 +127,7 @@ class QuestionsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[QuestionCluster]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``clusters`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -136,7 +136,7 @@ class QuestionsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="clusters",
+            items_key=None,
         )
 
     def remove(
@@ -261,7 +261,7 @@ class QuestionsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[AssertionView]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list_assertions`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -270,7 +270,7 @@ class QuestionsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="assertions",
+            items_key=None,
         )
 
     def add_assertion(

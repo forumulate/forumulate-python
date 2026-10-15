@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 
 class SitesResource:
-    """``client.sites`` (12 operations)."""
+    """``client.sites`` (15 operations)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
@@ -48,7 +48,7 @@ class SitesResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[SiteSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -57,7 +57,7 @@ class SitesResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="sites",
+            items_key=None,
         )
 
     def create(
@@ -110,11 +110,43 @@ class SitesResource:
             timeout=timeout,
         )
 
+    def replace(
+        self,
+        org_id: str,
+        site_id: str,
+        *,
+        name: str,
+        config: SitesReplaceParamsConfig,
+        dry_run: Union[str, NotGiven] = NOT_GIVEN,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        space_ids: Union[List[str], NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Any:
+        """Replace the site
+
+        ``PUT /orgs/{orgId}/sites/{siteId}``
+
+        :param dry_run: Use true or false (true/1/yes/on and false/0/no/off are accepted).
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "PUT",
+            f"/orgs/{_path(org_id)}/sites/{_path(site_id)}",
+            query=_query({"dryRun": dry_run}, extra_query),
+            body=_body({"name": name, "spaceIds": space_ids, "config": config}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
     def update(
         self,
         org_id: str,
         site_id: str,
         *,
+        dry_run: Union[str, NotGiven] = NOT_GIVEN,
         idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
         name: Union[str, NotGiven] = NOT_GIVEN,
         space_ids: Union[List[str], NotGiven] = NOT_GIVEN,
@@ -123,17 +155,18 @@ class SitesResource:
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> SitesUpdateResponse:
+    ) -> Any:
         """Update the site
 
         ``PATCH /orgs/{orgId}/sites/{siteId}``
 
+        :param dry_run: Use true or false (true/1/yes/on and false/0/no/off are accepted).
         :param idempotency_key: Makes this write safe to retry.
         """
         return self._client._request(
             "PATCH",
             f"/orgs/{_path(org_id)}/sites/{_path(site_id)}",
-            query=_query({}, extra_query),
+            query=_query({"dryRun": dry_run}, extra_query),
             body=_body({"name": name, "spaceIds": space_ids, "config": config}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
@@ -225,7 +258,7 @@ class SitesResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[DomainSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list_domains`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -234,7 +267,7 @@ class SitesResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="domains",
+            items_key=None,
         )
 
     def add_domain(
@@ -245,6 +278,7 @@ class SitesResource:
         hostname: str,
         idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
         base_path: Union[str, NotGiven] = NOT_GIVEN,
+        also_redirect_www: Union[bool, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -260,7 +294,57 @@ class SitesResource:
             "POST",
             f"/orgs/{_path(org_id)}/sites/{_path(site_id)}/domains",
             query=_query({}, extra_query),
-            body=_body({"hostname": hostname, "basePath": base_path}, extra_body),
+            body=_body({"hostname": hostname, "basePath": base_path, "alsoRedirectWww": also_redirect_www}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+    def domain_setup(
+        self,
+        org_id: str,
+        site_id: str,
+        domain_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> DomainSetupDto:
+        """Get the setup in an organization
+
+        ``GET /orgs/{orgId}/sites/{siteId}/domains/{domainId}/setup``
+        """
+        return self._client._request(
+            "GET",
+            f"/orgs/{_path(org_id)}/sites/{_path(site_id)}/domains/{_path(domain_id)}/setup",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def set_domain_www(
+        self,
+        org_id: str,
+        site_id: str,
+        domain_id: str,
+        *,
+        also_redirect_www: bool,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Any:
+        """Replace the www in an organization
+
+        ``PUT /orgs/{orgId}/sites/{siteId}/domains/{domainId}/www``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "PUT",
+            f"/orgs/{_path(org_id)}/sites/{_path(site_id)}/domains/{_path(domain_id)}/www",
+            query=_query({}, extra_query),
+            body=_body({"alsoRedirectWww": also_redirect_www}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )

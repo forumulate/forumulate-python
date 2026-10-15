@@ -48,7 +48,7 @@ class LibraryResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ReusableSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -57,7 +57,7 @@ class LibraryResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="reusables",
+            items_key=None,
         )
 
     def create(
@@ -144,7 +144,7 @@ class LibraryResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[VariableRow]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list_variables`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -153,7 +153,7 @@ class LibraryResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="variables",
+            items_key=None,
         )
 
     def set_variable(

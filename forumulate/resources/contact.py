@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 
 class ContactResource:
-    """``client.contact`` (9 operations)."""
+    """``client.contact`` (13 operations)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
@@ -50,7 +50,7 @@ class ContactResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[Department]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``departments`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -59,7 +59,7 @@ class ContactResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="departments",
+            items_key=None,
         )
 
     def set_departments(
@@ -124,7 +124,7 @@ class ContactResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ContactField]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``form_fields`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -133,7 +133,7 @@ class ContactResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="fields",
+            items_key=None,
         )
 
     def set_form_fields(
@@ -163,6 +163,85 @@ class ContactResource:
             timeout=timeout,
         )
 
+    def form(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> ContactFormResponse:
+        """Get the form in a space (contact)
+
+        ``GET /orgs/{orgId}/spaces/{spaceId}/contact/form``
+        """
+        return self._client._request(
+            "GET",
+            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/contact/form",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def set_form(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        success_message: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        redirect_url: Union[Optional[Any], NotGiven] = NOT_GIVEN,
+        submit_label: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        success_title: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        next_steps: Union[Optional[List[ContactSetFormParamsNextStep]], NotGiven] = NOT_GIVEN,
+        work_email_only: Union[Any, NotGiven] = NOT_GIVEN,
+        spam_filter: Union[Any, NotGiven] = NOT_GIVEN,
+        booking_url: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        retention_days: Union[Optional[int], NotGiven] = NOT_GIVEN,
+        translations: Union[Optional[Dict[str, Any]], NotGiven] = NOT_GIVEN,
+        fields: Union[List[ContactSetFormParamsField], NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> ContactSetFormResponse:
+        """Update the form in a space (contact)
+
+        ``PATCH /orgs/{orgId}/spaces/{spaceId}/contact/form``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "PATCH",
+            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/contact/form",
+            query=_query({}, extra_query),
+            body=_body({"successMessage": success_message, "redirectUrl": redirect_url, "submitLabel": submit_label, "successTitle": success_title, "nextSteps": next_steps, "workEmailOnly": work_email_only, "spamFilter": spam_filter, "bookingUrl": booking_url, "retentionDays": retention_days, "translations": translations, "fields": fields}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+    def export_csv(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Any:
+        """File of export (spaces contact)
+
+        ``GET /orgs/{orgId}/spaces/{spaceId}/contact/export.csv``
+        """
+        return self._client._request(
+            "GET",
+            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/contact/export.csv",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
     def list(
         self,
         org_id: str,
@@ -170,6 +249,7 @@ class ContactResource:
         *,
         limit: Union[int, NotGiven] = NOT_GIVEN,
         unhandled: Union[str, NotGiven] = NOT_GIVEN,
+        folder: Union[str, NotGiven] = NOT_GIVEN,
         cursor: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -185,7 +265,7 @@ class ContactResource:
         return self._client._request(
             "GET",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/contact",
-            query=_query({"limit": limit, "unhandled": unhandled, "cursor": cursor}, extra_query),
+            query=_query({"limit": limit, "unhandled": unhandled, "folder": folder, "cursor": cursor}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -197,19 +277,20 @@ class ContactResource:
         *,
         limit: Union[int, NotGiven] = NOT_GIVEN,
         unhandled: Union[str, NotGiven] = NOT_GIVEN,
+        folder: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[SubmissionRow]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/contact",
-            query=_query({"limit": limit, "unhandled": unhandled}, extra_query),
+            query=_query({"limit": limit, "unhandled": unhandled, "folder": folder}, extra_query),
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="submissions",
+            items_key=None,
         )
 
     def set_handled(
@@ -236,6 +317,34 @@ class ContactResource:
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/contact/{_path(id)}",
             query=_query({}, extra_query),
             body=_body({"handled": handled}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+    def set_status(
+        self,
+        org_id: str,
+        space_id: str,
+        id: str,
+        *,
+        status: str,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> ContactSetStatusResponse:
+        """Update the status in a space
+
+        ``PATCH /orgs/{orgId}/spaces/{spaceId}/contact/{id}/status``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "PATCH",
+            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/contact/{_path(id)}/status",
+            query=_query({}, extra_query),
+            body=_body({"status": status}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -304,7 +413,7 @@ class ContactResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[InboxReply]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``replies`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -313,7 +422,7 @@ class ContactResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="replies",
+            items_key=None,
         )
 
     def reply(

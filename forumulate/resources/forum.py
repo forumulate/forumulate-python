@@ -50,7 +50,7 @@ class ForumAutomationsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[AutomationSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -59,7 +59,7 @@ class ForumAutomationsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="automations",
+            items_key=None,
         )
 
     def create(
@@ -206,7 +206,7 @@ class ForumAutomationsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[AutomationRunSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``runs`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -215,7 +215,7 @@ class ForumAutomationsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="runs",
+            items_key=None,
         )
 
     def invoke(
@@ -257,6 +257,7 @@ class ForumTaxonomyResource:
         org_id: str,
         space_id: str,
         *,
+        locale: Union[str, NotGiven] = NOT_GIVEN,
         limit: Union[int, NotGiven] = NOT_GIVEN,
         cursor: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
@@ -267,13 +268,14 @@ class ForumTaxonomyResource:
 
         ``GET /orgs/{orgId}/spaces/{spaceId}/forum/categories``
 
+        :param locale: Answer each category in this language: its `name` and `description` are replaced by the entry in its `translations` map for this code (exact, then by language: `pt-BR` → `pt`).
         :param limit: Rows per page.
         :param cursor: Where to continue from: pass back the `page.nextCursor` of the previous answer.
         """
         return self._client._request(
             "GET",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/categories",
-            query=_query({"limit": limit, "cursor": cursor}, extra_query),
+            query=_query({"locale": locale, "limit": limit, "cursor": cursor}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -283,20 +285,21 @@ class ForumTaxonomyResource:
         org_id: str,
         space_id: str,
         *,
+        locale: Union[str, NotGiven] = NOT_GIVEN,
         limit: Union[int, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[CategorySummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list_categories`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/categories",
-            query=_query({"limit": limit}, extra_query),
+            query=_query({"locale": locale, "limit": limit}, extra_query),
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="categories",
+            items_key=None,
         )
 
     def create_category(
@@ -325,6 +328,19 @@ class ForumTaxonomyResource:
         required_tag_groups: Union[List[ForumTaxonomyCreateCategoryParamsRequiredTagGroup], NotGiven] = NOT_GIVEN,
         navigate_to_first_post: Union[Any, NotGiven] = NOT_GIVEN,
         default_list_filter: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        slug: Union[str, NotGiven] = NOT_GIVEN,
+        icon: Union[Optional[HeaderIconName], NotGiven] = NOT_GIVEN,
+        emoji: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        style: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        text_color: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        text_color_dark: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        color_dark: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        subcategory_list_style: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        default_top_period: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        sort_ascending: Union[Any, NotGiven] = NOT_GIVEN,
+        about_topic_id: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        topic_kind: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        translations: Union[Optional[Dict[str, Any]], NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -340,7 +356,7 @@ class ForumTaxonomyResource:
             "POST",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/categories",
             query=_query({}, extra_query),
-            body=_body({"name": name, "description": description, "color": color, "parentId": parent_id, "sortOrder": sort_order, "defaultNotificationLevel": default_notification_level, "topicTemplate": topic_template, "minimumRequiredTags": minimum_required_tags, "defaultTags": default_tags, "allowedTags": allowed_tags, "defaultSort": default_sort, "logoUrl": logo_url, "backgroundUrl": background_url, "numFeaturedTopics": num_featured_topics, "showSubcategoryList": show_subcategory_list, "autoCloseHours": auto_close_hours, "defaultSlowModeSeconds": default_slow_mode_seconds, "requiredTagGroups": required_tag_groups, "navigateToFirstPost": navigate_to_first_post, "defaultListFilter": default_list_filter}, extra_body),
+            body=_body({"name": name, "description": description, "color": color, "parentId": parent_id, "sortOrder": sort_order, "defaultNotificationLevel": default_notification_level, "topicTemplate": topic_template, "minimumRequiredTags": minimum_required_tags, "defaultTags": default_tags, "allowedTags": allowed_tags, "defaultSort": default_sort, "logoUrl": logo_url, "backgroundUrl": background_url, "numFeaturedTopics": num_featured_topics, "showSubcategoryList": show_subcategory_list, "autoCloseHours": auto_close_hours, "defaultSlowModeSeconds": default_slow_mode_seconds, "requiredTagGroups": required_tag_groups, "navigateToFirstPost": navigate_to_first_post, "defaultListFilter": default_list_filter, "slug": slug, "icon": icon, "emoji": emoji, "style": style, "textColor": text_color, "textColorDark": text_color_dark, "colorDark": color_dark, "subcategoryListStyle": subcategory_list_style, "defaultTopPeriod": default_top_period, "sortAscending": sort_ascending, "aboutTopicId": about_topic_id, "topicKind": topic_kind, "translations": translations}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -399,6 +415,19 @@ class ForumTaxonomyResource:
         required_tag_groups: Union[List[ForumTaxonomyUpdateCategoryParamsRequiredTagGroup], NotGiven] = NOT_GIVEN,
         navigate_to_first_post: Union[Any, NotGiven] = NOT_GIVEN,
         default_list_filter: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        slug: Union[str, NotGiven] = NOT_GIVEN,
+        icon: Union[Optional[HeaderIconName], NotGiven] = NOT_GIVEN,
+        emoji: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        style: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        text_color: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        text_color_dark: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        color_dark: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        subcategory_list_style: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        default_top_period: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        sort_ascending: Union[Any, NotGiven] = NOT_GIVEN,
+        about_topic_id: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        topic_kind: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        translations: Union[Optional[Dict[str, Any]], NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -414,7 +443,7 @@ class ForumTaxonomyResource:
             "PATCH",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/categories/{_path(category_id)}",
             query=_query({}, extra_query),
-            body=_body({"name": name, "description": description, "color": color, "parentId": parent_id, "sortOrder": sort_order, "defaultNotificationLevel": default_notification_level, "topicTemplate": topic_template, "minimumRequiredTags": minimum_required_tags, "defaultTags": default_tags, "allowedTags": allowed_tags, "defaultSort": default_sort, "logoUrl": logo_url, "backgroundUrl": background_url, "numFeaturedTopics": num_featured_topics, "showSubcategoryList": show_subcategory_list, "autoCloseHours": auto_close_hours, "defaultSlowModeSeconds": default_slow_mode_seconds, "requiredTagGroups": required_tag_groups, "navigateToFirstPost": navigate_to_first_post, "defaultListFilter": default_list_filter}, extra_body),
+            body=_body({"name": name, "description": description, "color": color, "parentId": parent_id, "sortOrder": sort_order, "defaultNotificationLevel": default_notification_level, "topicTemplate": topic_template, "minimumRequiredTags": minimum_required_tags, "defaultTags": default_tags, "allowedTags": allowed_tags, "defaultSort": default_sort, "logoUrl": logo_url, "backgroundUrl": background_url, "numFeaturedTopics": num_featured_topics, "showSubcategoryList": show_subcategory_list, "autoCloseHours": auto_close_hours, "defaultSlowModeSeconds": default_slow_mode_seconds, "requiredTagGroups": required_tag_groups, "navigateToFirstPost": navigate_to_first_post, "defaultListFilter": default_list_filter, "slug": slug, "icon": icon, "emoji": emoji, "style": style, "textColor": text_color, "textColorDark": text_color_dark, "colorDark": color_dark, "subcategoryListStyle": subcategory_list_style, "defaultTopPeriod": default_top_period, "sortAscending": sort_ascending, "aboutTopicId": about_topic_id, "topicKind": topic_kind, "translations": translations}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -505,7 +534,7 @@ class ForumTaxonomyResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[SharedDraftSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list_shared_drafts`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -514,7 +543,7 @@ class ForumTaxonomyResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="drafts",
+            items_key=None,
         )
 
     def create_shared_draft(
@@ -667,7 +696,7 @@ class ForumTaxonomyResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[PermalinkRow]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list_permalinks`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -676,7 +705,7 @@ class ForumTaxonomyResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="permalinks",
+            items_key=None,
         )
 
     def create_permalink(
@@ -801,7 +830,7 @@ class ForumTaxonomyResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[CategoryPermissionRow]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list_category_perms`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -810,7 +839,7 @@ class ForumTaxonomyResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="permissions",
+            items_key=None,
         )
 
     def set_category_perms(
@@ -878,7 +907,7 @@ class ForumTaxonomyResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[CategoryModeratorRow]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list_category_mods`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -887,7 +916,7 @@ class ForumTaxonomyResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="moderators",
+            items_key=None,
         )
 
     def add_category_mod(
@@ -979,7 +1008,7 @@ class ForumTaxonomyResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[TagGroupSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list_tag_groups`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -988,7 +1017,7 @@ class ForumTaxonomyResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="tagGroups",
+            items_key=None,
         )
 
     def create_tag_group(
@@ -1088,7 +1117,7 @@ class ForumTaxonomyResource:
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
     ) -> ForumTaxonomyListTagInfoResponse:
-        """Get the tag info in a space
+        """Get the tag info in a space (forum)
 
         ``GET /orgs/{orgId}/spaces/{spaceId}/forum/tag-info``
 
@@ -1112,7 +1141,7 @@ class ForumTaxonomyResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[TagInfoRow]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list_tag_info`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -1121,7 +1150,7 @@ class ForumTaxonomyResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="tagInfo",
+            items_key=None,
         )
 
     def set_tag_info(
@@ -1137,6 +1166,9 @@ class ForumTaxonomyResource:
         min_trust_level: Union[Optional[int], NotGiven] = NOT_GIVEN,
         color: Union[Optional[str], NotGiven] = NOT_GIVEN,
         text_color: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        color_dark: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        text_color_dark: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        gradient: Union[Optional[List[str]], NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -1152,7 +1184,7 @@ class ForumTaxonomyResource:
             "POST",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/tag-info",
             query=_query({}, extra_query),
-            body=_body({"tag": tag, "description": description, "canonical": canonical, "staffOnly": staff_only, "minTrustLevel": min_trust_level, "color": color, "textColor": text_color}, extra_body),
+            body=_body({"tag": tag, "description": description, "canonical": canonical, "staffOnly": staff_only, "minTrustLevel": min_trust_level, "color": color, "textColor": text_color, "colorDark": color_dark, "textColorDark": text_color_dark, "gradient": gradient}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -1212,7 +1244,7 @@ class ForumTaxonomyResource:
 
 
 class ForumToolsResource:
-    """``client.forum.tools`` (36 operations)."""
+    """``client.forum.tools`` (37 operations)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
@@ -1277,7 +1309,7 @@ class ForumToolsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ForumToolsUnansweredExpertsResponseItem]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``unanswered_experts`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -1286,7 +1318,7 @@ class ForumToolsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="items",
+            items_key=None,
         )
 
     def experts(
@@ -1326,7 +1358,7 @@ class ForumToolsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ExpertSuggestion]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``experts`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -1335,7 +1367,7 @@ class ForumToolsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="experts",
+            items_key=None,
         )
 
     def notify_experts(
@@ -1728,7 +1760,7 @@ class ForumToolsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[PostRevisionMeta]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``revisions`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -1737,7 +1769,7 @@ class ForumToolsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="revisions",
+            items_key=None,
         )
 
     def revision_diff(
@@ -1784,6 +1816,34 @@ class ForumToolsResource:
             "POST",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/posts/{_path(post_id)}/vote",
             query=_query({}, extra_query),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+    def set_vote(
+        self,
+        org_id: str,
+        space_id: str,
+        post_id: str,
+        *,
+        value: float,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> ForumToolsSetVoteResponse:
+        """Replace the vote in a space
+
+        ``PUT /orgs/{orgId}/spaces/{spaceId}/forum/posts/{postId}/vote``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "PUT",
+            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/posts/{_path(post_id)}/vote",
+            query=_query({}, extra_query),
+            body=_body({"value": value}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -2051,7 +2111,7 @@ class ForumToolsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[BountyView]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``bounty_history`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -2060,7 +2120,7 @@ class ForumToolsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="bounties",
+            items_key=None,
         )
 
     def set_state(
@@ -2289,7 +2349,7 @@ class ForumToolsResource:
 
 
 class ForumTopicsResource:
-    """``client.forum.topics`` (16 operations)."""
+    """``client.forum.topics`` (17 operations)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
@@ -2303,6 +2363,7 @@ class ForumTopicsResource:
         tag: Union[str, NotGiven] = NOT_GIVEN,
         q: Union[str, NotGiven] = NOT_GIVEN,
         category: Union[str, NotGiven] = NOT_GIVEN,
+        include_subcategories: Union[str, NotGiven] = NOT_GIVEN,
         page: Union[int, NotGiven] = NOT_GIVEN,
         assigned: Union[str, NotGiven] = NOT_GIVEN,
         cursor: Union[str, NotGiven] = NOT_GIVEN,
@@ -2317,12 +2378,13 @@ class ForumTopicsResource:
         ``GET /orgs/{orgId}/spaces/{spaceId}/forum``
 
         :param limit: Topics per page.
+        :param include_subcategories: Use true or false (true/1/yes/on and false/0/no/off are accepted).
         :param page: Which page of results to return, 1-based.
         """
         return self._client._request(
             "GET",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum",
-            query=_query({"limit": limit, "tag": tag, "q": q, "category": category, "page": page, "assigned": assigned, "cursor": cursor, "kind": kind, "sort": sort}, extra_query),
+            query=_query({"limit": limit, "tag": tag, "q": q, "category": category, "includeSubcategories": include_subcategories, "page": page, "assigned": assigned, "cursor": cursor, "kind": kind, "sort": sort}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -2336,6 +2398,7 @@ class ForumTopicsResource:
         tag: Union[str, NotGiven] = NOT_GIVEN,
         q: Union[str, NotGiven] = NOT_GIVEN,
         category: Union[str, NotGiven] = NOT_GIVEN,
+        include_subcategories: Union[str, NotGiven] = NOT_GIVEN,
         page: Union[int, NotGiven] = NOT_GIVEN,
         assigned: Union[str, NotGiven] = NOT_GIVEN,
         kind: Union[str, NotGiven] = NOT_GIVEN,
@@ -2343,16 +2406,16 @@ class ForumTopicsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ArticleSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum",
-            query=_query({"limit": limit, "tag": tag, "q": q, "category": category, "page": page, "assigned": assigned, "kind": kind, "sort": sort}, extra_query),
+            query=_query({"limit": limit, "tag": tag, "q": q, "category": category, "includeSubcategories": include_subcategories, "page": page, "assigned": assigned, "kind": kind, "sort": sort}, extra_query),
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="topics",
+            items_key=None,
         )
 
     def create(
@@ -2370,6 +2433,10 @@ class ForumTopicsResource:
         poll: Union[ForumTopicsCreateParamsPoll, NotGiven] = NOT_GIVEN,
         anonymous: Union[bool, NotGiven] = NOT_GIVEN,
         customization: Union[Optional[ForumTopicsCreateParamsCustomization], NotGiven] = NOT_GIVEN,
+        created_at: Union[str, NotGiven] = NOT_GIVEN,
+        post_as: Union[str, NotGiven] = NOT_GIVEN,
+        byline: Union[Optional[ForumTopicsCreateParamsByline], NotGiven] = NOT_GIVEN,
+        bylines: Union[Optional[List[ForumTopicsCreateParamsByline2]], NotGiven] = NOT_GIVEN,
         markdown: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
@@ -2386,7 +2453,7 @@ class ForumTopicsResource:
             "POST",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum",
             query=_query({}, extra_query),
-            body=_body({"title": title, "content": content, "kind": kind, "tags": tags, "categoryId": category_id, "featuredLink": featured_link, "poll": poll, "anonymous": anonymous, "customization": customization, "markdown": markdown}, extra_body),
+            body=_body({"title": title, "content": content, "kind": kind, "tags": tags, "categoryId": category_id, "featuredLink": featured_link, "poll": poll, "anonymous": anonymous, "customization": customization, "createdAt": created_at, "postAs": post_as, "byline": byline, "bylines": bylines, "markdown": markdown}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -2590,7 +2657,7 @@ class ForumTopicsResource:
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
     ) -> PollVoterBreakdown:
-        """List voters in a space
+        """List voters in a space (forum polls)
 
         ``GET /orgs/{orgId}/spaces/{spaceId}/forum/polls/{pollId}/voters``
         """
@@ -2688,6 +2755,7 @@ class ForumTopicsResource:
         parent_post_id: Union[Optional[str], NotGiven] = NOT_GIVEN,
         whisper: Union[bool, NotGiven] = NOT_GIVEN,
         anonymous: Union[bool, NotGiven] = NOT_GIVEN,
+        created_at: Union[str, NotGiven] = NOT_GIVEN,
         markdown: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
@@ -2704,7 +2772,7 @@ class ForumTopicsResource:
             "POST",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/{_path(topic_id)}/replies",
             query=_query({}, extra_query),
-            body=_body({"content": content, "parentPostId": parent_post_id, "whisper": whisper, "anonymous": anonymous, "markdown": markdown}, extra_body),
+            body=_body({"content": content, "parentPostId": parent_post_id, "whisper": whisper, "anonymous": anonymous, "createdAt": created_at, "markdown": markdown}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -2744,11 +2812,14 @@ class ForumTopicsResource:
         topic_id: str,
         *,
         idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        content: Union[ForumTopicsUpdateParamsContent, NotGiven] = NOT_GIVEN,
         title: Union[str, NotGiven] = NOT_GIVEN,
         tags: Union[List[str], NotGiven] = NOT_GIVEN,
         featured_link: Union[Optional[str], NotGiven] = NOT_GIVEN,
         slug: Union[str, NotGiven] = NOT_GIVEN,
         customization: Union[Optional[ForumTopicsUpdateParamsCustomization], NotGiven] = NOT_GIVEN,
+        featured: Union[bool, NotGiven] = NOT_GIVEN,
+        markdown: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -2764,7 +2835,32 @@ class ForumTopicsResource:
             "PATCH",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/{_path(topic_id)}",
             query=_query({}, extra_query),
-            body=_body({"title": title, "tags": tags, "featuredLink": featured_link, "slug": slug, "customization": customization}, extra_body),
+            body=_body({"content": content, "title": title, "tags": tags, "featuredLink": featured_link, "slug": slug, "customization": customization, "featured": featured, "markdown": markdown}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+    def remove(
+        self,
+        org_id: str,
+        space_id: str,
+        topic_id: str,
+        *,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> ForumTopicsRemoveResponse:
+        """Delete the forum
+
+        ``DELETE /orgs/{orgId}/spaces/{spaceId}/forum/{topicId}``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "DELETE",
+            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/{_path(topic_id)}",
+            query=_query({}, extra_query),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -3012,7 +3108,7 @@ class ForumResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ForumTagSubscriptionsResponseSubscription]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``tag_subscriptions`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -3021,7 +3117,7 @@ class ForumResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="subscriptions",
+            items_key=None,
         )
 
     def set_tag_subscription(
@@ -3087,7 +3183,7 @@ class ForumResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ForumCategorySubscriptionsResponseSubscription]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``category_subscriptions`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -3096,7 +3192,7 @@ class ForumResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="subscriptions",
+            items_key=None,
         )
 
     def set_category_subscription(
@@ -3162,7 +3258,7 @@ class ForumResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ForumTagsResponseTag]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``tags`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -3171,7 +3267,7 @@ class ForumResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="tags",
+            items_key=None,
         )
 
     def get_settings(
@@ -3208,6 +3304,9 @@ class ForumResource:
         anonymous_captcha: Union[Optional[str], NotGiven] = NOT_GIVEN,
         default_sort: Union[Optional[str], NotGiven] = NOT_GIVEN,
         reactions_enabled: Union[Optional[bool], NotGiven] = NOT_GIVEN,
+        reaction_emojis: Union[Optional[List[str]], NotGiven] = NOT_GIVEN,
+        post_votes: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        pin_scope: Union[Optional[str], NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -3223,7 +3322,7 @@ class ForumResource:
             "PATCH",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/settings",
             query=_query({}, extra_query),
-            body=_body({"whoCanPost": who_can_post, "moderateComments": moderate_comments, "moderateAnonymous": moderate_anonymous, "allowAnonymous": allow_anonymous, "anonymousCaptcha": anonymous_captcha, "defaultSort": default_sort, "reactionsEnabled": reactions_enabled}, extra_body),
+            body=_body({"whoCanPost": who_can_post, "moderateComments": moderate_comments, "moderateAnonymous": moderate_anonymous, "allowAnonymous": allow_anonymous, "anonymousCaptcha": anonymous_captcha, "defaultSort": default_sort, "reactionsEnabled": reactions_enabled, "reactionEmojis": reaction_emojis, "postVotes": post_votes, "pinScope": pin_scope}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -3263,7 +3362,7 @@ class ForumResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[FlagRow]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``flags`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -3272,7 +3371,7 @@ class ForumResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="flags",
+            items_key=None,
         )
 
     def resolve_flag(

@@ -50,7 +50,7 @@ class FormsSubmissionsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[FormSubmissionRow]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``by_email`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -59,7 +59,7 @@ class FormsSubmissionsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="submissions",
+            items_key=None,
         )
 
     def erase_by_email(
@@ -128,7 +128,7 @@ class FormsTemplatesResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[FormsTemplatesListResponseFormTemplate]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -137,7 +137,7 @@ class FormsTemplatesResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="formTemplates",
+            items_key=None,
         )
 
     def create(
@@ -314,7 +314,7 @@ class FormsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[FormSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -323,7 +323,7 @@ class FormsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="forms",
+            items_key=None,
         )
 
     def create(
@@ -477,7 +477,7 @@ class FormsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[FormSubmissionRow]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list_submissions`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -486,7 +486,7 @@ class FormsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="submissions",
+            items_key=None,
         )
 
     def export_csv(

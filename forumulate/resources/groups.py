@@ -52,7 +52,7 @@ class GroupsGrantsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[GroupGrantRow]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -61,7 +61,7 @@ class GroupsGrantsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="grants",
+            items_key=None,
         )
 
     def grant(
@@ -322,7 +322,7 @@ class GroupsMessagesResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ChannelSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``inbox`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -331,7 +331,7 @@ class GroupsMessagesResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="threads",
+            items_key=None,
         )
 
 
@@ -378,7 +378,7 @@ class GroupsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[GroupSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -387,7 +387,7 @@ class GroupsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="groups",
+            items_key=None,
         )
 
     def create(
@@ -401,7 +401,7 @@ class GroupsResource:
         join_policy: Union[str, NotGiven] = NOT_GIVEN,
         flair: Union[Optional[str], NotGiven] = NOT_GIVEN,
         title: Union[Optional[str], NotGiven] = NOT_GIVEN,
-        flair_icon: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        flair_icon: Union[Optional[Any], NotGiven] = NOT_GIVEN,
         flair_color: Union[Optional[str], NotGiven] = NOT_GIVEN,
         flair_bg_color: Union[Optional[str], NotGiven] = NOT_GIVEN,
         bio: Union[Optional[str], NotGiven] = NOT_GIVEN,
@@ -468,7 +468,7 @@ class GroupsResource:
         join_policy: Union[str, NotGiven] = NOT_GIVEN,
         flair: Union[Optional[str], NotGiven] = NOT_GIVEN,
         title: Union[Optional[str], NotGiven] = NOT_GIVEN,
-        flair_icon: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        flair_icon: Union[Optional[Any], NotGiven] = NOT_GIVEN,
         flair_color: Union[Optional[str], NotGiven] = NOT_GIVEN,
         flair_bg_color: Union[Optional[str], NotGiven] = NOT_GIVEN,
         bio: Union[Optional[str], NotGiven] = NOT_GIVEN,
@@ -664,7 +664,7 @@ class GroupsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[JoinRequestRow]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``requests`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -673,7 +673,7 @@ class GroupsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="requests",
+            items_key=None,
         )
 
     def review(

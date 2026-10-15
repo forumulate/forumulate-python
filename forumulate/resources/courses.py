@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 
 class CoursesQuizzesResource:
-    """``client.courses.quizzes`` (11 operations)."""
+    """``client.courses.quizzes`` (13 operations)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
@@ -194,6 +194,68 @@ class CoursesQuizzesResource:
             timeout=timeout,
         )
 
+    def details(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> CoursesQuizzesDetailsResponse:
+        """List details in a space
+
+        ``GET /orgs/{orgId}/spaces/{spaceId}/course/authoring/details``
+        """
+        return self._client._request(
+            "GET",
+            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/course/authoring/details",
+            query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def set_details(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        subtitle: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        cover_url: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        cover_alt: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        level: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        outcomes: Union[Optional[List[str]], NotGiven] = NOT_GIVEN,
+        prerequisites: Union[Optional[List[CoursesQuizzesSetDetailsParamsPrerequisite]], NotGiven] = NOT_GIVEN,
+        instructors: Union[Optional[List[str]], NotGiven] = NOT_GIVEN,
+        language: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        estimated_duration: Union[Optional[int], NotGiven] = NOT_GIVEN,
+        cta_label: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        show_updated: Union[Any, NotGiven] = NOT_GIVEN,
+        faq: Union[Optional[List[CoursesQuizzesSetDetailsParamsFaqItem]], NotGiven] = NOT_GIVEN,
+        topics: Union[Optional[List[str]], NotGiven] = NOT_GIVEN,
+        testimonials: Union[Optional[List[CoursesQuizzesSetDetailsParamsTestimonial]], NotGiven] = NOT_GIVEN,
+        cohort: Union[Optional[CoursesQuizzesSetDetailsParamsCohort], NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> CoursesQuizzesSetDetailsResponse:
+        """Replace details in a space
+
+        ``PUT /orgs/{orgId}/spaces/{spaceId}/course/authoring/details``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "PUT",
+            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/course/authoring/details",
+            query=_query({}, extra_query),
+            body=_body({"subtitle": subtitle, "coverUrl": cover_url, "coverAlt": cover_alt, "level": level, "outcomes": outcomes, "prerequisites": prerequisites, "instructors": instructors, "language": language, "estimatedDuration": estimated_duration, "ctaLabel": cta_label, "showUpdated": show_updated, "faq": faq, "topics": topics, "testimonials": testimonials, "cohort": cohort}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
     def lesson_quiz(
         self,
         org_id: str,
@@ -289,7 +351,7 @@ class CoursesQuizzesResource:
 
 
 class CoursesResource:
-    """``client.courses`` (2 operations; quizzes)."""
+    """``client.courses`` (4 operations; quizzes)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
@@ -303,7 +365,7 @@ class CoursesResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> CourseOutline:
+    ) -> GatedOutline:
         """Get the outline in a space
 
         ``GET /orgs/{orgId}/spaces/{spaceId}/course/outline``
@@ -340,6 +402,62 @@ class CoursesResource:
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/course/lessons/{_path(slug)}/complete",
             query=_query({}, extra_query),
             body=_body({"completed": completed}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+    def enrol(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        last_slug: Union[str, NotGiven] = NOT_GIVEN,
+        tz: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Any:
+        """Replace the enrolment in a space
+
+        ``PUT /orgs/{orgId}/spaces/{spaceId}/course/enrolment``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "PUT",
+            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/course/enrolment",
+            query=_query({}, extra_query),
+            body=_body({"lastSlug": last_slug, "tz": tz}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+    def merge(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        completed: List[str],
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        last_slug: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> CoursesMergeResponse:
+        """Merge the progress
+
+        ``POST /orgs/{orgId}/spaces/{spaceId}/course/progress/merge``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "POST",
+            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/course/progress/merge",
+            query=_query({}, extra_query),
+            body=_body({"completed": completed, "lastSlug": last_slug}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )

@@ -236,7 +236,7 @@ class DocsAiResource:
 
 
 class DocsAnalyticsResource:
-    """``client.docs.analytics`` (12 operations)."""
+    """``client.docs.analytics`` (15 operations)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
@@ -258,6 +258,82 @@ class DocsAnalyticsResource:
             "GET",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/docs/analytics",
             query=_query({}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def feedback_comments(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        limit: Union[int, NotGiven] = NOT_GIVEN,
+        page_id: Union[str, NotGiven] = NOT_GIVEN,
+        rating: Union[str, NotGiven] = NOT_GIVEN,
+        since_days: Union[float, NotGiven] = NOT_GIVEN,
+        cursor: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> DocsAnalyticsFeedbackCommentsResponse:
+        """Get the feedback in a space
+
+        ``GET /orgs/{orgId}/spaces/{spaceId}/docs/feedback``
+
+        :param limit: Comments per page.
+        """
+        return self._client._request(
+            "GET",
+            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/docs/feedback",
+            query=_query({"limit": limit, "pageId": page_id, "rating": rating, "sinceDays": since_days, "cursor": cursor}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def feedback_comments_all(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        limit: Union[int, NotGiven] = NOT_GIVEN,
+        page_id: Union[str, NotGiven] = NOT_GIVEN,
+        rating: Union[str, NotGiven] = NOT_GIVEN,
+        since_days: Union[float, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Iterator[Any]:
+        """Iterate every item of ``feedback_comments`` across all pages, following ``cursor``."""
+        yield from self._client._paginate(
+            "GET",
+            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/docs/feedback",
+            query=_query({"limit": limit, "pageId": page_id, "rating": rating, "sinceDays": since_days}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+            page_param="cursor",
+            items_key=None,
+        )
+
+    def feedback_csv(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        page_id: Union[str, NotGiven] = NOT_GIVEN,
+        rating: Union[str, NotGiven] = NOT_GIVEN,
+        since_days: Union[float, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Any:
+        """File of feedback
+
+        ``GET /orgs/{orgId}/spaces/{spaceId}/docs/feedback.csv``
+        """
+        return self._client._request(
+            "GET",
+            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/docs/feedback.csv",
+            query=_query({"pageId": page_id, "rating": rating, "sinceDays": since_days}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -318,7 +394,7 @@ class DocsAnalyticsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[DocsAnalyticsTagsResponseTag]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``tags`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -327,7 +403,7 @@ class DocsAnalyticsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="tags",
+            items_key=None,
         )
 
     def tag_pages(
@@ -367,7 +443,7 @@ class DocsAnalyticsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[DocsAnalyticsTagPagesResponsePage]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``tag_pages`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -376,7 +452,7 @@ class DocsAnalyticsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="pages",
+            items_key=None,
         )
 
     def skill_md(
@@ -444,6 +520,29 @@ class DocsAnalyticsResource:
             timeout=timeout,
         )
 
+    def draft_markdown(
+        self,
+        org_id: str,
+        space_id: str,
+        page_id: str,
+        *,
+        form: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Any:
+        """Get the markdown in a space (draft)
+
+        ``GET /orgs/{orgId}/spaces/{spaceId}/pages/{pageId}/draft/markdown``
+        """
+        return self._client._request(
+            "GET",
+            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/pages/{_path(page_id)}/draft/markdown",
+            query=_query({"form": form}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
     def check_links(
         self,
         org_id: str,
@@ -505,7 +604,7 @@ class DocsAnalyticsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[DocsAnalyticsEmptySectionsResponseSection]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``empty_sections`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -514,7 +613,7 @@ class DocsAnalyticsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="sections",
+            items_key=None,
         )
 
     def orphans(
@@ -576,7 +675,7 @@ class DocsAnalyticsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[Backlink]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``backlinks`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -585,7 +684,7 @@ class DocsAnalyticsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="backlinks",
+            items_key=None,
         )
 
     def stale(
@@ -626,7 +725,7 @@ class DocsAnalyticsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[DocsAnalyticsStaleResponseStaleItem]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``stale`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -635,7 +734,7 @@ class DocsAnalyticsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="stale",
+            items_key=None,
         )
 
 
@@ -733,7 +832,7 @@ class DocsChangeRequestsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ChangeRequestSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -742,7 +841,7 @@ class DocsChangeRequestsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="changeRequests",
+            items_key=None,
         )
 
     def create(
@@ -868,7 +967,7 @@ class DocsChangeRequestsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="blockers",
+            items_key=None,
         )
 
     def conflicts(
@@ -908,7 +1007,7 @@ class DocsChangeRequestsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ConflictDetail]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``conflicts`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -917,7 +1016,7 @@ class DocsChangeRequestsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="conflicts",
+            items_key=None,
         )
 
     def eligibility(
@@ -1000,7 +1099,7 @@ class DocsChangeRequestsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[DocsChangeRequestsPagesResponsePage]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``pages`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -1009,7 +1108,7 @@ class DocsChangeRequestsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="pages",
+            items_key=None,
         )
 
     def request_review(
@@ -1152,7 +1251,7 @@ class DocsChangeRequestsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[DocsChangeRequestsListReviewersResponseReviewer]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list_reviewers`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -1161,7 +1260,7 @@ class DocsChangeRequestsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="reviewers",
+            items_key=None,
         )
 
     def add_reviewers(
@@ -1308,7 +1407,7 @@ class DocsChangeRequestsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ChangeRequestCommentRow]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``comments`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -1317,7 +1416,7 @@ class DocsChangeRequestsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="comments",
+            items_key=None,
         )
 
     def comment(
@@ -1353,7 +1452,7 @@ class DocsChangeRequestsResource:
 
 
 class DocsCollectionsResource:
-    """``client.docs.collections`` (7 operations)."""
+    """``client.docs.collections`` (8 operations)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
@@ -1393,7 +1492,7 @@ class DocsCollectionsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[CollectionSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -1402,7 +1501,7 @@ class DocsCollectionsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="collections",
+            items_key=None,
         )
 
     def create(
@@ -1413,6 +1512,11 @@ class DocsCollectionsResource:
         name: str,
         idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
         slug: Union[str, NotGiven] = NOT_GIVEN,
+        nav: Union[DocsCollectionsCreateParamsNav, NotGiven] = NOT_GIVEN,
+        description: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        cover_url: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        seo: Union[DocsCollectionsCreateParamsSeo, NotGiven] = NOT_GIVEN,
+        translations: Union[Optional[Dict[str, Any]], NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -1428,7 +1532,7 @@ class DocsCollectionsResource:
             "POST",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/collections",
             query=_query({}, extra_query),
-            body=_body({"name": name, "slug": slug}, extra_body),
+            body=_body({"name": name, "slug": slug, "nav": nav, "description": description, "coverUrl": cover_url, "seo": seo, "translations": translations}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -1464,6 +1568,11 @@ class DocsCollectionsResource:
         idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
         name: Union[str, NotGiven] = NOT_GIVEN,
         slug: Union[str, NotGiven] = NOT_GIVEN,
+        nav: Union[DocsCollectionsUpdateParamsNav, NotGiven] = NOT_GIVEN,
+        description: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        cover_url: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        seo: Union[DocsCollectionsUpdateParamsSeo, NotGiven] = NOT_GIVEN,
+        translations: Union[Optional[Dict[str, Any]], NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -1479,7 +1588,7 @@ class DocsCollectionsResource:
             "PATCH",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/collections/{_path(collection_id)}",
             query=_query({}, extra_query),
-            body=_body({"name": name, "slug": slug}, extra_body),
+            body=_body({"name": name, "slug": slug, "nav": nav, "description": description, "coverUrl": cover_url, "seo": seo, "translations": translations}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -1577,7 +1686,7 @@ class DocsCollectionsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[PageNode]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``pages`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -1586,7 +1695,38 @@ class DocsCollectionsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="pages",
+            items_key=None,
+        )
+
+    def order(
+        self,
+        org_id: str,
+        space_id: str,
+        collection_id: str,
+        *,
+        page_ids: List[str],
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        parent_id: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        version: Union[str, NotGiven] = NOT_GIVEN,
+        locale: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> DocsCollectionsOrderResponse:
+        """Create the order in a space
+
+        ``POST /orgs/{orgId}/spaces/{spaceId}/collections/{collectionId}/order``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "POST",
+            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/collections/{_path(collection_id)}/order",
+            query=_query({}, extra_query),
+            body=_body({"pageIds": page_ids, "parentId": parent_id, "version": version, "locale": locale}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
         )
 
 
@@ -1633,7 +1773,7 @@ class DocsCommentsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[CommentSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -1642,7 +1782,7 @@ class DocsCommentsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="comments",
+            items_key=None,
         )
 
     def moderate(
@@ -1946,7 +2086,7 @@ class DocsOpenapiResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[StoredSpecSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list_specs`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -1955,7 +2095,7 @@ class DocsOpenapiResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="specs",
+            items_key=None,
         )
 
     def register_spec(
@@ -1972,7 +2112,11 @@ class DocsOpenapiResource:
         slug_prefix: Union[str, NotGiven] = NOT_GIVEN,
         include_tags: Union[List[str], NotGiven] = NOT_GIVEN,
         exclude_tags: Union[List[str], NotGiven] = NOT_GIVEN,
+        slug_style: Union[str, NotGiven] = NOT_GIVEN,
+        landing: Union[bool, NotGiven] = NOT_GIVEN,
+        tag_pages: Union[str, NotGiven] = NOT_GIVEN,
         on_existing: Union[str, NotGiven] = NOT_GIVEN,
+        changelog: Union[DocsOpenapiRegisterSpecParamsChangelog, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -1988,7 +2132,7 @@ class DocsOpenapiResource:
             "POST",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/docs/openapi/specs",
             query=_query({}, extra_query),
-            body=_body({"sourceUrl": source_url, "url": url, "name": name, "collectionId": collection_id, "mode": mode, "slugPrefix": slug_prefix, "includeTags": include_tags, "excludeTags": exclude_tags, "onExisting": on_existing}, extra_body),
+            body=_body({"sourceUrl": source_url, "url": url, "name": name, "collectionId": collection_id, "mode": mode, "slugPrefix": slug_prefix, "includeTags": include_tags, "excludeTags": exclude_tags, "slugStyle": slug_style, "landing": landing, "tagPages": tag_pages, "onExisting": on_existing, "changelog": changelog}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -2006,7 +2150,11 @@ class DocsOpenapiResource:
         slug_prefix: Union[str, NotGiven] = NOT_GIVEN,
         include_tags: Union[List[str], NotGiven] = NOT_GIVEN,
         exclude_tags: Union[List[str], NotGiven] = NOT_GIVEN,
+        slug_style: Union[str, NotGiven] = NOT_GIVEN,
+        landing: Union[bool, NotGiven] = NOT_GIVEN,
+        tag_pages: Union[str, NotGiven] = NOT_GIVEN,
         on_existing: Union[str, NotGiven] = NOT_GIVEN,
+        changelog: Union[DocsOpenapiResyncSpecParamsChangelog, NotGiven] = NOT_GIVEN,
         background: Union[bool, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
@@ -2023,7 +2171,7 @@ class DocsOpenapiResource:
             "POST",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/docs/openapi/specs/{_path(id)}/resync",
             query=_query({}, extra_query),
-            body=_body({"collectionId": collection_id, "title": title, "mode": mode, "slugPrefix": slug_prefix, "includeTags": include_tags, "excludeTags": exclude_tags, "onExisting": on_existing, "background": background}, extra_body),
+            body=_body({"collectionId": collection_id, "title": title, "mode": mode, "slugPrefix": slug_prefix, "includeTags": include_tags, "excludeTags": exclude_tags, "slugStyle": slug_style, "landing": landing, "tagPages": tag_pages, "onExisting": on_existing, "changelog": changelog, "background": background}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -2133,7 +2281,7 @@ class DocsOpenapiResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[DocsOpenapiSdkLanguagesResponseLanguage]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``sdk_languages`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -2142,7 +2290,7 @@ class DocsOpenapiResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="languages",
+            items_key=None,
         )
 
     def spec_sdk(
@@ -2307,6 +2455,7 @@ class DocsOpenapiResource:
         spec: Union[Any, NotGiven] = NOT_GIVEN,
         collection_id: Union[str, NotGiven] = NOT_GIVEN,
         enhance: Union[DocsOpenapiGenerateParamsEnhance, NotGiven] = NOT_GIVEN,
+        landing: Union[bool, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -2322,7 +2471,7 @@ class DocsOpenapiResource:
             "POST",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/docs/openapi/generate",
             query=_query({}, extra_query),
-            body=_body({"url": url, "sourceUrl": source_url, "spec": spec, "collectionId": collection_id, "enhance": enhance}, extra_body),
+            body=_body({"url": url, "sourceUrl": source_url, "spec": spec, "collectionId": collection_id, "enhance": enhance, "landing": landing}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -2366,7 +2515,11 @@ class DocsOpenapiResource:
         dry_run: Union[bool, NotGiven] = NOT_GIVEN,
         include_tags: Union[List[str], NotGiven] = NOT_GIVEN,
         exclude_tags: Union[List[str], NotGiven] = NOT_GIVEN,
+        slug_style: Union[str, NotGiven] = NOT_GIVEN,
+        landing: Union[bool, NotGiven] = NOT_GIVEN,
+        tag_pages: Union[str, NotGiven] = NOT_GIVEN,
         on_existing: Union[str, NotGiven] = NOT_GIVEN,
+        relayout: Union[bool, NotGiven] = NOT_GIVEN,
         spec_id: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
@@ -2383,7 +2536,7 @@ class DocsOpenapiResource:
             "POST",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/docs/openapi/import",
             query=_query({}, extra_query),
-            body=_body({"url": url, "sourceUrl": source_url, "spec": spec, "collectionId": collection_id, "title": title, "mode": mode, "slugPrefix": slug_prefix, "replaceCollection": replace_collection, "dryRun": dry_run, "includeTags": include_tags, "excludeTags": exclude_tags, "onExisting": on_existing, "specId": spec_id}, extra_body),
+            body=_body({"url": url, "sourceUrl": source_url, "spec": spec, "collectionId": collection_id, "title": title, "mode": mode, "slugPrefix": slug_prefix, "replaceCollection": replace_collection, "dryRun": dry_run, "includeTags": include_tags, "excludeTags": exclude_tags, "slugStyle": slug_style, "landing": landing, "tagPages": tag_pages, "onExisting": on_existing, "relayout": relayout, "specId": spec_id}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -2403,6 +2556,9 @@ class DocsOpenapiResource:
         include_tags: Union[str, NotGiven] = NOT_GIVEN,
         exclude_tags: Union[str, NotGiven] = NOT_GIVEN,
         on_existing: Union[str, NotGiven] = NOT_GIVEN,
+        slug_style: Union[str, NotGiven] = NOT_GIVEN,
+        landing: Union[bool, NotGiven] = NOT_GIVEN,
+        tag_pages: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -2418,7 +2574,7 @@ class DocsOpenapiResource:
             "POST",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/docs/openapi/import-file",
             query=_query({}, extra_query),
-            body=_body({"collectionId": collection_id, "title": title, "mode": mode, "slugPrefix": slug_prefix, "replaceCollection": replace_collection, "dryRun": dry_run, "includeTags": include_tags, "excludeTags": exclude_tags, "onExisting": on_existing}, extra_body),
+            body=_body({"collectionId": collection_id, "title": title, "mode": mode, "slugPrefix": slug_prefix, "replaceCollection": replace_collection, "dryRun": dry_run, "includeTags": include_tags, "excludeTags": exclude_tags, "onExisting": on_existing, "slugStyle": slug_style, "landing": landing, "tagPages": tag_pages}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -2605,7 +2761,7 @@ class DocsPagesRevisionsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[RevisionSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``history`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -2614,7 +2770,7 @@ class DocsPagesRevisionsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="revisions",
+            items_key=None,
         )
 
     def diff(
@@ -2923,20 +3079,46 @@ class DocsPagesResource:
         *,
         if_match: Union[str, NotGiven] = NOT_GIVEN,
         idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
-        cover_url: Union[Any, NotGiven] = NOT_GIVEN,
-        icon: Union[str, NotGiven] = NOT_GIVEN,
-        hide_from_nav: Union[bool, NotGiven] = NOT_GIVEN,
-        layout: Union[str, NotGiven] = NOT_GIVEN,
-        on_this_page: Union[Optional[str], NotGiven] = NOT_GIVEN,
-        seo_title: Union[str, NotGiven] = NOT_GIVEN,
-        seo_description: Union[str, NotGiven] = NOT_GIVEN,
-        noindex: Union[bool, NotGiven] = NOT_GIVEN,
-        content_language: Union[Optional[Any], NotGiven] = NOT_GIVEN,
-        canonical_url: Union[Any, NotGiven] = NOT_GIVEN,
-        external_url: Union[Any, NotGiven] = NOT_GIVEN,
-        tags: Union[List[str], NotGiven] = NOT_GIVEN,
+        tags: Union[Optional[List[str]], NotGiven] = NOT_GIVEN,
         audience: Union[Optional[DocsPagesSetMetadataParamsAudience], NotGiven] = NOT_GIVEN,
-        fields: Union[Dict[str, Any], NotGiven] = NOT_GIVEN,
+        fields: Union[Optional[Dict[str, Any]], NotGiven] = NOT_GIVEN,
+        kind: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        icon: Union[Optional[PageIconName], NotGiven] = NOT_GIVEN,
+        hide_from_nav: Union[Optional[bool], NotGiven] = NOT_GIVEN,
+        external_url: Union[Optional[Any], NotGiven] = NOT_GIVEN,
+        nav_title: Union[Optional[Any], NotGiven] = NOT_GIVEN,
+        badge: Union[Optional[DocsPagesSetMetadataParamsBadge], NotGiven] = NOT_GIVEN,
+        nav_kind: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        nav_font: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        search_exclude: Union[Optional[bool], NotGiven] = NOT_GIVEN,
+        cover_url: Union[Optional[Any], NotGiven] = NOT_GIVEN,
+        layout: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        hide_title: Union[Optional[bool], NotGiven] = NOT_GIVEN,
+        subtitle: Union[Optional[Any], NotGiven] = NOT_GIVEN,
+        hide_updated: Union[Optional[bool], NotGiven] = NOT_GIVEN,
+        hide_cover: Union[Optional[bool], NotGiven] = NOT_GIVEN,
+        template: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        hero: Union[Optional[DocsPagesSetMetadataParamsHero], NotGiven] = NOT_GIVEN,
+        toc_levels: Union[Optional[DocsPagesSetMetadataParamsTocLevels], NotGiven] = NOT_GIVEN,
+        page_chrome: Union[Optional[bool], NotGiven] = NOT_GIVEN,
+        title_align: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        theme_patch: Union[Optional[DocsPagesSetMetadataParamsThemePatch], NotGiven] = NOT_GIVEN,
+        on_this_page: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        api_method: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        api_page: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        api: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        seo_title: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        seo_description: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        noindex: Union[Optional[bool], NotGiven] = NOT_GIVEN,
+        content_language: Union[Optional[Any], NotGiven] = NOT_GIVEN,
+        canonical_url: Union[Optional[Any], NotGiven] = NOT_GIVEN,
+        hide_feedback: Union[Optional[bool], NotGiven] = NOT_GIVEN,
+        edit_url: Union[Optional[Any], NotGiven] = NOT_GIVEN,
+        source_path: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        pager: Union[Optional[DocsPagesSetMetadataParamsPager], NotGiven] = NOT_GIVEN,
+        hide_pager: Union[Optional[bool], NotGiven] = NOT_GIVEN,
+        keywords: Union[Optional[List[str]], NotGiven] = NOT_GIVEN,
+        comments_enabled: Union[Optional[Any], NotGiven] = NOT_GIVEN,
         custom_css: Union[Optional[str], NotGiven] = NOT_GIVEN,
         theme: Union[Optional[DocsPagesSetMetadataParamsTheme], NotGiven] = NOT_GIVEN,
         share_image_url: Union[Optional[Any], NotGiven] = NOT_GIVEN,
@@ -2960,7 +3142,7 @@ class DocsPagesResource:
             "PATCH",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/pages/{_path(page_id)}/metadata",
             query=_query({}, extra_query),
-            body=_body({"coverUrl": cover_url, "icon": icon, "hideFromNav": hide_from_nav, "layout": layout, "onThisPage": on_this_page, "seoTitle": seo_title, "seoDescription": seo_description, "noindex": noindex, "contentLanguage": content_language, "canonicalUrl": canonical_url, "externalUrl": external_url, "tags": tags, "audience": audience, "fields": fields, "customCss": custom_css, "theme": theme, "shareImageUrl": share_image_url, "ogTitle": og_title, "ogDescription": og_description, "twitterCard": twitter_card, "jsonLd": json_ld}, extra_body),
+            body=_body({"tags": tags, "audience": audience, "fields": fields, "kind": kind, "icon": icon, "hideFromNav": hide_from_nav, "externalUrl": external_url, "navTitle": nav_title, "badge": badge, "navKind": nav_kind, "navFont": nav_font, "searchExclude": search_exclude, "coverUrl": cover_url, "layout": layout, "hideTitle": hide_title, "subtitle": subtitle, "hideUpdated": hide_updated, "hideCover": hide_cover, "template": template, "hero": hero, "tocLevels": toc_levels, "pageChrome": page_chrome, "titleAlign": title_align, "themePatch": theme_patch, "onThisPage": on_this_page, "apiMethod": api_method, "apiPage": api_page, "api": api, "seoTitle": seo_title, "seoDescription": seo_description, "noindex": noindex, "contentLanguage": content_language, "canonicalUrl": canonical_url, "hideFeedback": hide_feedback, "editUrl": edit_url, "sourcePath": source_path, "pager": pager, "hidePager": hide_pager, "keywords": keywords, "commentsEnabled": comments_enabled, "customCss": custom_css, "theme": theme, "shareImageUrl": share_image_url, "ogTitle": og_title, "ogDescription": og_description, "twitterCard": twitter_card, "jsonLd": json_ld}, extra_body),
             headers={**_query({"If-Match": if_match, "Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -3004,6 +3186,8 @@ class DocsPagesResource:
         *,
         limit: Union[int, NotGiven] = NOT_GIVEN,
         cursor: Union[str, NotGiven] = NOT_GIVEN,
+        version: Union[str, NotGiven] = NOT_GIVEN,
+        locale: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
@@ -3013,11 +3197,13 @@ class DocsPagesResource:
         ``GET /orgs/{orgId}/spaces/{spaceId}/pages``
 
         :param limit: Pages per page, once a version is stated.
+        :param version: Only this content version.
+        :param locale: Only this language.
         """
         return self._client._request(
             "GET",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/pages",
-            query=_query({"limit": limit, "cursor": cursor}, extra_query),
+            query=_query({"limit": limit, "cursor": cursor, "version": version, "locale": locale}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -3028,19 +3214,21 @@ class DocsPagesResource:
         space_id: str,
         *,
         limit: Union[int, NotGiven] = NOT_GIVEN,
+        version: Union[str, NotGiven] = NOT_GIVEN,
+        locale: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[PageListRow]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/pages",
-            query=_query({"limit": limit}, extra_query),
+            query=_query({"limit": limit, "version": version, "locale": locale}, extra_query),
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="pages",
+            items_key=None,
         )
 
     def inventory(
@@ -3050,6 +3238,8 @@ class DocsPagesResource:
         *,
         limit: Union[int, NotGiven] = NOT_GIVEN,
         cursor: Union[str, NotGiven] = NOT_GIVEN,
+        version: Union[str, NotGiven] = NOT_GIVEN,
+        locale: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
@@ -3059,11 +3249,13 @@ class DocsPagesResource:
         ``GET /orgs/{orgId}/spaces/{spaceId}/pages/inventory``
 
         :param limit: Pages per page, once a version is stated.
+        :param version: Only this content version.
+        :param locale: Only this language.
         """
         return self._client._request(
             "GET",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/pages/inventory",
-            query=_query({"limit": limit, "cursor": cursor}, extra_query),
+            query=_query({"limit": limit, "cursor": cursor, "version": version, "locale": locale}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -3074,19 +3266,21 @@ class DocsPagesResource:
         space_id: str,
         *,
         limit: Union[int, NotGiven] = NOT_GIVEN,
+        version: Union[str, NotGiven] = NOT_GIVEN,
+        locale: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[PageInventoryRow]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``inventory`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/pages/inventory",
-            query=_query({"limit": limit}, extra_query),
+            query=_query({"limit": limit, "version": version, "locale": locale}, extra_query),
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="pages",
+            items_key=None,
         )
 
     def bulk_delete(
@@ -3213,7 +3407,7 @@ class DocsPagesResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[PageTrashRow]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``trash`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -3222,7 +3416,7 @@ class DocsPagesResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="pages",
+            items_key=None,
         )
 
     def empty_trash(
@@ -3511,7 +3705,7 @@ class DocsReusablesResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ReusableSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list_reusable`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -3520,7 +3714,7 @@ class DocsReusablesResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="reusables",
+            items_key=None,
         )
 
     def create_reusable(
@@ -3640,7 +3834,7 @@ class DocsReusablesResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[VariableRow]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list_variables`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -3649,7 +3843,7 @@ class DocsReusablesResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="variables",
+            items_key=None,
         )
 
     def set_variable(
@@ -3748,7 +3942,7 @@ class DocsTemplatesResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[TemplateSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -3757,7 +3951,7 @@ class DocsTemplatesResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="templates",
+            items_key=None,
         )
 
     def save(
@@ -3846,7 +4040,7 @@ class DocsTemplatesResource:
 
 
 class DocsTranslationsResource:
-    """``client.docs.translations`` (3 operations)."""
+    """``client.docs.translations`` (4 operations)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
@@ -3886,7 +4080,7 @@ class DocsTranslationsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[DocLocale]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -3895,7 +4089,7 @@ class DocsTranslationsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="locales",
+            items_key=None,
         )
 
     def create(
@@ -3922,6 +4116,34 @@ class DocsTranslationsResource:
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/docs/locales",
             query=_query({}, extra_query),
             body=_body({"code": code, "label": label}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+    def update(
+        self,
+        org_id: str,
+        space_id: str,
+        code: str,
+        *,
+        label: str,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> DocsTranslationsUpdateResponse:
+        """Update the locale
+
+        ``PATCH /orgs/{orgId}/spaces/{spaceId}/docs/locales/{code}``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "PATCH",
+            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/docs/locales/{_path(code)}",
+            query=_query({}, extra_query),
+            body=_body({"label": label}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -3953,7 +4175,7 @@ class DocsTranslationsResource:
 
 
 class DocsVersionsResource:
-    """``client.docs.versions`` (3 operations)."""
+    """``client.docs.versions`` (5 operations)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
@@ -3993,7 +4215,7 @@ class DocsVersionsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[DocVersion]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -4002,7 +4224,7 @@ class DocsVersionsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="versions",
+            items_key=None,
         )
 
     def create(
@@ -4034,6 +4256,38 @@ class DocsVersionsResource:
             timeout=timeout,
         )
 
+    def update(
+        self,
+        org_id: str,
+        space_id: str,
+        key: str,
+        *,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        label: Union[str, NotGiven] = NOT_GIVEN,
+        badge: Union[Any, NotGiven] = NOT_GIVEN,
+        banner: Union[str, NotGiven] = NOT_GIVEN,
+        hidden: Union[bool, NotGiven] = NOT_GIVEN,
+        archived: Union[bool, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> DocsVersionsUpdateResponse:
+        """Update the version
+
+        ``PATCH /orgs/{orgId}/spaces/{spaceId}/docs/versions/{key}``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "PATCH",
+            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/docs/versions/{_path(key)}",
+            query=_query({}, extra_query),
+            body=_body({"label": label, "badge": badge, "banner": banner, "hidden": hidden, "archived": archived}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
     def remove(
         self,
         org_id: str,
@@ -4055,6 +4309,35 @@ class DocsVersionsResource:
             "DELETE",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/docs/versions/{_path(key)}",
             query=_query({}, extra_query),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+    def make_default(
+        self,
+        org_id: str,
+        space_id: str,
+        key: str,
+        *,
+        retire_as: str,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        retire_label: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> DocsVersionsMakeDefaultResponse:
+        """Create the make default in a space
+
+        ``POST /orgs/{orgId}/spaces/{spaceId}/docs/versions/{key}/make-default``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "POST",
+            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/docs/versions/{_path(key)}/make-default",
+            query=_query({}, extra_query),
+            body=_body({"retireAs": retire_as, "retireLabel": retire_label}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )

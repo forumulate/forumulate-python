@@ -85,7 +85,7 @@ class ChatMessagesResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ChatMessageSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``thread`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -94,7 +94,7 @@ class ChatMessagesResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="messages",
+            items_key=None,
         )
 
     def edit(
@@ -416,7 +416,7 @@ class ChatMessagesResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ChatBookmarkSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list_bookmarks`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -425,7 +425,7 @@ class ChatMessagesResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="bookmarks",
+            items_key=None,
         )
 
     def move(
@@ -496,7 +496,7 @@ class ChatProvidersResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ChatProviderDef]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -505,7 +505,7 @@ class ChatProvidersResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="providers",
+            items_key=None,
         )
 
     def create(
@@ -642,7 +642,7 @@ class ChatResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ChannelSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``channels`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -651,7 +651,7 @@ class ChatResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="channels",
+            items_key=None,
         )
 
     def create_channel(
@@ -900,7 +900,7 @@ class ChatResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ChatMessageSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list_messages`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -909,7 +909,7 @@ class ChatResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="messages",
+            items_key=None,
         )
 
     def send(
@@ -1006,7 +1006,7 @@ class ChatResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[IncomingWebhookSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list_incoming_webhooks`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -1015,7 +1015,7 @@ class ChatResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="webhooks",
+            items_key=None,
         )
 
     def create_incoming_webhook(
@@ -1104,7 +1104,7 @@ class ChatResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ReadReceipt]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``receipts`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -1113,7 +1113,7 @@ class ChatResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="receipts",
+            items_key=None,
         )
 
     def pins(
@@ -1151,7 +1151,7 @@ class ChatResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ChatMessageSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``pins`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -1160,7 +1160,7 @@ class ChatResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="messages",
+            items_key=None,
         )
 
     def pin(
@@ -1351,7 +1351,7 @@ class ChatResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ChatOnlineResponseOnlineItem]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``online`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -1360,7 +1360,7 @@ class ChatResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="online",
+            items_key=None,
         )
 
     def stream(

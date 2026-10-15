@@ -78,7 +78,7 @@ class SpacesAssetsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[UploadedAsset]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -87,7 +87,7 @@ class SpacesAssetsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="assets",
+            items_key=None,
         )
 
     def upload(
@@ -161,7 +161,7 @@ class SpacesAssetsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[CatalogedAsset]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``catalog`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -170,7 +170,7 @@ class SpacesAssetsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="assets",
+            items_key=None,
         )
 
     def remove(
@@ -222,7 +222,7 @@ class SpacesAssetsResource:
 
 
 class SpacesDomainsResource:
-    """``client.spaces.domains`` (11 operations)."""
+    """``client.spaces.domains`` (12 operations)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
@@ -262,7 +262,7 @@ class SpacesDomainsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[DomainSummaryDto]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -271,7 +271,7 @@ class SpacesDomainsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="domains",
+            items_key=None,
         )
 
     def add(
@@ -282,6 +282,7 @@ class SpacesDomainsResource:
         hostname: str,
         idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
         base_path: Union[str, NotGiven] = NOT_GIVEN,
+        also_redirect_www: Union[bool, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -297,7 +298,7 @@ class SpacesDomainsResource:
             "POST",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/domains",
             query=_query({}, extra_query),
-            body=_body({"hostname": hostname, "basePath": base_path}, extra_body),
+            body=_body({"hostname": hostname, "basePath": base_path, "alsoRedirectWww": also_redirect_www}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -486,6 +487,34 @@ class SpacesDomainsResource:
             timeout=timeout,
         )
 
+    def set_www(
+        self,
+        org_id: str,
+        space_id: str,
+        domain_id: str,
+        *,
+        also_redirect_www: bool,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Any:
+        """Replace the www in a space
+
+        ``PUT /orgs/{orgId}/spaces/{spaceId}/domains/{domainId}/www``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "PUT",
+            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/domains/{_path(domain_id)}/www",
+            query=_query({}, extra_query),
+            body=_body({"alsoRedirectWww": also_redirect_www}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
     def set_ip_allow_list(
         self,
         org_id: str,
@@ -559,7 +588,7 @@ class SpacesHubIntrosResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> SpacesHubIntrosGetResponse:
+    ) -> HubIntro:
         """Get the intro in a space
 
         ``GET /orgs/{orgId}/spaces/{spaceId}/hubs/{kind}/{key}/intro``
@@ -581,11 +610,12 @@ class SpacesHubIntrosResource:
         *,
         idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
         doc: Union[Optional[Any], NotGiven] = NOT_GIVEN,
+        translations: Union[Optional[Dict[str, Any]], NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> SpacesHubIntrosSetResponse:
+    ) -> Any:
         """Replace the intro in a space
 
         ``PUT /orgs/{orgId}/spaces/{spaceId}/hubs/{kind}/{key}/intro``
@@ -596,7 +626,7 @@ class SpacesHubIntrosResource:
             "PUT",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/hubs/{_path(kind)}/{_path(key)}/intro",
             query=_query({}, extra_query),
-            body=_body({"doc": doc}, extra_body),
+            body=_body({"doc": doc, "translations": translations}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -695,24 +725,31 @@ class SpacesSettingsResource:
         *,
         idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
         primary_color: Union[str, NotGiven] = NOT_GIVEN,
+        primary_color_dark: Union[str, NotGiven] = NOT_GIVEN,
         accent_color: Union[str, NotGiven] = NOT_GIVEN,
         palette: Union[SpacesSettingsSetThemeParamsPalette, NotGiven] = NOT_GIVEN,
         palette_dark: Union[SpacesSettingsSetThemeParamsPaletteDark, NotGiven] = NOT_GIVEN,
         font: Union[str, NotGiven] = NOT_GIVEN,
         color_scheme: Union[str, NotGiven] = NOT_GIVEN,
+        color_scheme_strict: Union[bool, NotGiven] = NOT_GIVEN,
         content_width: Union[str, NotGiven] = NOT_GIVEN,
         on_this_page: Union[str, NotGiven] = NOT_GIVEN,
         layout: Union[SpacesSettingsSetThemeParamsLayout, NotGiven] = NOT_GIVEN,
         custom_font_url: Union[Any, NotGiven] = NOT_GIVEN,
         custom_font_family: Union[str, NotGiven] = NOT_GIVEN,
         brand_name: Union[Any, NotGiven] = NOT_GIVEN,
+        logo_includes_name: Union[bool, NotGiven] = NOT_GIVEN,
         heading_font_family: Union[str, NotGiven] = NOT_GIVEN,
         body_font_family: Union[str, NotGiven] = NOT_GIVEN,
         mono_font_family: Union[str, NotGiven] = NOT_GIVEN,
         typography: Union[SpacesSettingsSetThemeParamsTypography, NotGiven] = NOT_GIVEN,
+        heading_anchors: Union[str, NotGiven] = NOT_GIVEN,
         fonts: Union[SpacesSettingsSetThemeParamsFonts, NotGiven] = NOT_GIVEN,
         logo_url: Union[Any, NotGiven] = NOT_GIVEN,
         logo_mark: Union[Any, NotGiven] = NOT_GIVEN,
+        logo_url_light: Union[Any, NotGiven] = NOT_GIVEN,
+        logo_url_dark: Union[Any, NotGiven] = NOT_GIVEN,
+        logo_dark_mode: Union[str, NotGiven] = NOT_GIVEN,
         favicon_url: Union[Any, NotGiven] = NOT_GIVEN,
         custom_css: Union[str, NotGiven] = NOT_GIVEN,
         custom_js: Union[str, NotGiven] = NOT_GIVEN,
@@ -735,7 +772,22 @@ class SpacesSettingsResource:
         chrome: Union[SpacesSettingsSetThemeParamsChrome, NotGiven] = NOT_GIVEN,
         not_found: Union[SpacesSettingsSetThemeParamsNotFound, NotGiven] = NOT_GIVEN,
         components: Union[SpacesSettingsSetThemeParamsComponents, NotGiven] = NOT_GIVEN,
+        changelog: Union[SpacesSettingsSetThemeParamsChangelog, NotGiven] = NOT_GIVEN,
+        forum: Union[SpacesSettingsSetThemeParamsForum, NotGiven] = NOT_GIVEN,
+        post: Union[SpacesSettingsSetThemeParamsPost, NotGiven] = NOT_GIVEN,
+        docs: Union[SpacesSettingsSetThemeParamsDocs, NotGiven] = NOT_GIVEN,
+        footnotes: Union[SpacesSettingsSetThemeParamsFootnotes, NotGiven] = NOT_GIVEN,
+        i18n: Union[SpacesSettingsSetThemeParamsI18n, NotGiven] = NOT_GIVEN,
+        status: Union[SpacesSettingsSetThemeParamsStatus, NotGiven] = NOT_GIVEN,
+        legal: Union[SpacesSettingsSetThemeParamsLegal, NotGiven] = NOT_GIVEN,
+        faq: Union[SpacesSettingsSetThemeParamsFaq, NotGiven] = NOT_GIVEN,
+        roadmap: Union[SpacesSettingsSetThemeParamsRoadmap, NotGiven] = NOT_GIVEN,
+        events: Union[SpacesSettingsSetThemeParamsEvents, NotGiven] = NOT_GIVEN,
+        courses: Union[SpacesSettingsSetThemeParamsCourses, NotGiven] = NOT_GIVEN,
+        careers: Union[SpacesSettingsSetThemeParamsCareers, NotGiven] = NOT_GIVEN,
+        contact: Union[SpacesSettingsSetThemeParamsContact, NotGiven] = NOT_GIVEN,
         motion: Union[SpacesSettingsSetThemeParamsMotion, NotGiven] = NOT_GIVEN,
+        title_band: Union[SpacesSettingsSetThemeParamsTitleBand, NotGiven] = NOT_GIVEN,
         component_installs: Union[List[SpacesSettingsSetThemeParamsComponentInstall], NotGiven] = NOT_GIVEN,
         mobile: Union[SpacesSettingsSetThemeParamsMobile, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
@@ -753,7 +805,7 @@ class SpacesSettingsResource:
             "PUT",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/theme",
             query=_query({}, extra_query),
-            body=_body({"primaryColor": primary_color, "accentColor": accent_color, "palette": palette, "paletteDark": palette_dark, "font": font, "colorScheme": color_scheme, "contentWidth": content_width, "onThisPage": on_this_page, "layout": layout, "customFontUrl": custom_font_url, "customFontFamily": custom_font_family, "brandName": brand_name, "headingFontFamily": heading_font_family, "bodyFontFamily": body_font_family, "monoFontFamily": mono_font_family, "typography": typography, "fonts": fonts, "logoUrl": logo_url, "logoMark": logo_mark, "faviconUrl": favicon_url, "customCss": custom_css, "customJs": custom_js, "scriptOrigins": script_origins, "ads": ads, "whiteLabel": white_label, "showLanguageSwitcher": show_language_switcher, "apiOrigins": api_origins, "fontOrigins": font_origins, "fontOriginsRemoved": font_origins_removed, "imgOrigins": img_origins, "mediaOrigins": media_origins, "frameOrigins": frame_origins, "elementStyles": element_styles, "settingsSchema": settings_schema, "settings": settings, "stringOverrides": string_overrides, "cssSnippets": css_snippets, "announcement": announcement, "chrome": chrome, "notFound": not_found, "components": components, "motion": motion, "componentInstalls": component_installs, "mobile": mobile}, extra_body),
+            body=_body({"primaryColor": primary_color, "primaryColorDark": primary_color_dark, "accentColor": accent_color, "palette": palette, "paletteDark": palette_dark, "font": font, "colorScheme": color_scheme, "colorSchemeStrict": color_scheme_strict, "contentWidth": content_width, "onThisPage": on_this_page, "layout": layout, "customFontUrl": custom_font_url, "customFontFamily": custom_font_family, "brandName": brand_name, "logoIncludesName": logo_includes_name, "headingFontFamily": heading_font_family, "bodyFontFamily": body_font_family, "monoFontFamily": mono_font_family, "typography": typography, "headingAnchors": heading_anchors, "fonts": fonts, "logoUrl": logo_url, "logoMark": logo_mark, "logoUrlLight": logo_url_light, "logoUrlDark": logo_url_dark, "logoDarkMode": logo_dark_mode, "faviconUrl": favicon_url, "customCss": custom_css, "customJs": custom_js, "scriptOrigins": script_origins, "ads": ads, "whiteLabel": white_label, "showLanguageSwitcher": show_language_switcher, "apiOrigins": api_origins, "fontOrigins": font_origins, "fontOriginsRemoved": font_origins_removed, "imgOrigins": img_origins, "mediaOrigins": media_origins, "frameOrigins": frame_origins, "elementStyles": element_styles, "settingsSchema": settings_schema, "settings": settings, "stringOverrides": string_overrides, "cssSnippets": css_snippets, "announcement": announcement, "chrome": chrome, "notFound": not_found, "components": components, "changelog": changelog, "forum": forum, "post": post, "docs": docs, "footnotes": footnotes, "i18n": i18n, "status": status, "legal": legal, "faq": faq, "roadmap": roadmap, "events": events, "courses": courses, "careers": careers, "contact": contact, "motion": motion, "titleBand": title_band, "componentInstalls": component_installs, "mobile": mobile}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -765,24 +817,31 @@ class SpacesSettingsResource:
         *,
         idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
         primary_color: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        primary_color_dark: Union[Optional[str], NotGiven] = NOT_GIVEN,
         accent_color: Union[Optional[str], NotGiven] = NOT_GIVEN,
         palette: Union[Optional[SpacesSettingsPatchThemeParamsPalette], NotGiven] = NOT_GIVEN,
         palette_dark: Union[Optional[SpacesSettingsPatchThemeParamsPaletteDark], NotGiven] = NOT_GIVEN,
         font: Union[Optional[str], NotGiven] = NOT_GIVEN,
         color_scheme: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        color_scheme_strict: Union[Optional[bool], NotGiven] = NOT_GIVEN,
         content_width: Union[Optional[str], NotGiven] = NOT_GIVEN,
         on_this_page: Union[Optional[str], NotGiven] = NOT_GIVEN,
         layout: Union[Optional[SpacesSettingsPatchThemeParamsLayout], NotGiven] = NOT_GIVEN,
         custom_font_url: Union[Optional[Any], NotGiven] = NOT_GIVEN,
         custom_font_family: Union[Optional[str], NotGiven] = NOT_GIVEN,
         brand_name: Union[Optional[Any], NotGiven] = NOT_GIVEN,
+        logo_includes_name: Union[Optional[bool], NotGiven] = NOT_GIVEN,
         heading_font_family: Union[Optional[str], NotGiven] = NOT_GIVEN,
         body_font_family: Union[Optional[str], NotGiven] = NOT_GIVEN,
         mono_font_family: Union[Optional[str], NotGiven] = NOT_GIVEN,
         typography: Union[Optional[SpacesSettingsPatchThemeParamsTypography], NotGiven] = NOT_GIVEN,
+        heading_anchors: Union[Optional[str], NotGiven] = NOT_GIVEN,
         fonts: Union[Optional[SpacesSettingsPatchThemeParamsFonts], NotGiven] = NOT_GIVEN,
         logo_url: Union[Optional[Any], NotGiven] = NOT_GIVEN,
         logo_mark: Union[Optional[Any], NotGiven] = NOT_GIVEN,
+        logo_url_light: Union[Optional[Any], NotGiven] = NOT_GIVEN,
+        logo_url_dark: Union[Optional[Any], NotGiven] = NOT_GIVEN,
+        logo_dark_mode: Union[Optional[str], NotGiven] = NOT_GIVEN,
         favicon_url: Union[Optional[Any], NotGiven] = NOT_GIVEN,
         custom_css: Union[Optional[str], NotGiven] = NOT_GIVEN,
         custom_js: Union[Optional[str], NotGiven] = NOT_GIVEN,
@@ -805,7 +864,22 @@ class SpacesSettingsResource:
         chrome: Union[Optional[SpacesSettingsPatchThemeParamsChrome], NotGiven] = NOT_GIVEN,
         not_found: Union[Optional[SpacesSettingsPatchThemeParamsNotFound], NotGiven] = NOT_GIVEN,
         components: Union[Optional[SpacesSettingsPatchThemeParamsComponents], NotGiven] = NOT_GIVEN,
+        changelog: Union[Optional[SpacesSettingsPatchThemeParamsChangelog], NotGiven] = NOT_GIVEN,
+        forum: Union[Optional[SpacesSettingsPatchThemeParamsForum], NotGiven] = NOT_GIVEN,
+        post: Union[Optional[SpacesSettingsPatchThemeParamsPost], NotGiven] = NOT_GIVEN,
+        docs: Union[Optional[SpacesSettingsPatchThemeParamsDocs], NotGiven] = NOT_GIVEN,
+        footnotes: Union[Optional[SpacesSettingsPatchThemeParamsFootnotes], NotGiven] = NOT_GIVEN,
+        i18n: Union[Optional[SpacesSettingsPatchThemeParamsI18n], NotGiven] = NOT_GIVEN,
+        status: Union[Optional[SpacesSettingsPatchThemeParamsStatus], NotGiven] = NOT_GIVEN,
+        legal: Union[Optional[SpacesSettingsPatchThemeParamsLegal], NotGiven] = NOT_GIVEN,
+        faq: Union[Optional[SpacesSettingsPatchThemeParamsFaq], NotGiven] = NOT_GIVEN,
+        roadmap: Union[Optional[SpacesSettingsPatchThemeParamsRoadmap], NotGiven] = NOT_GIVEN,
+        events: Union[Optional[SpacesSettingsPatchThemeParamsEvents], NotGiven] = NOT_GIVEN,
+        courses: Union[Optional[SpacesSettingsPatchThemeParamsCourses], NotGiven] = NOT_GIVEN,
+        careers: Union[Optional[SpacesSettingsPatchThemeParamsCareers], NotGiven] = NOT_GIVEN,
+        contact: Union[Optional[SpacesSettingsPatchThemeParamsContact], NotGiven] = NOT_GIVEN,
         motion: Union[Optional[SpacesSettingsPatchThemeParamsMotion], NotGiven] = NOT_GIVEN,
+        title_band: Union[Optional[SpacesSettingsPatchThemeParamsTitleBand], NotGiven] = NOT_GIVEN,
         component_installs: Union[Optional[List[SpacesSettingsPatchThemeParamsComponentInstall]], NotGiven] = NOT_GIVEN,
         mobile: Union[Optional[SpacesSettingsPatchThemeParamsMobile], NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
@@ -823,7 +897,7 @@ class SpacesSettingsResource:
             "PATCH",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/theme",
             query=_query({}, extra_query),
-            body=_body({"primaryColor": primary_color, "accentColor": accent_color, "palette": palette, "paletteDark": palette_dark, "font": font, "colorScheme": color_scheme, "contentWidth": content_width, "onThisPage": on_this_page, "layout": layout, "customFontUrl": custom_font_url, "customFontFamily": custom_font_family, "brandName": brand_name, "headingFontFamily": heading_font_family, "bodyFontFamily": body_font_family, "monoFontFamily": mono_font_family, "typography": typography, "fonts": fonts, "logoUrl": logo_url, "logoMark": logo_mark, "faviconUrl": favicon_url, "customCss": custom_css, "customJs": custom_js, "scriptOrigins": script_origins, "ads": ads, "whiteLabel": white_label, "showLanguageSwitcher": show_language_switcher, "apiOrigins": api_origins, "fontOrigins": font_origins, "fontOriginsRemoved": font_origins_removed, "imgOrigins": img_origins, "mediaOrigins": media_origins, "frameOrigins": frame_origins, "elementStyles": element_styles, "settingsSchema": settings_schema, "settings": settings, "stringOverrides": string_overrides, "cssSnippets": css_snippets, "announcement": announcement, "chrome": chrome, "notFound": not_found, "components": components, "motion": motion, "componentInstalls": component_installs, "mobile": mobile}, extra_body),
+            body=_body({"primaryColor": primary_color, "primaryColorDark": primary_color_dark, "accentColor": accent_color, "palette": palette, "paletteDark": palette_dark, "font": font, "colorScheme": color_scheme, "colorSchemeStrict": color_scheme_strict, "contentWidth": content_width, "onThisPage": on_this_page, "layout": layout, "customFontUrl": custom_font_url, "customFontFamily": custom_font_family, "brandName": brand_name, "logoIncludesName": logo_includes_name, "headingFontFamily": heading_font_family, "bodyFontFamily": body_font_family, "monoFontFamily": mono_font_family, "typography": typography, "headingAnchors": heading_anchors, "fonts": fonts, "logoUrl": logo_url, "logoMark": logo_mark, "logoUrlLight": logo_url_light, "logoUrlDark": logo_url_dark, "logoDarkMode": logo_dark_mode, "faviconUrl": favicon_url, "customCss": custom_css, "customJs": custom_js, "scriptOrigins": script_origins, "ads": ads, "whiteLabel": white_label, "showLanguageSwitcher": show_language_switcher, "apiOrigins": api_origins, "fontOrigins": font_origins, "fontOriginsRemoved": font_origins_removed, "imgOrigins": img_origins, "mediaOrigins": media_origins, "frameOrigins": frame_origins, "elementStyles": element_styles, "settingsSchema": settings_schema, "settings": settings, "stringOverrides": string_overrides, "cssSnippets": css_snippets, "announcement": announcement, "chrome": chrome, "notFound": not_found, "components": components, "changelog": changelog, "forum": forum, "post": post, "docs": docs, "footnotes": footnotes, "i18n": i18n, "status": status, "legal": legal, "faq": faq, "roadmap": roadmap, "events": events, "courses": courses, "careers": careers, "contact": contact, "motion": motion, "titleBand": title_band, "componentInstalls": component_installs, "mobile": mobile}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -856,24 +930,31 @@ class SpacesSettingsResource:
         *,
         idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
         primary_color: Union[str, NotGiven] = NOT_GIVEN,
+        primary_color_dark: Union[str, NotGiven] = NOT_GIVEN,
         accent_color: Union[str, NotGiven] = NOT_GIVEN,
         palette: Union[SpacesSettingsSetThemeDraftParamsPalette, NotGiven] = NOT_GIVEN,
         palette_dark: Union[SpacesSettingsSetThemeDraftParamsPaletteDark, NotGiven] = NOT_GIVEN,
         font: Union[str, NotGiven] = NOT_GIVEN,
         color_scheme: Union[str, NotGiven] = NOT_GIVEN,
+        color_scheme_strict: Union[bool, NotGiven] = NOT_GIVEN,
         content_width: Union[str, NotGiven] = NOT_GIVEN,
         on_this_page: Union[str, NotGiven] = NOT_GIVEN,
         layout: Union[SpacesSettingsSetThemeDraftParamsLayout, NotGiven] = NOT_GIVEN,
         custom_font_url: Union[Any, NotGiven] = NOT_GIVEN,
         custom_font_family: Union[str, NotGiven] = NOT_GIVEN,
         brand_name: Union[Any, NotGiven] = NOT_GIVEN,
+        logo_includes_name: Union[bool, NotGiven] = NOT_GIVEN,
         heading_font_family: Union[str, NotGiven] = NOT_GIVEN,
         body_font_family: Union[str, NotGiven] = NOT_GIVEN,
         mono_font_family: Union[str, NotGiven] = NOT_GIVEN,
         typography: Union[SpacesSettingsSetThemeDraftParamsTypography, NotGiven] = NOT_GIVEN,
+        heading_anchors: Union[str, NotGiven] = NOT_GIVEN,
         fonts: Union[SpacesSettingsSetThemeDraftParamsFonts, NotGiven] = NOT_GIVEN,
         logo_url: Union[Any, NotGiven] = NOT_GIVEN,
         logo_mark: Union[Any, NotGiven] = NOT_GIVEN,
+        logo_url_light: Union[Any, NotGiven] = NOT_GIVEN,
+        logo_url_dark: Union[Any, NotGiven] = NOT_GIVEN,
+        logo_dark_mode: Union[str, NotGiven] = NOT_GIVEN,
         favicon_url: Union[Any, NotGiven] = NOT_GIVEN,
         custom_css: Union[str, NotGiven] = NOT_GIVEN,
         custom_js: Union[str, NotGiven] = NOT_GIVEN,
@@ -896,7 +977,22 @@ class SpacesSettingsResource:
         chrome: Union[SpacesSettingsSetThemeDraftParamsChrome, NotGiven] = NOT_GIVEN,
         not_found: Union[SpacesSettingsSetThemeDraftParamsNotFound, NotGiven] = NOT_GIVEN,
         components: Union[SpacesSettingsSetThemeDraftParamsComponents, NotGiven] = NOT_GIVEN,
+        changelog: Union[SpacesSettingsSetThemeDraftParamsChangelog, NotGiven] = NOT_GIVEN,
+        forum: Union[SpacesSettingsSetThemeDraftParamsForum, NotGiven] = NOT_GIVEN,
+        post: Union[SpacesSettingsSetThemeDraftParamsPost, NotGiven] = NOT_GIVEN,
+        docs: Union[SpacesSettingsSetThemeDraftParamsDocs, NotGiven] = NOT_GIVEN,
+        footnotes: Union[SpacesSettingsSetThemeDraftParamsFootnotes, NotGiven] = NOT_GIVEN,
+        i18n: Union[SpacesSettingsSetThemeDraftParamsI18n, NotGiven] = NOT_GIVEN,
+        status: Union[SpacesSettingsSetThemeDraftParamsStatus, NotGiven] = NOT_GIVEN,
+        legal: Union[SpacesSettingsSetThemeDraftParamsLegal, NotGiven] = NOT_GIVEN,
+        faq: Union[SpacesSettingsSetThemeDraftParamsFaq, NotGiven] = NOT_GIVEN,
+        roadmap: Union[SpacesSettingsSetThemeDraftParamsRoadmap, NotGiven] = NOT_GIVEN,
+        events: Union[SpacesSettingsSetThemeDraftParamsEvents, NotGiven] = NOT_GIVEN,
+        courses: Union[SpacesSettingsSetThemeDraftParamsCourses, NotGiven] = NOT_GIVEN,
+        careers: Union[SpacesSettingsSetThemeDraftParamsCareers, NotGiven] = NOT_GIVEN,
+        contact: Union[SpacesSettingsSetThemeDraftParamsContact, NotGiven] = NOT_GIVEN,
         motion: Union[SpacesSettingsSetThemeDraftParamsMotion, NotGiven] = NOT_GIVEN,
+        title_band: Union[SpacesSettingsSetThemeDraftParamsTitleBand, NotGiven] = NOT_GIVEN,
         component_installs: Union[List[SpacesSettingsSetThemeDraftParamsComponentInstall], NotGiven] = NOT_GIVEN,
         mobile: Union[SpacesSettingsSetThemeDraftParamsMobile, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
@@ -914,7 +1010,7 @@ class SpacesSettingsResource:
             "PUT",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/theme/draft",
             query=_query({}, extra_query),
-            body=_body({"primaryColor": primary_color, "accentColor": accent_color, "palette": palette, "paletteDark": palette_dark, "font": font, "colorScheme": color_scheme, "contentWidth": content_width, "onThisPage": on_this_page, "layout": layout, "customFontUrl": custom_font_url, "customFontFamily": custom_font_family, "brandName": brand_name, "headingFontFamily": heading_font_family, "bodyFontFamily": body_font_family, "monoFontFamily": mono_font_family, "typography": typography, "fonts": fonts, "logoUrl": logo_url, "logoMark": logo_mark, "faviconUrl": favicon_url, "customCss": custom_css, "customJs": custom_js, "scriptOrigins": script_origins, "ads": ads, "whiteLabel": white_label, "showLanguageSwitcher": show_language_switcher, "apiOrigins": api_origins, "fontOrigins": font_origins, "fontOriginsRemoved": font_origins_removed, "imgOrigins": img_origins, "mediaOrigins": media_origins, "frameOrigins": frame_origins, "elementStyles": element_styles, "settingsSchema": settings_schema, "settings": settings, "stringOverrides": string_overrides, "cssSnippets": css_snippets, "announcement": announcement, "chrome": chrome, "notFound": not_found, "components": components, "motion": motion, "componentInstalls": component_installs, "mobile": mobile}, extra_body),
+            body=_body({"primaryColor": primary_color, "primaryColorDark": primary_color_dark, "accentColor": accent_color, "palette": palette, "paletteDark": palette_dark, "font": font, "colorScheme": color_scheme, "colorSchemeStrict": color_scheme_strict, "contentWidth": content_width, "onThisPage": on_this_page, "layout": layout, "customFontUrl": custom_font_url, "customFontFamily": custom_font_family, "brandName": brand_name, "logoIncludesName": logo_includes_name, "headingFontFamily": heading_font_family, "bodyFontFamily": body_font_family, "monoFontFamily": mono_font_family, "typography": typography, "headingAnchors": heading_anchors, "fonts": fonts, "logoUrl": logo_url, "logoMark": logo_mark, "logoUrlLight": logo_url_light, "logoUrlDark": logo_url_dark, "logoDarkMode": logo_dark_mode, "faviconUrl": favicon_url, "customCss": custom_css, "customJs": custom_js, "scriptOrigins": script_origins, "ads": ads, "whiteLabel": white_label, "showLanguageSwitcher": show_language_switcher, "apiOrigins": api_origins, "fontOrigins": font_origins, "fontOriginsRemoved": font_origins_removed, "imgOrigins": img_origins, "mediaOrigins": media_origins, "frameOrigins": frame_origins, "elementStyles": element_styles, "settingsSchema": settings_schema, "settings": settings, "stringOverrides": string_overrides, "cssSnippets": css_snippets, "announcement": announcement, "chrome": chrome, "notFound": not_found, "components": components, "changelog": changelog, "forum": forum, "post": post, "docs": docs, "footnotes": footnotes, "i18n": i18n, "status": status, "legal": legal, "faq": faq, "roadmap": roadmap, "events": events, "courses": courses, "careers": careers, "contact": contact, "motion": motion, "titleBand": title_band, "componentInstalls": component_installs, "mobile": mobile}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -926,24 +1022,31 @@ class SpacesSettingsResource:
         *,
         idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
         primary_color: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        primary_color_dark: Union[Optional[str], NotGiven] = NOT_GIVEN,
         accent_color: Union[Optional[str], NotGiven] = NOT_GIVEN,
         palette: Union[Optional[SpacesSettingsPatchThemeDraftParamsPalette], NotGiven] = NOT_GIVEN,
         palette_dark: Union[Optional[SpacesSettingsPatchThemeDraftParamsPaletteDark], NotGiven] = NOT_GIVEN,
         font: Union[Optional[str], NotGiven] = NOT_GIVEN,
         color_scheme: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        color_scheme_strict: Union[Optional[bool], NotGiven] = NOT_GIVEN,
         content_width: Union[Optional[str], NotGiven] = NOT_GIVEN,
         on_this_page: Union[Optional[str], NotGiven] = NOT_GIVEN,
         layout: Union[Optional[SpacesSettingsPatchThemeDraftParamsLayout], NotGiven] = NOT_GIVEN,
         custom_font_url: Union[Optional[Any], NotGiven] = NOT_GIVEN,
         custom_font_family: Union[Optional[str], NotGiven] = NOT_GIVEN,
         brand_name: Union[Optional[Any], NotGiven] = NOT_GIVEN,
+        logo_includes_name: Union[Optional[bool], NotGiven] = NOT_GIVEN,
         heading_font_family: Union[Optional[str], NotGiven] = NOT_GIVEN,
         body_font_family: Union[Optional[str], NotGiven] = NOT_GIVEN,
         mono_font_family: Union[Optional[str], NotGiven] = NOT_GIVEN,
         typography: Union[Optional[SpacesSettingsPatchThemeDraftParamsTypography], NotGiven] = NOT_GIVEN,
+        heading_anchors: Union[Optional[str], NotGiven] = NOT_GIVEN,
         fonts: Union[Optional[SpacesSettingsPatchThemeDraftParamsFonts], NotGiven] = NOT_GIVEN,
         logo_url: Union[Optional[Any], NotGiven] = NOT_GIVEN,
         logo_mark: Union[Optional[Any], NotGiven] = NOT_GIVEN,
+        logo_url_light: Union[Optional[Any], NotGiven] = NOT_GIVEN,
+        logo_url_dark: Union[Optional[Any], NotGiven] = NOT_GIVEN,
+        logo_dark_mode: Union[Optional[str], NotGiven] = NOT_GIVEN,
         favicon_url: Union[Optional[Any], NotGiven] = NOT_GIVEN,
         custom_css: Union[Optional[str], NotGiven] = NOT_GIVEN,
         custom_js: Union[Optional[str], NotGiven] = NOT_GIVEN,
@@ -966,7 +1069,22 @@ class SpacesSettingsResource:
         chrome: Union[Optional[SpacesSettingsPatchThemeDraftParamsChrome], NotGiven] = NOT_GIVEN,
         not_found: Union[Optional[SpacesSettingsPatchThemeDraftParamsNotFound], NotGiven] = NOT_GIVEN,
         components: Union[Optional[SpacesSettingsPatchThemeDraftParamsComponents], NotGiven] = NOT_GIVEN,
+        changelog: Union[Optional[SpacesSettingsPatchThemeDraftParamsChangelog], NotGiven] = NOT_GIVEN,
+        forum: Union[Optional[SpacesSettingsPatchThemeDraftParamsForum], NotGiven] = NOT_GIVEN,
+        post: Union[Optional[SpacesSettingsPatchThemeDraftParamsPost], NotGiven] = NOT_GIVEN,
+        docs: Union[Optional[SpacesSettingsPatchThemeDraftParamsDocs], NotGiven] = NOT_GIVEN,
+        footnotes: Union[Optional[SpacesSettingsPatchThemeDraftParamsFootnotes], NotGiven] = NOT_GIVEN,
+        i18n: Union[Optional[SpacesSettingsPatchThemeDraftParamsI18n], NotGiven] = NOT_GIVEN,
+        status: Union[Optional[SpacesSettingsPatchThemeDraftParamsStatus], NotGiven] = NOT_GIVEN,
+        legal: Union[Optional[SpacesSettingsPatchThemeDraftParamsLegal], NotGiven] = NOT_GIVEN,
+        faq: Union[Optional[SpacesSettingsPatchThemeDraftParamsFaq], NotGiven] = NOT_GIVEN,
+        roadmap: Union[Optional[SpacesSettingsPatchThemeDraftParamsRoadmap], NotGiven] = NOT_GIVEN,
+        events: Union[Optional[SpacesSettingsPatchThemeDraftParamsEvents], NotGiven] = NOT_GIVEN,
+        courses: Union[Optional[SpacesSettingsPatchThemeDraftParamsCourses], NotGiven] = NOT_GIVEN,
+        careers: Union[Optional[SpacesSettingsPatchThemeDraftParamsCareers], NotGiven] = NOT_GIVEN,
+        contact: Union[Optional[SpacesSettingsPatchThemeDraftParamsContact], NotGiven] = NOT_GIVEN,
         motion: Union[Optional[SpacesSettingsPatchThemeDraftParamsMotion], NotGiven] = NOT_GIVEN,
+        title_band: Union[Optional[SpacesSettingsPatchThemeDraftParamsTitleBand], NotGiven] = NOT_GIVEN,
         component_installs: Union[Optional[List[SpacesSettingsPatchThemeDraftParamsComponentInstall]], NotGiven] = NOT_GIVEN,
         mobile: Union[Optional[SpacesSettingsPatchThemeDraftParamsMobile], NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
@@ -984,7 +1102,7 @@ class SpacesSettingsResource:
             "PATCH",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/theme/draft",
             query=_query({}, extra_query),
-            body=_body({"primaryColor": primary_color, "accentColor": accent_color, "palette": palette, "paletteDark": palette_dark, "font": font, "colorScheme": color_scheme, "contentWidth": content_width, "onThisPage": on_this_page, "layout": layout, "customFontUrl": custom_font_url, "customFontFamily": custom_font_family, "brandName": brand_name, "headingFontFamily": heading_font_family, "bodyFontFamily": body_font_family, "monoFontFamily": mono_font_family, "typography": typography, "fonts": fonts, "logoUrl": logo_url, "logoMark": logo_mark, "faviconUrl": favicon_url, "customCss": custom_css, "customJs": custom_js, "scriptOrigins": script_origins, "ads": ads, "whiteLabel": white_label, "showLanguageSwitcher": show_language_switcher, "apiOrigins": api_origins, "fontOrigins": font_origins, "fontOriginsRemoved": font_origins_removed, "imgOrigins": img_origins, "mediaOrigins": media_origins, "frameOrigins": frame_origins, "elementStyles": element_styles, "settingsSchema": settings_schema, "settings": settings, "stringOverrides": string_overrides, "cssSnippets": css_snippets, "announcement": announcement, "chrome": chrome, "notFound": not_found, "components": components, "motion": motion, "componentInstalls": component_installs, "mobile": mobile}, extra_body),
+            body=_body({"primaryColor": primary_color, "primaryColorDark": primary_color_dark, "accentColor": accent_color, "palette": palette, "paletteDark": palette_dark, "font": font, "colorScheme": color_scheme, "colorSchemeStrict": color_scheme_strict, "contentWidth": content_width, "onThisPage": on_this_page, "layout": layout, "customFontUrl": custom_font_url, "customFontFamily": custom_font_family, "brandName": brand_name, "logoIncludesName": logo_includes_name, "headingFontFamily": heading_font_family, "bodyFontFamily": body_font_family, "monoFontFamily": mono_font_family, "typography": typography, "headingAnchors": heading_anchors, "fonts": fonts, "logoUrl": logo_url, "logoMark": logo_mark, "logoUrlLight": logo_url_light, "logoUrlDark": logo_url_dark, "logoDarkMode": logo_dark_mode, "faviconUrl": favicon_url, "customCss": custom_css, "customJs": custom_js, "scriptOrigins": script_origins, "ads": ads, "whiteLabel": white_label, "showLanguageSwitcher": show_language_switcher, "apiOrigins": api_origins, "fontOrigins": font_origins, "fontOriginsRemoved": font_origins_removed, "imgOrigins": img_origins, "mediaOrigins": media_origins, "frameOrigins": frame_origins, "elementStyles": element_styles, "settingsSchema": settings_schema, "settings": settings, "stringOverrides": string_overrides, "cssSnippets": css_snippets, "announcement": announcement, "chrome": chrome, "notFound": not_found, "components": components, "changelog": changelog, "forum": forum, "post": post, "docs": docs, "footnotes": footnotes, "i18n": i18n, "status": status, "legal": legal, "faq": faq, "roadmap": roadmap, "events": events, "courses": courses, "careers": careers, "contact": contact, "motion": motion, "titleBand": title_band, "componentInstalls": component_installs, "mobile": mobile}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -1075,7 +1193,7 @@ class SpacesSettingsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ReaderThemeOption]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``get_reader_themes`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -1084,7 +1202,7 @@ class SpacesSettingsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="themes",
+            items_key=None,
         )
 
     def set_reader_themes(
@@ -1178,7 +1296,7 @@ class SpacesSettingsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[RedirectRule]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``get_redirects`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -1187,7 +1305,7 @@ class SpacesSettingsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="redirects",
+            items_key=None,
         )
 
     def set_redirects(
@@ -1244,10 +1362,21 @@ class SpacesSettingsResource:
         space_id: str,
         *,
         idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
-        ga4: Union[str, NotGiven] = NOT_GIVEN,
-        gtm: Union[str, NotGiven] = NOT_GIVEN,
-        segment: Union[str, NotGiven] = NOT_GIVEN,
-        intercom: Union[str, NotGiven] = NOT_GIVEN,
+        ga4: Union[Any, NotGiven] = NOT_GIVEN,
+        gtm: Union[Any, NotGiven] = NOT_GIVEN,
+        segment: Union[Any, NotGiven] = NOT_GIVEN,
+        intercom: Union[Any, NotGiven] = NOT_GIVEN,
+        plausible: Union[Any, NotGiven] = NOT_GIVEN,
+        plausible_host: Union[Any, NotGiven] = NOT_GIVEN,
+        fathom: Union[Any, NotGiven] = NOT_GIVEN,
+        umami: Union[Any, NotGiven] = NOT_GIVEN,
+        umami_host: Union[Any, NotGiven] = NOT_GIVEN,
+        matomo: Union[Any, NotGiven] = NOT_GIVEN,
+        matomo_host: Union[Any, NotGiven] = NOT_GIVEN,
+        simple_analytics: Union[Any, NotGiven] = NOT_GIVEN,
+        posthog: Union[Any, NotGiven] = NOT_GIVEN,
+        posthog_host: Union[Any, NotGiven] = NOT_GIVEN,
+        inherit_org: Union[bool, NotGiven] = NOT_GIVEN,
         custom_head: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
@@ -1264,7 +1393,7 @@ class SpacesSettingsResource:
             "PUT",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/analytics-tags",
             query=_query({}, extra_query),
-            body=_body({"ga4": ga4, "gtm": gtm, "segment": segment, "intercom": intercom, "customHead": custom_head}, extra_body),
+            body=_body({"ga4": ga4, "gtm": gtm, "segment": segment, "intercom": intercom, "plausible": plausible, "plausibleHost": plausible_host, "fathom": fathom, "umami": umami, "umamiHost": umami_host, "matomo": matomo, "matomoHost": matomo_host, "simpleAnalytics": simple_analytics, "posthog": posthog, "posthogHost": posthog_host, "inheritOrg": inherit_org, "customHead": custom_head}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -1347,9 +1476,14 @@ class SpacesSettingsResource:
         description: Union[Any, NotGiven] = NOT_GIVEN,
         social_image_url: Union[Any, NotGiven] = NOT_GIVEN,
         social_card: Union[SpacesSettingsSetSeoParamsSocialCard, NotGiven] = NOT_GIVEN,
+        twitter_site: Union[Any, NotGiven] = NOT_GIVEN,
         verification: Union[SpacesSettingsSetSeoParamsVerification, NotGiven] = NOT_GIVEN,
         noindex: Union[bool, NotGiven] = NOT_GIVEN,
         content_language: Union[Any, NotGiven] = NOT_GIVEN,
+        index_hidden: Union[bool, NotGiven] = NOT_GIVEN,
+        site_name: Union[Any, NotGiven] = NOT_GIVEN,
+        schema_type: Union[Any, NotGiven] = NOT_GIVEN,
+        title_template: Union[Any, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -1365,7 +1499,7 @@ class SpacesSettingsResource:
             "PUT",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/seo",
             query=_query({}, extra_query),
-            body=_body({"description": description, "socialImageUrl": social_image_url, "socialCard": social_card, "verification": verification, "noindex": noindex, "contentLanguage": content_language}, extra_body),
+            body=_body({"description": description, "socialImageUrl": social_image_url, "socialCard": social_card, "twitterSite": twitter_site, "verification": verification, "noindex": noindex, "contentLanguage": content_language, "indexHidden": index_hidden, "siteName": site_name, "schemaType": schema_type, "titleTemplate": title_template}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -1405,7 +1539,7 @@ class SpacesSettingsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[SpacesSettingsGetGlossaryResponseGlossaryItem]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``get_glossary`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -1414,7 +1548,7 @@ class SpacesSettingsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="glossary",
+            items_key=None,
         )
 
     def set_glossary(
@@ -1452,7 +1586,7 @@ class SpacesSettingsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> SpacesSettingsGetRoadmapSettingsResponse:
+    ) -> RoadmapSettingsView:
         """List roadmap settings in a space
 
         ``GET /orgs/{orgId}/spaces/{spaceId}/roadmap-settings``
@@ -1475,6 +1609,11 @@ class SpacesSettingsResource:
         status_labels: Union[Dict[str, Any], NotGiven] = NOT_GIVEN,
         status_order: Union[List[str], NotGiven] = NOT_GIVEN,
         hidden_statuses: Union[List[str], NotGiven] = NOT_GIVEN,
+        public_statuses: Union[List[str], NotGiven] = NOT_GIVEN,
+        statuses: Union[List[SpacesSettingsSetRoadmapSettingsParamsStatuse], NotGiven] = NOT_GIVEN,
+        group_by: Union[str, NotGiven] = NOT_GIVEN,
+        horizons: Union[List[str], NotGiven] = NOT_GIVEN,
+        vote_mode: Union[str, NotGiven] = NOT_GIVEN,
         vote_budget: Union[int, NotGiven] = NOT_GIVEN,
         vote_weights: Union[List[int], NotGiven] = NOT_GIVEN,
         moderate_submissions: Union[bool, NotGiven] = NOT_GIVEN,
@@ -1482,7 +1621,7 @@ class SpacesSettingsResource:
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> SpacesSettingsSetRoadmapSettingsResponse:
+    ) -> Any:
         """Replace roadmap settings in a space
 
         ``PUT /orgs/{orgId}/spaces/{spaceId}/roadmap-settings``
@@ -1493,7 +1632,7 @@ class SpacesSettingsResource:
             "PUT",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/roadmap-settings",
             query=_query({}, extra_query),
-            body=_body({"anonymousVotes": anonymous_votes, "statusLabels": status_labels, "statusOrder": status_order, "hiddenStatuses": hidden_statuses, "voteBudget": vote_budget, "voteWeights": vote_weights, "moderateSubmissions": moderate_submissions}, extra_body),
+            body=_body({"anonymousVotes": anonymous_votes, "statusLabels": status_labels, "statusOrder": status_order, "hiddenStatuses": hidden_statuses, "publicStatuses": public_statuses, "statuses": statuses, "groupBy": group_by, "horizons": horizons, "voteMode": vote_mode, "voteBudget": vote_budget, "voteWeights": vote_weights, "moderateSubmissions": moderate_submissions}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -1510,7 +1649,7 @@ class SpacesSettingsResource:
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> SpacesSettingsRenameRoadmapLaneResponse:
+    ) -> Any:
         """Update the lane
 
         ``PATCH /orgs/{orgId}/spaces/{spaceId}/roadmap-settings/lanes/{laneKey}``
@@ -1602,6 +1741,9 @@ class SpacesSettingsResource:
         *,
         idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
         doc: Union[Optional[Any], NotGiven] = NOT_GIVEN,
+        markdown: Union[str, NotGiven] = NOT_GIVEN,
+        body: Union[str, NotGiven] = NOT_GIVEN,
+        translations: Union[Optional[Dict[str, Any]], NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -1617,7 +1759,7 @@ class SpacesSettingsResource:
             "PUT",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/home-doc",
             query=_query({}, extra_query),
-            body=_body({"doc": doc}, extra_body),
+            body=_body({"doc": doc, "markdown": markdown, "body": body, "translations": translations}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -2057,7 +2199,7 @@ class SpacesShareLinksResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ShareLinkSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -2066,7 +2208,7 @@ class SpacesShareLinksResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="links",
+            items_key=None,
         )
 
     def create(
@@ -2187,7 +2329,7 @@ class SpacesSnapshotsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[SnapshotSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -2196,7 +2338,7 @@ class SpacesSnapshotsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="snapshots",
+            items_key=None,
         )
 
     def create(
@@ -2409,7 +2551,7 @@ class SpacesResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[SpaceSummaryDto]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -2418,7 +2560,7 @@ class SpacesResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="spaces",
+            items_key=None,
         )
 
     def create(
@@ -2432,6 +2574,7 @@ class SpacesResource:
         visibility: Union[str, NotGiven] = NOT_GIVEN,
         seed: Union[bool, NotGiven] = NOT_GIVEN,
         preset: Union[str, NotGiven] = NOT_GIVEN,
+        site_id: Union[Optional[str], NotGiven] = NOT_GIVEN,
         shape: Union[SpacesCreateParamsShape, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
@@ -2448,7 +2591,7 @@ class SpacesResource:
             "POST",
             f"/orgs/{_path(org_id)}/spaces",
             query=_query({}, extra_query),
-            body=_body({"name": name, "slug": slug, "type": type, "visibility": visibility, "seed": seed, "preset": preset, "shape": shape}, extra_body),
+            body=_body({"name": name, "slug": slug, "type": type, "visibility": visibility, "seed": seed, "preset": preset, "siteId": site_id, "shape": shape}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -2507,7 +2650,7 @@ class SpacesResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[SpaceOverview]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``overview`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -2516,7 +2659,7 @@ class SpacesResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="overview",
+            items_key=None,
         )
 
     def preview(
@@ -2568,6 +2711,7 @@ class SpacesResource:
         *,
         idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
         name: Union[str, NotGiven] = NOT_GIVEN,
+        translations: Union[Optional[Dict[str, Any]], NotGiven] = NOT_GIVEN,
         visibility: Union[str, NotGiven] = NOT_GIVEN,
         settings: Union[Dict[str, Any], NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
@@ -2585,7 +2729,7 @@ class SpacesResource:
             "PATCH",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}",
             query=_query({}, extra_query),
-            body=_body({"name": name, "visibility": visibility, "settings": settings}, extra_body),
+            body=_body({"name": name, "translations": translations, "visibility": visibility, "settings": settings}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -2685,7 +2829,7 @@ class SpacesResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="slugs",
+            items_key=None,
         )
 
     def forget_slug(

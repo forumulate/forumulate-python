@@ -50,7 +50,7 @@ class ApiActivityResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ApiCall]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``mine`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -59,5 +59,5 @@ class ApiActivityResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="calls",
+            items_key=None,
         )

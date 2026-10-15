@@ -48,7 +48,7 @@ class CommunityBadgeQueryGrantsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[CommunityBadgeQueryGrantsListResponseRule]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -57,7 +57,7 @@ class CommunityBadgeQueryGrantsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="rules",
+            items_key=None,
         )
 
     def create(
@@ -230,7 +230,7 @@ class CommunityCannedRepliesResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[CannedReplyRow]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -239,7 +239,7 @@ class CommunityCannedRepliesResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="cannedReplies",
+            items_key=None,
         )
 
     def create(
@@ -386,7 +386,7 @@ class CommunityExtrasResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[SavedSearchRow]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list_saved`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -395,7 +395,7 @@ class CommunityExtrasResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="searches",
+            items_key=None,
         )
 
     def save(
@@ -513,7 +513,7 @@ class CommunityExtrasResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[CakedayRow]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``cakeday`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -522,7 +522,7 @@ class CommunityExtrasResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="cakedays",
+            items_key=None,
         )
 
     def list_notes(
@@ -560,7 +560,7 @@ class CommunityExtrasResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[UserNoteRow]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list_notes`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -569,7 +569,7 @@ class CommunityExtrasResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="notes",
+            items_key=None,
         )
 
     def add_note(
@@ -609,7 +609,7 @@ class CommunityExtrasResource:
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
     ) -> CommunityExtrasRemoveNoteResponse:
-        """Delete the note
+        """Delete the note (community)
 
         ``DELETE /orgs/{orgId}/community/notes/{id}``
 
@@ -785,7 +785,7 @@ class CommunityExtrasResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[CommunityExtrasEventsResponseEvent]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``events`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -794,7 +794,7 @@ class CommunityExtrasResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="events",
+            items_key=None,
         )
 
     def rsvp_state(
@@ -978,7 +978,7 @@ class CommunityRelationshipsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[RelationshipRow]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -987,7 +987,7 @@ class CommunityRelationshipsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="relationships",
+            items_key=None,
         )
 
     def mute(
@@ -1562,7 +1562,7 @@ class CommunityReputationResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[CommunityReputationLeaderboardResponseLeader]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``leaderboard`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -1571,7 +1571,7 @@ class CommunityReputationResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="leaders",
+            items_key=None,
         )
 
     def points_leaderboard(
@@ -1652,7 +1652,7 @@ class CommunityReputationResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="members",
+            items_key=None,
         )
 
     def for_user(
@@ -1766,6 +1766,7 @@ class CommunityResource:
         self,
         org_id: str,
         *,
+        space_id: Union[str, NotGiven] = NOT_GIVEN,
         limit: Union[int, NotGiven] = NOT_GIVEN,
         cursor: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
@@ -1776,13 +1777,14 @@ class CommunityResource:
 
         ``GET /orgs/{orgId}/community/reactions``
 
+        :param space_id: A space whose own palette (`reactionEmojis`) to resolve; omitted = the organization's.
         :param limit: Rows per page.
         :param cursor: Where to continue from: pass back the `page.nextCursor` of the previous answer.
         """
         return self._client._request(
             "GET",
             f"/orgs/{_path(org_id)}/community/reactions",
-            query=_query({"limit": limit, "cursor": cursor}, extra_query),
+            query=_query({"spaceId": space_id, "limit": limit, "cursor": cursor}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -1791,6 +1793,7 @@ class CommunityResource:
         self,
         org_id: str,
         *,
+        space_id: Union[str, NotGiven] = NOT_GIVEN,
         limit: Union[int, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -1800,11 +1803,11 @@ class CommunityResource:
         yield from self._client._paginate(
             "GET",
             f"/orgs/{_path(org_id)}/community/reactions",
-            query=_query({"limit": limit}, extra_query),
+            query=_query({"spaceId": space_id, "limit": limit}, extra_query),
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="emojis",
+            items_key=None,
         )
 
     def set_reactions(
@@ -1866,7 +1869,7 @@ class CommunityResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[CustomReaction]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list_custom_reactions`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -1875,7 +1878,7 @@ class CommunityResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="reactions",
+            items_key=None,
         )
 
     def upload_custom_reaction(
@@ -1968,7 +1971,7 @@ class CommunityResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ArticleSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``tag_feed`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -1977,7 +1980,7 @@ class CommunityResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="items",
+            items_key=None,
         )
 
     def search(
@@ -2034,7 +2037,7 @@ class CommunityResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ArticleSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``bookmarks`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -2043,5 +2046,5 @@ class CommunityResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="articles",
+            items_key=None,
         )

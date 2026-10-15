@@ -48,7 +48,7 @@ class SsoAtlasResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[SsoConnectionView]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list_sso`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -57,7 +57,7 @@ class SsoAtlasResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="connections",
+            items_key=None,
         )
 
     def create_sso(
@@ -293,7 +293,7 @@ class SsoAtlasResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[OauthClientView]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list_oauth_clients`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -302,7 +302,7 @@ class SsoAtlasResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="clients",
+            items_key=None,
         )
 
     def create_oauth_client(
@@ -750,7 +750,7 @@ class SsoResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[SsoProvidersResponseProvider]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``providers`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -759,5 +759,5 @@ class SsoResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="providers",
+            items_key=None,
         )

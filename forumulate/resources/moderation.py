@@ -48,7 +48,7 @@ class ModerationContentRulesResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ContentRule]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -57,7 +57,7 @@ class ModerationContentRulesResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="rules",
+            items_key=None,
         )
 
     def create(
@@ -204,7 +204,7 @@ class ModerationFlagTypesResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[FlagTypeCatalogueEntry]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``catalogue`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -213,7 +213,7 @@ class ModerationFlagTypesResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="catalogue",
+            items_key=None,
         )
 
     def update(
@@ -309,7 +309,7 @@ class ModerationScreeningResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ScreenedRow]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -318,7 +318,7 @@ class ModerationScreeningResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="screened",
+            items_key=None,
         )
 
     def add(
@@ -417,7 +417,7 @@ class ModerationResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[Reviewable]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``reviewables`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -426,7 +426,7 @@ class ModerationResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="reviewables",
+            items_key=None,
         )
 
     def review_flag(
@@ -698,7 +698,7 @@ class ModerationResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[FlagHistoryEntry]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``flag_history`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -707,7 +707,7 @@ class ModerationResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="history",
+            items_key=None,
         )
 
     def list_words(
@@ -743,7 +743,7 @@ class ModerationResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[WatchedWordSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list_words`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -752,7 +752,7 @@ class ModerationResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="words",
+            items_key=None,
         )
 
     def add_word(
@@ -842,7 +842,7 @@ class ModerationResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[SuspensionSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list_suspensions`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -851,7 +851,7 @@ class ModerationResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="suspensions",
+            items_key=None,
         )
 
     def suspend(
@@ -987,7 +987,7 @@ class ModerationResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[WatchedUserRow]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list_watched_users`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -996,7 +996,7 @@ class ModerationResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="watchedUsers",
+            items_key=None,
         )
 
     def watch_user(
@@ -1082,7 +1082,7 @@ class ModerationResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[StaffActionSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``log`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -1091,5 +1091,5 @@ class ModerationResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="actions",
+            items_key=None,
         )

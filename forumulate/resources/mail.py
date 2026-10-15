@@ -153,7 +153,7 @@ class MailTemplatesResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[EmailTemplateSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -162,7 +162,7 @@ class MailTemplatesResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="templates",
+            items_key=None,
         )
 
     def get(
@@ -396,7 +396,7 @@ class MailResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[SuppressionRow]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -405,7 +405,7 @@ class MailResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="suppressions",
+            items_key=None,
         )
 
     def suppress(
@@ -490,7 +490,7 @@ class MailResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[MailLogRow]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``log`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -499,7 +499,7 @@ class MailResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="log",
+            items_key=None,
         )
 
     def check(

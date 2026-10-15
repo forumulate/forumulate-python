@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 
 class BlogArticlesResource:
-    """``client.blog.articles`` (26 operations)."""
+    """``client.blog.articles`` (17 operations)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
@@ -57,7 +57,7 @@ class BlogArticlesResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ArticleSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -66,7 +66,7 @@ class BlogArticlesResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="articles",
+            items_key=None,
         )
 
     def create(
@@ -80,10 +80,13 @@ class BlogArticlesResource:
         published_at: Union[str, NotGiven] = NOT_GIVEN,
         byline: Union[Optional[BlogArticlesCreateParamsByline], NotGiven] = NOT_GIVEN,
         author: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        bylines: Union[Optional[List[BlogArticlesCreateParamsByline2]], NotGiven] = NOT_GIVEN,
+        subtitle: Union[Optional[str], NotGiven] = NOT_GIVEN,
         content: Union[BlogArticlesCreateParamsContent, NotGiven] = NOT_GIVEN,
         sections: Union[Dict[str, Any], NotGiven] = NOT_GIVEN,
         excerpt: Union[str, NotGiven] = NOT_GIVEN,
         cover_url: Union[Any, NotGiven] = NOT_GIVEN,
+        cover_alt: Union[Optional[str], NotGiven] = NOT_GIVEN,
         series: Union[Optional[str], NotGiven] = NOT_GIVEN,
         social_image_url: Union[Any, NotGiven] = NOT_GIVEN,
         tags: Union[List[str], NotGiven] = NOT_GIVEN,
@@ -108,7 +111,7 @@ class BlogArticlesResource:
             "POST",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/blog",
             query=_query({}, extra_query),
-            body=_body({"title": title, "slug": slug, "publishedAt": published_at, "byline": byline, "author": author, "content": content, "sections": sections, "excerpt": excerpt, "coverUrl": cover_url, "series": series, "socialImageUrl": social_image_url, "tags": tags, "seo": seo, "furtherReading": further_reading, "commentsEnabled": comments_enabled, "onThisPage": on_this_page, "customization": customization, "markdown": markdown}, extra_body),
+            body=_body({"title": title, "slug": slug, "publishedAt": published_at, "byline": byline, "author": author, "bylines": bylines, "subtitle": subtitle, "content": content, "sections": sections, "excerpt": excerpt, "coverUrl": cover_url, "coverAlt": cover_alt, "series": series, "socialImageUrl": social_image_url, "tags": tags, "seo": seo, "furtherReading": further_reading, "commentsEnabled": comments_enabled, "onThisPage": on_this_page, "customization": customization, "markdown": markdown}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -147,10 +150,13 @@ class BlogArticlesResource:
         published_at: Union[str, NotGiven] = NOT_GIVEN,
         byline: Union[Optional[BlogArticlesUpdateParamsByline], NotGiven] = NOT_GIVEN,
         author: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        bylines: Union[Optional[List[BlogArticlesUpdateParamsByline2]], NotGiven] = NOT_GIVEN,
+        subtitle: Union[Optional[str], NotGiven] = NOT_GIVEN,
         content: Union[BlogArticlesUpdateParamsContent, NotGiven] = NOT_GIVEN,
         sections: Union[Dict[str, Any], NotGiven] = NOT_GIVEN,
         excerpt: Union[str, NotGiven] = NOT_GIVEN,
         cover_url: Union[Any, NotGiven] = NOT_GIVEN,
+        cover_alt: Union[Optional[str], NotGiven] = NOT_GIVEN,
         series: Union[Optional[str], NotGiven] = NOT_GIVEN,
         social_image_url: Union[Any, NotGiven] = NOT_GIVEN,
         tags: Union[List[str], NotGiven] = NOT_GIVEN,
@@ -160,6 +166,8 @@ class BlogArticlesResource:
         on_this_page: Union[Optional[str], NotGiven] = NOT_GIVEN,
         customization: Union[Optional[BlogArticlesUpdateParamsCustomization], NotGiven] = NOT_GIVEN,
         edit_reason: Union[str, NotGiven] = NOT_GIVEN,
+        pinned: Union[bool, NotGiven] = NOT_GIVEN,
+        featured: Union[bool, NotGiven] = NOT_GIVEN,
         markdown: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
@@ -176,7 +184,7 @@ class BlogArticlesResource:
             "PATCH",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/blog/{_path(topic_id)}",
             query=_query({}, extra_query),
-            body=_body({"title": title, "slug": slug, "publishedAt": published_at, "byline": byline, "author": author, "content": content, "sections": sections, "excerpt": excerpt, "coverUrl": cover_url, "series": series, "socialImageUrl": social_image_url, "tags": tags, "seo": seo, "furtherReading": further_reading, "commentsEnabled": comments_enabled, "onThisPage": on_this_page, "customization": customization, "editReason": edit_reason, "markdown": markdown}, extra_body),
+            body=_body({"title": title, "slug": slug, "publishedAt": published_at, "byline": byline, "author": author, "bylines": bylines, "subtitle": subtitle, "content": content, "sections": sections, "excerpt": excerpt, "coverUrl": cover_url, "coverAlt": cover_alt, "series": series, "socialImageUrl": social_image_url, "tags": tags, "seo": seo, "furtherReading": further_reading, "commentsEnabled": comments_enabled, "onThisPage": on_this_page, "customization": customization, "editReason": edit_reason, "pinned": pinned, "featured": featured, "markdown": markdown}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -243,7 +251,7 @@ class BlogArticlesResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[SlugHistoryEntry]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``slug_history`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -252,7 +260,7 @@ class BlogArticlesResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="history",
+            items_key=None,
         )
 
     def schedule(
@@ -531,243 +539,6 @@ class BlogArticlesResource:
             timeout=timeout,
         )
 
-    def vote(
-        self,
-        org_id: str,
-        space_id: str,
-        post_id: str,
-        *,
-        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
-        extra_query: Optional[Mapping[str, Any]] = None,
-        extra_headers: Optional[Mapping[str, str]] = None,
-        timeout: Optional[float] = None,
-    ) -> BlogArticlesVoteResponse:
-        """Create the vote in a space (blog posts)
-
-        ``POST /orgs/{orgId}/spaces/{spaceId}/blog/posts/{postId}/vote``
-
-        :param idempotency_key: Makes this write safe to retry.
-        """
-        return self._client._request(
-            "POST",
-            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/blog/posts/{_path(post_id)}/vote",
-            query=_query({}, extra_query),
-            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
-            timeout=timeout,
-        )
-
-    def react(
-        self,
-        org_id: str,
-        space_id: str,
-        post_id: str,
-        *,
-        emoji: str,
-        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
-        extra_query: Optional[Mapping[str, Any]] = None,
-        extra_body: Optional[Mapping[str, Any]] = None,
-        extra_headers: Optional[Mapping[str, str]] = None,
-        timeout: Optional[float] = None,
-    ) -> BlogArticlesReactResponse:
-        """Create the react in a space (blog posts)
-
-        ``POST /orgs/{orgId}/spaces/{spaceId}/blog/posts/{postId}/react``
-
-        :param idempotency_key: Makes this write safe to retry.
-        """
-        return self._client._request(
-            "POST",
-            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/blog/posts/{_path(post_id)}/react",
-            query=_query({}, extra_query),
-            body=_body({"emoji": emoji}, extra_body),
-            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
-            timeout=timeout,
-        )
-
-    def edit_post(
-        self,
-        org_id: str,
-        space_id: str,
-        post_id: str,
-        *,
-        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
-        content: Union[BlogArticlesEditPostParamsContent, NotGiven] = NOT_GIVEN,
-        edit_reason: Union[str, NotGiven] = NOT_GIVEN,
-        markdown: Union[str, NotGiven] = NOT_GIVEN,
-        extra_query: Optional[Mapping[str, Any]] = None,
-        extra_body: Optional[Mapping[str, Any]] = None,
-        extra_headers: Optional[Mapping[str, str]] = None,
-        timeout: Optional[float] = None,
-    ) -> BlogArticlesEditPostResponse:
-        """Update the post (blog)
-
-        ``PATCH /orgs/{orgId}/spaces/{spaceId}/blog/posts/{postId}``
-
-        :param idempotency_key: Makes this write safe to retry.
-        """
-        return self._client._request(
-            "PATCH",
-            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/blog/posts/{_path(post_id)}",
-            query=_query({}, extra_query),
-            body=_body({"content": content, "editReason": edit_reason, "markdown": markdown}, extra_body),
-            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
-            timeout=timeout,
-        )
-
-    def delete_post(
-        self,
-        org_id: str,
-        space_id: str,
-        post_id: str,
-        *,
-        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
-        extra_query: Optional[Mapping[str, Any]] = None,
-        extra_headers: Optional[Mapping[str, str]] = None,
-        timeout: Optional[float] = None,
-    ) -> BlogArticlesDeletePostResponse:
-        """Delete the post (blog)
-
-        ``DELETE /orgs/{orgId}/spaces/{spaceId}/blog/posts/{postId}``
-
-        :param idempotency_key: Makes this write safe to retry.
-        """
-        return self._client._request(
-            "DELETE",
-            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/blog/posts/{_path(post_id)}",
-            query=_query({}, extra_query),
-            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
-            timeout=timeout,
-        )
-
-    def revisions(
-        self,
-        org_id: str,
-        space_id: str,
-        post_id: str,
-        *,
-        limit: Union[int, NotGiven] = NOT_GIVEN,
-        cursor: Union[str, NotGiven] = NOT_GIVEN,
-        extra_query: Optional[Mapping[str, Any]] = None,
-        extra_headers: Optional[Mapping[str, str]] = None,
-        timeout: Optional[float] = None,
-    ) -> BlogArticlesRevisionsResponse:
-        """List revisions in a space (blog posts)
-
-        ``GET /orgs/{orgId}/spaces/{spaceId}/blog/posts/{postId}/revisions``
-
-        :param limit: Rows per page.
-        :param cursor: Where to continue from: pass back the `page.nextCursor` of the previous answer.
-        """
-        return self._client._request(
-            "GET",
-            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/blog/posts/{_path(post_id)}/revisions",
-            query=_query({"limit": limit, "cursor": cursor}, extra_query),
-            headers=extra_headers,
-            timeout=timeout,
-        )
-
-    def revisions_all(
-        self,
-        org_id: str,
-        space_id: str,
-        post_id: str,
-        *,
-        limit: Union[int, NotGiven] = NOT_GIVEN,
-        extra_query: Optional[Mapping[str, Any]] = None,
-        extra_headers: Optional[Mapping[str, str]] = None,
-        timeout: Optional[float] = None,
-    ) -> Iterator[PostRevisionMeta]:
-        """Iterate every item of ``revisions`` across all pages, following ``cursor``."""
-        yield from self._client._paginate(
-            "GET",
-            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/blog/posts/{_path(post_id)}/revisions",
-            query=_query({"limit": limit}, extra_query),
-            headers=extra_headers,
-            timeout=timeout,
-            page_param="cursor",
-            items_key="revisions",
-        )
-
-    def revision_diff(
-        self,
-        org_id: str,
-        space_id: str,
-        post_id: str,
-        revision: str,
-        *,
-        extra_query: Optional[Mapping[str, Any]] = None,
-        extra_headers: Optional[Mapping[str, str]] = None,
-        timeout: Optional[float] = None,
-    ) -> BlogArticlesRevisionDiffResponse:
-        """Get the revision (blog)
-
-        ``GET /orgs/{orgId}/spaces/{spaceId}/blog/posts/{postId}/revisions/{revision}``
-        """
-        return self._client._request(
-            "GET",
-            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/blog/posts/{_path(post_id)}/revisions/{_path(revision)}",
-            query=_query({}, extra_query),
-            headers=extra_headers,
-            timeout=timeout,
-        )
-
-    def flag(
-        self,
-        org_id: str,
-        space_id: str,
-        post_id: str,
-        *,
-        reason: str,
-        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
-        flag_type: Union[str, NotGiven] = NOT_GIVEN,
-        extra_query: Optional[Mapping[str, Any]] = None,
-        extra_body: Optional[Mapping[str, Any]] = None,
-        extra_headers: Optional[Mapping[str, str]] = None,
-        timeout: Optional[float] = None,
-    ) -> BlogArticlesFlagResponse:
-        """Flag the post (blog)
-
-        ``POST /orgs/{orgId}/spaces/{spaceId}/blog/posts/{postId}/flag``
-
-        :param idempotency_key: Makes this write safe to retry.
-        """
-        return self._client._request(
-            "POST",
-            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/blog/posts/{_path(post_id)}/flag",
-            query=_query({}, extra_query),
-            body=_body({"reason": reason, "flagType": flag_type}, extra_body),
-            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
-            timeout=timeout,
-        )
-
-    def set_post_status(
-        self,
-        org_id: str,
-        space_id: str,
-        post_id: str,
-        *,
-        status: str,
-        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
-        extra_query: Optional[Mapping[str, Any]] = None,
-        extra_body: Optional[Mapping[str, Any]] = None,
-        extra_headers: Optional[Mapping[str, str]] = None,
-        timeout: Optional[float] = None,
-    ) -> BlogArticlesSetPostStatusResponse:
-        """Create the status in a space (blog posts)
-
-        ``POST /orgs/{orgId}/spaces/{spaceId}/blog/posts/{postId}/status``
-
-        :param idempotency_key: Makes this write safe to retry.
-        """
-        return self._client._request(
-            "POST",
-            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/blog/posts/{_path(post_id)}/status",
-            query=_query({}, extra_query),
-            body=_body({"status": status}, extra_body),
-            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
-            timeout=timeout,
-        )
-
     def recover_article(
         self,
         org_id: str,
@@ -788,31 +559,6 @@ class BlogArticlesResource:
         return self._client._request(
             "POST",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/blog/{_path(topic_id)}/recover",
-            query=_query({}, extra_query),
-            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
-            timeout=timeout,
-        )
-
-    def recover_post(
-        self,
-        org_id: str,
-        space_id: str,
-        post_id: str,
-        *,
-        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
-        extra_query: Optional[Mapping[str, Any]] = None,
-        extra_headers: Optional[Mapping[str, str]] = None,
-        timeout: Optional[float] = None,
-    ) -> BlogArticlesRecoverPostResponse:
-        """Create the recover in a space (blog posts)
-
-        ``POST /orgs/{orgId}/spaces/{spaceId}/blog/posts/{postId}/recover``
-
-        :param idempotency_key: Makes this write safe to retry.
-        """
-        return self._client._request(
-            "POST",
-            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/blog/posts/{_path(post_id)}/recover",
             query=_query({}, extra_query),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
@@ -860,7 +606,7 @@ class BlogModerationResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[FlagRow]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``flags`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -869,7 +615,7 @@ class BlogModerationResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="flags",
+            items_key=None,
         )
 
     def review_flag(
@@ -969,7 +715,7 @@ class BlogNewsletterResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[SubscriberSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``subscribers`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -978,7 +724,7 @@ class BlogNewsletterResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="subscribers",
+            items_key=None,
         )
 
     def subscribers_csv(
@@ -1036,7 +782,7 @@ class BlogNewsletterResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[BroadcastSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``broadcasts`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -1045,7 +791,7 @@ class BlogNewsletterResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="broadcasts",
+            items_key=None,
         )
 
     def send_broadcast(
@@ -1149,7 +895,7 @@ class BlogNewsletterResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="tags",
+            items_key=None,
         )
 
 
@@ -1197,7 +943,7 @@ class BlogResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[BlogTagsResponseTag]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``tags`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -1206,7 +952,7 @@ class BlogResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="tags",
+            items_key=None,
         )
 
     def search(
@@ -1265,7 +1011,7 @@ class BlogResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ArticleSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``bookmarks`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -1274,7 +1020,7 @@ class BlogResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="articles",
+            items_key=None,
         )
 
     def get_settings(
@@ -1312,6 +1058,7 @@ class BlogResource:
         default_sort: Union[Optional[str], NotGiven] = NOT_GIVEN,
         reactions_enabled: Union[Optional[bool], NotGiven] = NOT_GIVEN,
         default_byline: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        reaction_emojis: Union[Optional[List[str]], NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -1327,7 +1074,7 @@ class BlogResource:
             "PATCH",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/blog/settings",
             query=_query({}, extra_query),
-            body=_body({"whoCanPost": who_can_post, "moderateComments": moderate_comments, "moderateAnonymous": moderate_anonymous, "allowAnonymous": allow_anonymous, "anonymousCaptcha": anonymous_captcha, "defaultSort": default_sort, "reactionsEnabled": reactions_enabled, "defaultByline": default_byline}, extra_body),
+            body=_body({"whoCanPost": who_can_post, "moderateComments": moderate_comments, "moderateAnonymous": moderate_anonymous, "allowAnonymous": allow_anonymous, "anonymousCaptcha": anonymous_captcha, "defaultSort": default_sort, "reactionsEnabled": reactions_enabled, "defaultByline": default_byline, "reactionEmojis": reaction_emojis}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )

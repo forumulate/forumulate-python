@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 
 class ThemesBundlesResource:
-    """``client.themes.bundles`` (9 operations)."""
+    """``client.themes.bundles`` (11 operations)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
@@ -48,6 +48,7 @@ class ThemesBundlesResource:
         theme: ThemesBundlesImportSpaceParamsTheme,
         idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
         components: Union[List[ThemesBundlesImportSpaceParamsComponent], NotGiven] = NOT_GIVEN,
+        front_pages: Union[List[ThemesBundlesImportSpaceParamsFrontPage], NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -63,7 +64,7 @@ class ThemesBundlesResource:
             "PUT",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/theme/bundle",
             query=_query({}, extra_query),
-            body=_body({"format": format, "formatVersion": format_version, "meta": meta, "requiredOrigins": required_origins, "theme": theme, "components": components}, extra_body),
+            body=_body({"format": format, "formatVersion": format_version, "meta": meta, "requiredOrigins": required_origins, "theme": theme, "components": components, "frontPages": front_pages}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -129,6 +130,7 @@ class ThemesBundlesResource:
         theme: ThemesBundlesImportSiteParamsTheme,
         idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
         components: Union[List[ThemesBundlesImportSiteParamsComponent], NotGiven] = NOT_GIVEN,
+        front_pages: Union[List[ThemesBundlesImportSiteParamsFrontPage], NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -144,7 +146,7 @@ class ThemesBundlesResource:
             "PUT",
             f"/orgs/{_path(org_id)}/sites/{_path(site_id)}/theme/bundle",
             query=_query({}, extra_query),
-            body=_body({"format": format, "formatVersion": format_version, "meta": meta, "requiredOrigins": required_origins, "theme": theme, "components": components}, extra_body),
+            body=_body({"format": format, "formatVersion": format_version, "meta": meta, "requiredOrigins": required_origins, "theme": theme, "components": components, "frontPages": front_pages}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -195,6 +197,190 @@ class ThemesBundlesResource:
             f"/orgs/{_path(org_id)}/sites/{_path(site_id)}/theme/draft",
             query=_query({}, extra_query),
             headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def set_site_draft(
+        self,
+        org_id: str,
+        site_id: str,
+        *,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        primary_color: Union[str, NotGiven] = NOT_GIVEN,
+        primary_color_dark: Union[str, NotGiven] = NOT_GIVEN,
+        accent_color: Union[str, NotGiven] = NOT_GIVEN,
+        palette: Union[ThemesBundlesSetSiteDraftParamsPalette, NotGiven] = NOT_GIVEN,
+        palette_dark: Union[ThemesBundlesSetSiteDraftParamsPaletteDark, NotGiven] = NOT_GIVEN,
+        font: Union[str, NotGiven] = NOT_GIVEN,
+        color_scheme: Union[str, NotGiven] = NOT_GIVEN,
+        color_scheme_strict: Union[bool, NotGiven] = NOT_GIVEN,
+        content_width: Union[str, NotGiven] = NOT_GIVEN,
+        on_this_page: Union[str, NotGiven] = NOT_GIVEN,
+        layout: Union[ThemesBundlesSetSiteDraftParamsLayout, NotGiven] = NOT_GIVEN,
+        custom_font_url: Union[Any, NotGiven] = NOT_GIVEN,
+        custom_font_family: Union[str, NotGiven] = NOT_GIVEN,
+        brand_name: Union[Any, NotGiven] = NOT_GIVEN,
+        logo_includes_name: Union[bool, NotGiven] = NOT_GIVEN,
+        heading_font_family: Union[str, NotGiven] = NOT_GIVEN,
+        body_font_family: Union[str, NotGiven] = NOT_GIVEN,
+        mono_font_family: Union[str, NotGiven] = NOT_GIVEN,
+        typography: Union[ThemesBundlesSetSiteDraftParamsTypography, NotGiven] = NOT_GIVEN,
+        heading_anchors: Union[str, NotGiven] = NOT_GIVEN,
+        fonts: Union[ThemesBundlesSetSiteDraftParamsFonts, NotGiven] = NOT_GIVEN,
+        logo_url: Union[Any, NotGiven] = NOT_GIVEN,
+        logo_mark: Union[Any, NotGiven] = NOT_GIVEN,
+        logo_url_light: Union[Any, NotGiven] = NOT_GIVEN,
+        logo_url_dark: Union[Any, NotGiven] = NOT_GIVEN,
+        logo_dark_mode: Union[str, NotGiven] = NOT_GIVEN,
+        favicon_url: Union[Any, NotGiven] = NOT_GIVEN,
+        custom_css: Union[str, NotGiven] = NOT_GIVEN,
+        custom_js: Union[str, NotGiven] = NOT_GIVEN,
+        script_origins: Union[List[str], NotGiven] = NOT_GIVEN,
+        ads: Union[ThemesBundlesSetSiteDraftParamsAds, NotGiven] = NOT_GIVEN,
+        white_label: Union[bool, NotGiven] = NOT_GIVEN,
+        show_language_switcher: Union[bool, NotGiven] = NOT_GIVEN,
+        api_origins: Union[List[str], NotGiven] = NOT_GIVEN,
+        font_origins: Union[List[str], NotGiven] = NOT_GIVEN,
+        font_origins_removed: Union[List[str], NotGiven] = NOT_GIVEN,
+        img_origins: Union[List[str], NotGiven] = NOT_GIVEN,
+        media_origins: Union[List[str], NotGiven] = NOT_GIVEN,
+        frame_origins: Union[List[str], NotGiven] = NOT_GIVEN,
+        element_styles: Union[List[ThemesBundlesSetSiteDraftParamsElementStyle], NotGiven] = NOT_GIVEN,
+        settings_schema: Union[List[ThemesBundlesSetSiteDraftParamsSettingsSchemaItem], NotGiven] = NOT_GIVEN,
+        settings: Union[Dict[str, Any], NotGiven] = NOT_GIVEN,
+        string_overrides: Union[Dict[str, Any], NotGiven] = NOT_GIVEN,
+        css_snippets: Union[List[ThemesBundlesSetSiteDraftParamsCssSnippet], NotGiven] = NOT_GIVEN,
+        announcement: Union[ThemesBundlesSetSiteDraftParamsAnnouncement, NotGiven] = NOT_GIVEN,
+        chrome: Union[ThemesBundlesSetSiteDraftParamsChrome, NotGiven] = NOT_GIVEN,
+        not_found: Union[ThemesBundlesSetSiteDraftParamsNotFound, NotGiven] = NOT_GIVEN,
+        components: Union[ThemesBundlesSetSiteDraftParamsComponents, NotGiven] = NOT_GIVEN,
+        changelog: Union[ThemesBundlesSetSiteDraftParamsChangelog, NotGiven] = NOT_GIVEN,
+        forum: Union[ThemesBundlesSetSiteDraftParamsForum, NotGiven] = NOT_GIVEN,
+        post: Union[ThemesBundlesSetSiteDraftParamsPost, NotGiven] = NOT_GIVEN,
+        docs: Union[ThemesBundlesSetSiteDraftParamsDocs, NotGiven] = NOT_GIVEN,
+        footnotes: Union[ThemesBundlesSetSiteDraftParamsFootnotes, NotGiven] = NOT_GIVEN,
+        i18n: Union[ThemesBundlesSetSiteDraftParamsI18n, NotGiven] = NOT_GIVEN,
+        status: Union[ThemesBundlesSetSiteDraftParamsStatus, NotGiven] = NOT_GIVEN,
+        legal: Union[ThemesBundlesSetSiteDraftParamsLegal, NotGiven] = NOT_GIVEN,
+        faq: Union[ThemesBundlesSetSiteDraftParamsFaq, NotGiven] = NOT_GIVEN,
+        roadmap: Union[ThemesBundlesSetSiteDraftParamsRoadmap, NotGiven] = NOT_GIVEN,
+        events: Union[ThemesBundlesSetSiteDraftParamsEvents, NotGiven] = NOT_GIVEN,
+        courses: Union[ThemesBundlesSetSiteDraftParamsCourses, NotGiven] = NOT_GIVEN,
+        careers: Union[ThemesBundlesSetSiteDraftParamsCareers, NotGiven] = NOT_GIVEN,
+        contact: Union[ThemesBundlesSetSiteDraftParamsContact, NotGiven] = NOT_GIVEN,
+        motion: Union[ThemesBundlesSetSiteDraftParamsMotion, NotGiven] = NOT_GIVEN,
+        title_band: Union[ThemesBundlesSetSiteDraftParamsTitleBand, NotGiven] = NOT_GIVEN,
+        component_installs: Union[List[ThemesBundlesSetSiteDraftParamsComponentInstall], NotGiven] = NOT_GIVEN,
+        mobile: Union[ThemesBundlesSetSiteDraftParamsMobile, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Any:
+        """List draft theme in an organization (replace)
+
+        ``PUT /orgs/{orgId}/sites/{siteId}/theme/draft``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "PUT",
+            f"/orgs/{_path(org_id)}/sites/{_path(site_id)}/theme/draft",
+            query=_query({}, extra_query),
+            body=_body({"primaryColor": primary_color, "primaryColorDark": primary_color_dark, "accentColor": accent_color, "palette": palette, "paletteDark": palette_dark, "font": font, "colorScheme": color_scheme, "colorSchemeStrict": color_scheme_strict, "contentWidth": content_width, "onThisPage": on_this_page, "layout": layout, "customFontUrl": custom_font_url, "customFontFamily": custom_font_family, "brandName": brand_name, "logoIncludesName": logo_includes_name, "headingFontFamily": heading_font_family, "bodyFontFamily": body_font_family, "monoFontFamily": mono_font_family, "typography": typography, "headingAnchors": heading_anchors, "fonts": fonts, "logoUrl": logo_url, "logoMark": logo_mark, "logoUrlLight": logo_url_light, "logoUrlDark": logo_url_dark, "logoDarkMode": logo_dark_mode, "faviconUrl": favicon_url, "customCss": custom_css, "customJs": custom_js, "scriptOrigins": script_origins, "ads": ads, "whiteLabel": white_label, "showLanguageSwitcher": show_language_switcher, "apiOrigins": api_origins, "fontOrigins": font_origins, "fontOriginsRemoved": font_origins_removed, "imgOrigins": img_origins, "mediaOrigins": media_origins, "frameOrigins": frame_origins, "elementStyles": element_styles, "settingsSchema": settings_schema, "settings": settings, "stringOverrides": string_overrides, "cssSnippets": css_snippets, "announcement": announcement, "chrome": chrome, "notFound": not_found, "components": components, "changelog": changelog, "forum": forum, "post": post, "docs": docs, "footnotes": footnotes, "i18n": i18n, "status": status, "legal": legal, "faq": faq, "roadmap": roadmap, "events": events, "courses": courses, "careers": careers, "contact": contact, "motion": motion, "titleBand": title_band, "componentInstalls": component_installs, "mobile": mobile}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+    def patch_site_draft(
+        self,
+        org_id: str,
+        site_id: str,
+        *,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        primary_color: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        primary_color_dark: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        accent_color: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        palette: Union[Optional[ThemesBundlesPatchSiteDraftParamsPalette], NotGiven] = NOT_GIVEN,
+        palette_dark: Union[Optional[ThemesBundlesPatchSiteDraftParamsPaletteDark], NotGiven] = NOT_GIVEN,
+        font: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        color_scheme: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        color_scheme_strict: Union[Optional[bool], NotGiven] = NOT_GIVEN,
+        content_width: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        on_this_page: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        layout: Union[Optional[ThemesBundlesPatchSiteDraftParamsLayout], NotGiven] = NOT_GIVEN,
+        custom_font_url: Union[Optional[Any], NotGiven] = NOT_GIVEN,
+        custom_font_family: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        brand_name: Union[Optional[Any], NotGiven] = NOT_GIVEN,
+        logo_includes_name: Union[Optional[bool], NotGiven] = NOT_GIVEN,
+        heading_font_family: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        body_font_family: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        mono_font_family: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        typography: Union[Optional[ThemesBundlesPatchSiteDraftParamsTypography], NotGiven] = NOT_GIVEN,
+        heading_anchors: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        fonts: Union[Optional[ThemesBundlesPatchSiteDraftParamsFonts], NotGiven] = NOT_GIVEN,
+        logo_url: Union[Optional[Any], NotGiven] = NOT_GIVEN,
+        logo_mark: Union[Optional[Any], NotGiven] = NOT_GIVEN,
+        logo_url_light: Union[Optional[Any], NotGiven] = NOT_GIVEN,
+        logo_url_dark: Union[Optional[Any], NotGiven] = NOT_GIVEN,
+        logo_dark_mode: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        favicon_url: Union[Optional[Any], NotGiven] = NOT_GIVEN,
+        custom_css: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        custom_js: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        script_origins: Union[Optional[List[str]], NotGiven] = NOT_GIVEN,
+        ads: Union[Optional[ThemesBundlesPatchSiteDraftParamsAds], NotGiven] = NOT_GIVEN,
+        white_label: Union[Optional[bool], NotGiven] = NOT_GIVEN,
+        show_language_switcher: Union[Optional[bool], NotGiven] = NOT_GIVEN,
+        api_origins: Union[Optional[List[str]], NotGiven] = NOT_GIVEN,
+        font_origins: Union[Optional[List[str]], NotGiven] = NOT_GIVEN,
+        font_origins_removed: Union[Optional[List[str]], NotGiven] = NOT_GIVEN,
+        img_origins: Union[Optional[List[str]], NotGiven] = NOT_GIVEN,
+        media_origins: Union[Optional[List[str]], NotGiven] = NOT_GIVEN,
+        frame_origins: Union[Optional[List[str]], NotGiven] = NOT_GIVEN,
+        element_styles: Union[Optional[List[ThemesBundlesPatchSiteDraftParamsElementStyle]], NotGiven] = NOT_GIVEN,
+        settings_schema: Union[Optional[List[ThemesBundlesPatchSiteDraftParamsSettingsSchemaItem]], NotGiven] = NOT_GIVEN,
+        settings: Union[Optional[Dict[str, Any]], NotGiven] = NOT_GIVEN,
+        string_overrides: Union[Optional[Dict[str, Any]], NotGiven] = NOT_GIVEN,
+        css_snippets: Union[Optional[List[ThemesBundlesPatchSiteDraftParamsCssSnippet]], NotGiven] = NOT_GIVEN,
+        announcement: Union[Optional[ThemesBundlesPatchSiteDraftParamsAnnouncement], NotGiven] = NOT_GIVEN,
+        chrome: Union[Optional[ThemesBundlesPatchSiteDraftParamsChrome], NotGiven] = NOT_GIVEN,
+        not_found: Union[Optional[ThemesBundlesPatchSiteDraftParamsNotFound], NotGiven] = NOT_GIVEN,
+        components: Union[Optional[ThemesBundlesPatchSiteDraftParamsComponents], NotGiven] = NOT_GIVEN,
+        changelog: Union[Optional[ThemesBundlesPatchSiteDraftParamsChangelog], NotGiven] = NOT_GIVEN,
+        forum: Union[Optional[ThemesBundlesPatchSiteDraftParamsForum], NotGiven] = NOT_GIVEN,
+        post: Union[Optional[ThemesBundlesPatchSiteDraftParamsPost], NotGiven] = NOT_GIVEN,
+        docs: Union[Optional[ThemesBundlesPatchSiteDraftParamsDocs], NotGiven] = NOT_GIVEN,
+        footnotes: Union[Optional[ThemesBundlesPatchSiteDraftParamsFootnotes], NotGiven] = NOT_GIVEN,
+        i18n: Union[Optional[ThemesBundlesPatchSiteDraftParamsI18n], NotGiven] = NOT_GIVEN,
+        status: Union[Optional[ThemesBundlesPatchSiteDraftParamsStatus], NotGiven] = NOT_GIVEN,
+        legal: Union[Optional[ThemesBundlesPatchSiteDraftParamsLegal], NotGiven] = NOT_GIVEN,
+        faq: Union[Optional[ThemesBundlesPatchSiteDraftParamsFaq], NotGiven] = NOT_GIVEN,
+        roadmap: Union[Optional[ThemesBundlesPatchSiteDraftParamsRoadmap], NotGiven] = NOT_GIVEN,
+        events: Union[Optional[ThemesBundlesPatchSiteDraftParamsEvents], NotGiven] = NOT_GIVEN,
+        courses: Union[Optional[ThemesBundlesPatchSiteDraftParamsCourses], NotGiven] = NOT_GIVEN,
+        careers: Union[Optional[ThemesBundlesPatchSiteDraftParamsCareers], NotGiven] = NOT_GIVEN,
+        contact: Union[Optional[ThemesBundlesPatchSiteDraftParamsContact], NotGiven] = NOT_GIVEN,
+        motion: Union[Optional[ThemesBundlesPatchSiteDraftParamsMotion], NotGiven] = NOT_GIVEN,
+        title_band: Union[Optional[ThemesBundlesPatchSiteDraftParamsTitleBand], NotGiven] = NOT_GIVEN,
+        component_installs: Union[Optional[List[ThemesBundlesPatchSiteDraftParamsComponentInstall]], NotGiven] = NOT_GIVEN,
+        mobile: Union[Optional[ThemesBundlesPatchSiteDraftParamsMobile], NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Any:
+        """List draft theme in an organization (update)
+
+        ``PATCH /orgs/{orgId}/sites/{siteId}/theme/draft``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "PATCH",
+            f"/orgs/{_path(org_id)}/sites/{_path(site_id)}/theme/draft",
+            query=_query({}, extra_query),
+            body=_body({"primaryColor": primary_color, "primaryColorDark": primary_color_dark, "accentColor": accent_color, "palette": palette, "paletteDark": palette_dark, "font": font, "colorScheme": color_scheme, "colorSchemeStrict": color_scheme_strict, "contentWidth": content_width, "onThisPage": on_this_page, "layout": layout, "customFontUrl": custom_font_url, "customFontFamily": custom_font_family, "brandName": brand_name, "logoIncludesName": logo_includes_name, "headingFontFamily": heading_font_family, "bodyFontFamily": body_font_family, "monoFontFamily": mono_font_family, "typography": typography, "headingAnchors": heading_anchors, "fonts": fonts, "logoUrl": logo_url, "logoMark": logo_mark, "logoUrlLight": logo_url_light, "logoUrlDark": logo_url_dark, "logoDarkMode": logo_dark_mode, "faviconUrl": favicon_url, "customCss": custom_css, "customJs": custom_js, "scriptOrigins": script_origins, "ads": ads, "whiteLabel": white_label, "showLanguageSwitcher": show_language_switcher, "apiOrigins": api_origins, "fontOrigins": font_origins, "fontOriginsRemoved": font_origins_removed, "imgOrigins": img_origins, "mediaOrigins": media_origins, "frameOrigins": frame_origins, "elementStyles": element_styles, "settingsSchema": settings_schema, "settings": settings, "stringOverrides": string_overrides, "cssSnippets": css_snippets, "announcement": announcement, "chrome": chrome, "notFound": not_found, "components": components, "changelog": changelog, "forum": forum, "post": post, "docs": docs, "footnotes": footnotes, "i18n": i18n, "status": status, "legal": legal, "faq": faq, "roadmap": roadmap, "events": events, "courses": courses, "careers": careers, "contact": contact, "motion": motion, "titleBand": title_band, "componentInstalls": component_installs, "mobile": mobile}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
 
@@ -365,7 +551,7 @@ class ThemesComponentMarketplaceResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[OwnComponentListing]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``mine`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -374,7 +560,7 @@ class ThemesComponentMarketplaceResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="listings",
+            items_key=None,
         )
 
     def submit(
@@ -665,7 +851,7 @@ class ThemesComponentsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ComponentInstallItem]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -674,7 +860,7 @@ class ThemesComponentsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="components",
+            items_key=None,
         )
 
     def create(
@@ -936,7 +1122,7 @@ class ThemesLibraryResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ThemeLibraryItem]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -945,7 +1131,7 @@ class ThemesLibraryResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="themes",
+            items_key=None,
         )
 
     def save(
@@ -992,6 +1178,7 @@ class ThemesLibraryResource:
         theme: ThemesLibraryImportParamsTheme,
         idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
         components: Union[List[ThemesLibraryImportParamsComponent], NotGiven] = NOT_GIVEN,
+        front_pages: Union[List[ThemesLibraryImportParamsFrontPage], NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -1007,7 +1194,7 @@ class ThemesLibraryResource:
             "POST",
             f"/orgs/{_path(org_id)}/theme-library/import",
             query=_query({}, extra_query),
-            body=_body({"format": format, "formatVersion": format_version, "meta": meta, "requiredOrigins": required_origins, "theme": theme, "components": components}, extra_body),
+            body=_body({"format": format, "formatVersion": format_version, "meta": meta, "requiredOrigins": required_origins, "theme": theme, "components": components, "frontPages": front_pages}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -1254,7 +1441,7 @@ class ThemesMarketplaceResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[OwnThemeListing]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``mine`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -1263,7 +1450,7 @@ class ThemesMarketplaceResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="listings",
+            items_key=None,
         )
 
     def submit(
@@ -1381,7 +1568,7 @@ class ThemesMarketplaceResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[RegistryTheme]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``browse_registry`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -1390,7 +1577,7 @@ class ThemesMarketplaceResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="themes",
+            items_key=None,
         )
 
     def publish(

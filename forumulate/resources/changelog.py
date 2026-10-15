@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 
 class ChangelogResource:
-    """``client.changelog`` (9 operations)."""
+    """``client.changelog`` (10 operations)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
@@ -23,6 +23,7 @@ class ChangelogResource:
         limit: Union[int, NotGiven] = NOT_GIVEN,
         offset: Union[int, NotGiven] = NOT_GIVEN,
         cursor: Union[str, NotGiven] = NOT_GIVEN,
+        review: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
@@ -37,7 +38,7 @@ class ChangelogResource:
         return self._client._request(
             "GET",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/changelog",
-            query=_query({"limit": limit, "offset": offset, "cursor": cursor}, extra_query),
+            query=_query({"limit": limit, "offset": offset, "cursor": cursor, "review": review}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -49,19 +50,20 @@ class ChangelogResource:
         *,
         limit: Union[int, NotGiven] = NOT_GIVEN,
         offset: Union[int, NotGiven] = NOT_GIVEN,
+        review: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ArticleDetail]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/changelog",
-            query=_query({"limit": limit, "offset": offset}, extra_query),
+            query=_query({"limit": limit, "offset": offset, "review": review}, extra_query),
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="releases",
+            items_key=None,
         )
 
     def create(
@@ -79,6 +81,11 @@ class ChangelogResource:
         fields: Union[Dict[str, Any], NotGiven] = NOT_GIVEN,
         on_this_page: Union[Optional[str], NotGiven] = NOT_GIVEN,
         customization: Union[Optional[ChangelogCreateParamsCustomization], NotGiven] = NOT_GIVEN,
+        cover_url: Union[Any, NotGiven] = NOT_GIVEN,
+        expires_at: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        cover_alt: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        bylines: Union[Optional[List[ChangelogCreateParamsByline]], NotGiven] = NOT_GIVEN,
+        author_ids: Union[List[str], NotGiven] = NOT_GIVEN,
         markdown: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
@@ -95,7 +102,7 @@ class ChangelogResource:
             "POST",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/changelog",
             query=_query({}, extra_query),
-            body=_body({"title": title, "content": content, "version": version, "publishedAt": published_at, "shippedTopicIds": shipped_topic_ids, "tags": tags, "fields": fields, "onThisPage": on_this_page, "customization": customization, "markdown": markdown}, extra_body),
+            body=_body({"title": title, "content": content, "version": version, "publishedAt": published_at, "shippedTopicIds": shipped_topic_ids, "tags": tags, "fields": fields, "onThisPage": on_this_page, "customization": customization, "coverUrl": cover_url, "expiresAt": expires_at, "coverAlt": cover_alt, "bylines": bylines, "authorIds": author_ids, "markdown": markdown}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -120,6 +127,28 @@ class ChangelogResource:
             "GET",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/changelog/compile",
             query=_query({"since": since}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def widget_stats(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        days: Union[float, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> ChangelogWidgetStatsResponse:
+        """List widget stats in a space
+
+        ``GET /orgs/{orgId}/spaces/{spaceId}/changelog/widget-stats``
+        """
+        return self._client._request(
+            "GET",
+            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/changelog/widget-stats",
+            query=_query({"days": days}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -188,6 +217,13 @@ class ChangelogResource:
         on_this_page: Union[Optional[str], NotGiven] = NOT_GIVEN,
         customization: Union[Optional[ChangelogUpdateParamsCustomization], NotGiven] = NOT_GIVEN,
         edit_reason: Union[str, NotGiven] = NOT_GIVEN,
+        pinned: Union[bool, NotGiven] = NOT_GIVEN,
+        featured: Union[bool, NotGiven] = NOT_GIVEN,
+        cover_url: Union[Any, NotGiven] = NOT_GIVEN,
+        expires_at: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        cover_alt: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        bylines: Union[Optional[List[ChangelogUpdateParamsByline]], NotGiven] = NOT_GIVEN,
+        author_ids: Union[List[str], NotGiven] = NOT_GIVEN,
         markdown: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
@@ -204,7 +240,7 @@ class ChangelogResource:
             "PATCH",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/changelog/{_path(release_id)}",
             query=_query({}, extra_query),
-            body=_body({"title": title, "content": content, "version": version, "publishedAt": published_at, "shippedTopicIds": shipped_topic_ids, "tags": tags, "fields": fields, "onThisPage": on_this_page, "customization": customization, "editReason": edit_reason, "markdown": markdown}, extra_body),
+            body=_body({"title": title, "content": content, "version": version, "publishedAt": published_at, "shippedTopicIds": shipped_topic_ids, "tags": tags, "fields": fields, "onThisPage": on_this_page, "customization": customization, "editReason": edit_reason, "pinned": pinned, "featured": featured, "coverUrl": cover_url, "expiresAt": expires_at, "coverAlt": cover_alt, "bylines": bylines, "authorIds": author_ids, "markdown": markdown}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )

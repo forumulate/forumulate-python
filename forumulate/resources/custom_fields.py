@@ -50,7 +50,7 @@ class CustomFieldsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[FieldDef]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list_defs`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -59,7 +59,7 @@ class CustomFieldsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="fields",
+            items_key=None,
         )
 
     def create_def(
@@ -157,7 +157,7 @@ class CustomFieldsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[FieldValue]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``get_values`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -166,7 +166,7 @@ class CustomFieldsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="values",
+            items_key=None,
         )
 
     def set_value(

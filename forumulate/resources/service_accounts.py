@@ -48,7 +48,7 @@ class ServiceAccountsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[ServiceAccountSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -57,7 +57,7 @@ class ServiceAccountsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="accounts",
+            items_key=None,
         )
 
     def create(
@@ -67,6 +67,8 @@ class ServiceAccountsResource:
         name: str,
         role: str,
         idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        persona: Union[bool, NotGiven] = NOT_GIVEN,
+        username: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -82,7 +84,7 @@ class ServiceAccountsResource:
             "POST",
             f"/orgs/{_path(org_id)}/service-accounts",
             query=_query({}, extra_query),
-            body=_body({"name": name, "role": role}, extra_body),
+            body=_body({"name": name, "role": role, "persona": persona, "username": username}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -92,8 +94,9 @@ class ServiceAccountsResource:
         org_id: str,
         id: str,
         *,
-        name: str,
         idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        name: Union[str, NotGiven] = NOT_GIVEN,
+        username: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -109,7 +112,7 @@ class ServiceAccountsResource:
             "PATCH",
             f"/orgs/{_path(org_id)}/service-accounts/{_path(id)}",
             query=_query({}, extra_query),
-            body=_body({"name": name}, extra_body),
+            body=_body({"name": name, "username": username}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -173,7 +176,7 @@ class ServiceAccountsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[PatSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``tokens`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -182,7 +185,7 @@ class ServiceAccountsResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="tokens",
+            items_key=None,
         )
 
     def mint(

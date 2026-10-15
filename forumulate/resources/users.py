@@ -351,6 +351,7 @@ class UsersResource:
         bio: Union[Optional[str], NotGiven] = NOT_GIVEN,
         location: Union[Optional[str], NotGiven] = NOT_GIVEN,
         website_url: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        username: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -366,7 +367,7 @@ class UsersResource:
             "PATCH",
             f"/users/me",
             query=_query({}, extra_query),
-            body=_body({"name": name, "avatarUrl": avatar_url, "bio": bio, "location": location, "websiteUrl": website_url}, extra_body),
+            body=_body({"name": name, "avatarUrl": avatar_url, "bio": bio, "location": location, "websiteUrl": website_url, "username": username}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )

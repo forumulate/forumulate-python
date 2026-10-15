@@ -20,6 +20,9 @@ class StatusMonitorsResource:
         monitor_id: str,
         token: str,
         *,
+        detail: Union[str, NotGiven] = NOT_GIVEN,
+        status: Union[str, NotGiven] = NOT_GIVEN,
+        ok: Union[bool, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
@@ -27,11 +30,15 @@ class StatusMonitorsResource:
         """Record a heartbeat for a monitor
 
         ``GET /status/ping/{monitorId}/{token}``
+
+        :param detail: What went wrong, in the job’s words (up to 500 characters).
+        :param status: Name the state outright.
+        :param ok: `false` = the job ran but part of it failed: the component reads partial_outage while pings keep arriving.
         """
         return self._client._request(
             "GET",
             f"/status/ping/{_path(monitor_id)}/{_path(token)}",
-            query=_query({}, extra_query),
+            query=_query({"detail": detail, "status": status, "ok": ok}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -42,7 +49,11 @@ class StatusMonitorsResource:
         token: str,
         *,
         idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        ok: Union[bool, NotGiven] = NOT_GIVEN,
+        status: Union[str, NotGiven] = NOT_GIVEN,
+        detail: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
     ) -> StatusMonitorsPingPostResponse:
@@ -56,6 +67,7 @@ class StatusMonitorsResource:
             "POST",
             f"/status/ping/{_path(monitor_id)}/{_path(token)}",
             query=_query({}, extra_query),
+            body=_body({"ok": ok, "status": status, "detail": detail}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -89,7 +101,7 @@ class StatusMonitorsResource:
 
 
 class StatusResource:
-    """``client.status`` (13 operations; monitors)."""
+    """``client.status`` (15 operations; monitors)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
@@ -130,7 +142,7 @@ class StatusResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[StatusChannel]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list_channels`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -139,7 +151,7 @@ class StatusResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="channels",
+            items_key=None,
         )
 
     def add_channel(
@@ -231,7 +243,7 @@ class StatusResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[MonitorSummary]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``monitors_status`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -240,7 +252,7 @@ class StatusResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="monitors",
+            items_key=None,
         )
 
     def add_monitor(
@@ -253,6 +265,14 @@ class StatusResource:
         url: Union[str, NotGiven] = NOT_GIVEN,
         method: Union[str, NotGiven] = NOT_GIVEN,
         kind: Union[str, NotGiven] = NOT_GIVEN,
+        target_space_id: Union[str, NotGiven] = NOT_GIVEN,
+        vendor_component: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        region: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        description: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        slug: Union[str, NotGiven] = NOT_GIVEN,
+        link_url: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        display: Union[str, NotGiven] = NOT_GIVEN,
+        starts_on: Union[Optional[str], NotGiven] = NOT_GIVEN,
         interval_seconds: Union[int, NotGiven] = NOT_GIVEN,
         visible: Union[bool, NotGiven] = NOT_GIVEN,
         alerts_enabled: Union[bool, NotGiven] = NOT_GIVEN,
@@ -267,6 +287,7 @@ class StatusResource:
         body_path: Union[Optional[str], NotGiven] = NOT_GIVEN,
         body_expect: Union[Optional[str], NotGiven] = NOT_GIVEN,
         group: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        audience: Union[StatusAddMonitorParamsAudience, NotGiven] = NOT_GIVEN,
         declared_state: Union[Optional[str], NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
@@ -283,7 +304,7 @@ class StatusResource:
             "POST",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/monitors",
             query=_query({}, extra_query),
-            body=_body({"name": name, "url": url, "method": method, "kind": kind, "intervalSeconds": interval_seconds, "visible": visible, "alertsEnabled": alerts_enabled, "failureThreshold": failure_threshold, "successThreshold": success_threshold, "keyword": keyword, "certExpiryDays": cert_expiry_days, "expectStatus": expect_status, "maxLatencyMs": max_latency_ms, "requestHeaders": request_headers, "requestBody": request_body, "bodyPath": body_path, "bodyExpect": body_expect, "group": group, "declaredState": declared_state}, extra_body),
+            body=_body({"name": name, "url": url, "method": method, "kind": kind, "targetSpaceId": target_space_id, "vendorComponent": vendor_component, "region": region, "description": description, "slug": slug, "linkUrl": link_url, "display": display, "startsOn": starts_on, "intervalSeconds": interval_seconds, "visible": visible, "alertsEnabled": alerts_enabled, "failureThreshold": failure_threshold, "successThreshold": success_threshold, "keyword": keyword, "certExpiryDays": cert_expiry_days, "expectStatus": expect_status, "maxLatencyMs": max_latency_ms, "requestHeaders": request_headers, "requestBody": request_body, "bodyPath": body_path, "bodyExpect": body_expect, "group": group, "audience": audience, "declaredState": declared_state}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -299,6 +320,14 @@ class StatusResource:
         url: Union[str, NotGiven] = NOT_GIVEN,
         method: Union[str, NotGiven] = NOT_GIVEN,
         kind: Union[str, NotGiven] = NOT_GIVEN,
+        target_space_id: Union[str, NotGiven] = NOT_GIVEN,
+        vendor_component: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        region: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        description: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        slug: Union[str, NotGiven] = NOT_GIVEN,
+        link_url: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        display: Union[str, NotGiven] = NOT_GIVEN,
+        starts_on: Union[Optional[str], NotGiven] = NOT_GIVEN,
         interval_seconds: Union[int, NotGiven] = NOT_GIVEN,
         visible: Union[bool, NotGiven] = NOT_GIVEN,
         alerts_enabled: Union[bool, NotGiven] = NOT_GIVEN,
@@ -313,6 +342,7 @@ class StatusResource:
         body_path: Union[Optional[str], NotGiven] = NOT_GIVEN,
         body_expect: Union[Optional[str], NotGiven] = NOT_GIVEN,
         group: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        audience: Union[StatusUpdateMonitorParamsAudience, NotGiven] = NOT_GIVEN,
         declared_state: Union[Optional[str], NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
@@ -329,7 +359,7 @@ class StatusResource:
             "PATCH",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/monitors/{_path(monitor_id)}",
             query=_query({}, extra_query),
-            body=_body({"name": name, "url": url, "method": method, "kind": kind, "intervalSeconds": interval_seconds, "visible": visible, "alertsEnabled": alerts_enabled, "failureThreshold": failure_threshold, "successThreshold": success_threshold, "keyword": keyword, "certExpiryDays": cert_expiry_days, "expectStatus": expect_status, "maxLatencyMs": max_latency_ms, "requestHeaders": request_headers, "requestBody": request_body, "bodyPath": body_path, "bodyExpect": body_expect, "group": group, "declaredState": declared_state}, extra_body),
+            body=_body({"name": name, "url": url, "method": method, "kind": kind, "targetSpaceId": target_space_id, "vendorComponent": vendor_component, "region": region, "description": description, "slug": slug, "linkUrl": link_url, "display": display, "startsOn": starts_on, "intervalSeconds": interval_seconds, "visible": visible, "alertsEnabled": alerts_enabled, "failureThreshold": failure_threshold, "successThreshold": success_threshold, "keyword": keyword, "certExpiryDays": cert_expiry_days, "expectStatus": expect_status, "maxLatencyMs": max_latency_ms, "requestHeaders": request_headers, "requestBody": request_body, "bodyPath": body_path, "bodyExpect": body_expect, "group": group, "audience": audience, "declaredState": declared_state}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -367,7 +397,7 @@ class StatusResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> StatusGetSettingsResponse:
+    ) -> StatusNotificationSettings:
         """List settings in a space (status)
 
         ``GET /orgs/{orgId}/spaces/{spaceId}/status/settings``
@@ -388,11 +418,14 @@ class StatusResource:
         idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
         auto_incident: Union[bool, NotGiven] = NOT_GIVEN,
         notify_subscribers: Union[bool, NotGiven] = NOT_GIVEN,
+        maintenance_reminder_hours: Union[int, NotGiven] = NOT_GIVEN,
+        auto_translate: Union[List[str], NotGiven] = NOT_GIVEN,
+        day_thresholds: Union[Optional[StatusSetSettingsParamsDayThresholds], NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> StatusSetSettingsResponse:
+    ) -> Any:
         """Replace settings in a space
 
         ``PUT /orgs/{orgId}/spaces/{spaceId}/status/settings``
@@ -403,7 +436,81 @@ class StatusResource:
             "PUT",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/settings",
             query=_query({}, extra_query),
-            body=_body({"autoIncident": auto_incident, "notifySubscribers": notify_subscribers}, extra_body),
+            body=_body({"autoIncident": auto_incident, "notifySubscribers": notify_subscribers, "maintenanceReminderHours": maintenance_reminder_hours, "autoTranslate": auto_translate, "dayThresholds": day_thresholds}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+    def get_groups(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        limit: Union[int, NotGiven] = NOT_GIVEN,
+        cursor: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> StatusGetGroupsResponse:
+        """List groups in a space
+
+        ``GET /orgs/{orgId}/spaces/{spaceId}/status/groups``
+
+        :param limit: Rows per page.
+        :param cursor: Where to continue from: pass back the `page.nextCursor` of the previous answer.
+        """
+        return self._client._request(
+            "GET",
+            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/groups",
+            query=_query({"limit": limit, "cursor": cursor}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+        )
+
+    def get_groups_all(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        limit: Union[int, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Iterator[Any]:
+        """Iterate every item of ``get_groups`` across all pages, following ``cursor``."""
+        yield from self._client._paginate(
+            "GET",
+            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/groups",
+            query=_query({"limit": limit}, extra_query),
+            headers=extra_headers,
+            timeout=timeout,
+            page_param="cursor",
+            items_key=None,
+        )
+
+    def set_groups(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        groups: List[StatusSetGroupsParamsGroup],
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> StatusSetGroupsResponse:
+        """Replace groups in a space
+
+        ``PUT /orgs/{orgId}/spaces/{spaceId}/status/groups``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "PUT",
+            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/groups",
+            query=_query({}, extra_query),
+            body=_body({"groups": groups}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -439,9 +546,17 @@ class StatusResource:
         state: Union[str, NotGiven] = NOT_GIVEN,
         severity: Union[str, NotGiven] = NOT_GIVEN,
         body: Union[Dict[str, Any], NotGiven] = NOT_GIVEN,
+        markdown: Union[str, NotGiven] = NOT_GIVEN,
         fields: Union[StatusCreateIncidentParamsFields, NotGiven] = NOT_GIVEN,
+        components: Union[List[StatusCreateIncidentParamsComponent], NotGiven] = NOT_GIVEN,
         scheduled_for: Union[Optional[str], NotGiven] = NOT_GIVEN,
         scheduled_until: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        started_at: Union[str, NotGiven] = NOT_GIVEN,
+        resolved_at: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        auto_start: Union[bool, NotGiven] = NOT_GIVEN,
+        auto_complete: Union[bool, NotGiven] = NOT_GIVEN,
+        audience: Union[StatusCreateIncidentParamsAudience, NotGiven] = NOT_GIVEN,
+        notify_subscribers: Union[bool, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -457,7 +572,7 @@ class StatusResource:
             "POST",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/incidents",
             query=_query({}, extra_query),
-            body=_body({"title": title, "state": state, "severity": severity, "body": body, "fields": fields, "scheduledFor": scheduled_for, "scheduledUntil": scheduled_until}, extra_body),
+            body=_body({"title": title, "state": state, "severity": severity, "body": body, "markdown": markdown, "fields": fields, "components": components, "scheduledFor": scheduled_for, "scheduledUntil": scheduled_until, "startedAt": started_at, "resolvedAt": resolved_at, "autoStart": auto_start, "autoComplete": auto_complete, "audience": audience, "notifySubscribers": notify_subscribers}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -473,9 +588,17 @@ class StatusResource:
         state: Union[str, NotGiven] = NOT_GIVEN,
         severity: Union[str, NotGiven] = NOT_GIVEN,
         body: Union[Dict[str, Any], NotGiven] = NOT_GIVEN,
+        markdown: Union[str, NotGiven] = NOT_GIVEN,
         fields: Union[StatusUpdateIncidentParamsFields, NotGiven] = NOT_GIVEN,
+        components: Union[List[StatusUpdateIncidentParamsComponent], NotGiven] = NOT_GIVEN,
         scheduled_for: Union[Optional[str], NotGiven] = NOT_GIVEN,
         scheduled_until: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        started_at: Union[str, NotGiven] = NOT_GIVEN,
+        resolved_at: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        auto_start: Union[bool, NotGiven] = NOT_GIVEN,
+        auto_complete: Union[bool, NotGiven] = NOT_GIVEN,
+        audience: Union[StatusUpdateIncidentParamsAudience, NotGiven] = NOT_GIVEN,
+        notify_subscribers: Union[bool, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -491,7 +614,7 @@ class StatusResource:
             "PATCH",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/incidents/{_path(incident_id)}",
             query=_query({}, extra_query),
-            body=_body({"title": title, "state": state, "severity": severity, "body": body, "fields": fields, "scheduledFor": scheduled_for, "scheduledUntil": scheduled_until}, extra_body),
+            body=_body({"title": title, "state": state, "severity": severity, "body": body, "markdown": markdown, "fields": fields, "components": components, "scheduledFor": scheduled_for, "scheduledUntil": scheduled_until, "startedAt": started_at, "resolvedAt": resolved_at, "autoStart": auto_start, "autoComplete": auto_complete, "audience": audience, "notifySubscribers": notify_subscribers}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -505,6 +628,7 @@ class StatusResource:
         body: str,
         idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
         state: Union[str, NotGiven] = NOT_GIVEN,
+        notify_subscribers: Union[bool, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -520,7 +644,7 @@ class StatusResource:
             "POST",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/incidents/{_path(incident_id)}/updates",
             query=_query({}, extra_query),
-            body=_body({"body": body, "state": state}, extra_body),
+            body=_body({"body": body, "state": state, "notifySubscribers": notify_subscribers}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )

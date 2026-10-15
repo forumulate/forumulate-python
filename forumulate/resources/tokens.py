@@ -45,7 +45,7 @@ class TokensResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[PatSummaryDto]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -54,7 +54,7 @@ class TokensResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="pats",
+            items_key=None,
         )
 
     def create(
@@ -119,7 +119,7 @@ class TokensResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[PatScopeDto]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``scopes`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -128,7 +128,7 @@ class TokensResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="scopes",
+            items_key=None,
         )
 
     def rename(

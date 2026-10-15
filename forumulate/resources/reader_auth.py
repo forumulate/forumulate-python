@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 
 class ReaderAuthResource:
-    """``client.reader_auth`` (7 operations)."""
+    """``client.reader_auth`` (9 operations)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
@@ -23,7 +23,7 @@ class ReaderAuthResource:
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
     ) -> Any:
-        """Get the reader auth in an organization
+        """The organization's reader sign-in registry
 
         ``GET /orgs/{orgId}/reader-auth``
         """
@@ -45,13 +45,14 @@ class ReaderAuthResource:
         approve_new_members: Union[bool, NotGiven] = NOT_GIVEN,
         hosted_signup: Union[bool, NotGiven] = NOT_GIVEN,
         sign_in_url: Union[str, NotGiven] = NOT_GIVEN,
+        sign_out_url: Union[str, NotGiven] = NOT_GIVEN,
         outbound_sync: Union[ReaderAuthSetOrgParamsOutboundSync, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
     ) -> Any:
-        """Replace the reader auth in an organization
+        """Replace the organization's reader sign-in registry
 
         ``PUT /orgs/{orgId}/reader-auth``
 
@@ -61,7 +62,39 @@ class ReaderAuthResource:
             "PUT",
             f"/orgs/{_path(org_id)}/reader-auth",
             query=_query({}, extra_query),
-            body=_body({"sourceOfTruth": source_of_truth, "providers": providers, "approveNewMembers": approve_new_members, "hostedSignup": hosted_signup, "signInUrl": sign_in_url, "outboundSync": outbound_sync}, extra_body),
+            body=_body({"sourceOfTruth": source_of_truth, "providers": providers, "approveNewMembers": approve_new_members, "hostedSignup": hosted_signup, "signInUrl": sign_in_url, "signOutUrl": sign_out_url, "outboundSync": outbound_sync}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+    def patch_org(
+        self,
+        org_id: str,
+        *,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        source_of_truth: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        providers: Union[List[ReaderAuthPatchOrgParamsProvider], NotGiven] = NOT_GIVEN,
+        approve_new_members: Union[Any, NotGiven] = NOT_GIVEN,
+        hosted_signup: Union[Any, NotGiven] = NOT_GIVEN,
+        sign_in_url: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        sign_out_url: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        outbound_sync: Union[Optional[ReaderAuthPatchOrgParamsOutboundSync], NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> ReaderAuthPatchOrgResponse:
+        """Change part of the organization's reader sign-in registry
+
+        ``PATCH /orgs/{orgId}/reader-auth``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "PATCH",
+            f"/orgs/{_path(org_id)}/reader-auth",
+            query=_query({}, extra_query),
+            body=_body({"sourceOfTruth": source_of_truth, "providers": providers, "approveNewMembers": approve_new_members, "hostedSignup": hosted_signup, "signInUrl": sign_in_url, "signOutUrl": sign_out_url, "outboundSync": outbound_sync}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -141,6 +174,7 @@ class ReaderAuthResource:
         approve_new_members: Union[bool, NotGiven] = NOT_GIVEN,
         hosted_signup: Union[bool, NotGiven] = NOT_GIVEN,
         sign_in_url: Union[str, NotGiven] = NOT_GIVEN,
+        sign_out_url: Union[str, NotGiven] = NOT_GIVEN,
         outbound_sync: Union[ReaderAuthSetSpaceParamsOutboundSync, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
@@ -157,7 +191,40 @@ class ReaderAuthResource:
             "PUT",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/reader-auth",
             query=_query({}, extra_query),
-            body=_body({"sourceOfTruth": source_of_truth, "providers": providers, "approveNewMembers": approve_new_members, "hostedSignup": hosted_signup, "signInUrl": sign_in_url, "outboundSync": outbound_sync}, extra_body),
+            body=_body({"sourceOfTruth": source_of_truth, "providers": providers, "approveNewMembers": approve_new_members, "hostedSignup": hosted_signup, "signInUrl": sign_in_url, "signOutUrl": sign_out_url, "outboundSync": outbound_sync}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+    def patch_space(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        source_of_truth: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        providers: Union[List[ReaderAuthPatchSpaceParamsProvider], NotGiven] = NOT_GIVEN,
+        approve_new_members: Union[Any, NotGiven] = NOT_GIVEN,
+        hosted_signup: Union[Any, NotGiven] = NOT_GIVEN,
+        sign_in_url: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        sign_out_url: Union[Optional[str], NotGiven] = NOT_GIVEN,
+        outbound_sync: Union[Optional[ReaderAuthPatchSpaceParamsOutboundSync], NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Any:
+        """Change part of one space's reader sign-in override
+
+        ``PATCH /orgs/{orgId}/spaces/{spaceId}/reader-auth``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "PATCH",
+            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/reader-auth",
+            query=_query({}, extra_query),
+            body=_body({"sourceOfTruth": source_of_truth, "providers": providers, "approveNewMembers": approve_new_members, "hostedSignup": hosted_signup, "signInUrl": sign_in_url, "signOutUrl": sign_out_url, "outboundSync": outbound_sync}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )

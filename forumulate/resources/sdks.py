@@ -48,7 +48,7 @@ class SdksResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[RegistryTokenStatus]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``list_registries`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -57,7 +57,7 @@ class SdksResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="registries",
+            items_key=None,
         )
 
     def set_registry(
@@ -210,7 +210,7 @@ class SdksResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="packages",
+            items_key=None,
         )
 
     def publish(
@@ -284,5 +284,5 @@ class SdksResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="publishes",
+            items_key=None,
         )

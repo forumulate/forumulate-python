@@ -46,7 +46,7 @@ class InvitesResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> Iterator[PendingInvite]:
+    ) -> Iterator[Any]:
         """Iterate every item of ``pending`` across all pages, following ``cursor``."""
         yield from self._client._paginate(
             "GET",
@@ -55,7 +55,7 @@ class InvitesResource:
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
-            items_key="invites",
+            items_key=None,
         )
 
     def accept_pending(
