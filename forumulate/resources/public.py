@@ -1752,6 +1752,7 @@ class PublicDomainsResource:
     def primary(
         self,
         *,
+        library: Union[str, NotGiven] = NOT_GIVEN,
         space: Union[str, NotGiven] = NOT_GIVEN,
         org: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
@@ -1762,13 +1763,14 @@ class PublicDomainsResource:
 
         ``GET /public/domains/primary``
 
+        :param library: Content library id, for its hosted output (`/h/…`): its own domain first, else the site it feeds, at the library’s slug.
         :param space: Space slug or id.
         :param org: Organization slug or id.
         """
         return self._client._request(
             "GET",
             f"/public/domains/primary",
-            query=_query({"space": space, "org": org}, extra_query),
+            query=_query({"library": library, "space": space, "org": org}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -4855,7 +4857,7 @@ class PublicLegalResource:
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
     ) -> PublicLegalVersionsResponse:
-        """List versions in an organization
+        """List versions in an organization (public reader legal)
 
         ``GET /public/orgs/{orgId}/legal/{kind}/versions``
         """

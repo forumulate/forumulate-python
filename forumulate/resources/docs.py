@@ -1050,7 +1050,7 @@ class DocsChangeRequestsResource:
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
     ) -> ChangeRequestDetail:
-        """Get the change request
+        """Get the change request (spaces)
 
         ``GET /orgs/{orgId}/spaces/{spaceId}/change-requests/{crId}``
         """
@@ -4133,7 +4133,7 @@ class DocsTranslationsResource:
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
     ) -> DocsTranslationsUpdateResponse:
-        """Update the locale
+        """Update the locale (spaces docs)
 
         ``PATCH /orgs/{orgId}/spaces/{spaceId}/docs/locales/{code}``
 
@@ -4159,7 +4159,7 @@ class DocsTranslationsResource:
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
     ) -> DocsTranslationsRemoveResponse:
-        """Delete the locale
+        """Delete the locale (spaces docs)
 
         ``DELETE /orgs/{orgId}/spaces/{spaceId}/docs/locales/{code}``
 

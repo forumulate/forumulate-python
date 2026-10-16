@@ -1303,7 +1303,7 @@ class ChatResource:
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
     ) -> ChatHeartbeatResponse:
-        """Create the heartbeat in an organization
+        """Create the heartbeat in an organization (chat channels)
 
         ``POST /orgs/{orgId}/chat/channels/{channelId}/heartbeat``
 

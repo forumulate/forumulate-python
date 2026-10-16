@@ -195,7 +195,7 @@ class NotificationsResource:
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
     ) -> NotificationsGetScheduleResponse:
-        """Get the schedule in an organization
+        """Get the schedule in an organization (notifications)
 
         ``GET /orgs/{orgId}/notifications/schedule``
         """

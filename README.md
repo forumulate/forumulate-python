@@ -1,6 +1,6 @@
 # Forumulate Python SDK
 
-The official Python client for the [Forumulate](https://forumulate.com) API: docs, forum, blog and every other space type, plus the organization around them. Every operation of the API (v1.0.0) is a typed method, grouped the way the product is: `client.spaces`, `client.docs.pages`, `client.forum.topics`, `client.blog.articles`, …
+The official Python client for the [Forumulate](https://forumulate.com) API: docs, forum, blog and every other space type, plus the organization around them. Every operation of the API (v1.1.0) is a typed method, grouped the way the product is: `client.spaces`, `client.docs.pages`, `client.forum.topics`, `client.blog.articles`, …
 
 - Python 3.8+, one dependency (`requests`), fully typed (`py.typed`; request and response shapes are `TypedDict`s in `forumulate.types`).
 - Retries rate limits and server errors with backoff, honouring `Retry-After`.

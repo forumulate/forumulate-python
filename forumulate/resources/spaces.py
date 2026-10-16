@@ -125,6 +125,8 @@ class SpacesAssetsResource:
         space_id: Union[str, NotGiven] = NOT_GIVEN,
         type: Union[str, NotGiven] = NOT_GIVEN,
         search: Union[str, NotGiven] = NOT_GIVEN,
+        folder_id: Union[str, NotGiven] = NOT_GIVEN,
+        tag: Union[str, NotGiven] = NOT_GIVEN,
         page: Union[int, NotGiven] = NOT_GIVEN,
         cursor: Union[str, NotGiven] = NOT_GIVEN,
         limit: Union[int, NotGiven] = NOT_GIVEN,
@@ -143,7 +145,7 @@ class SpacesAssetsResource:
         return self._client._request(
             "GET",
             f"/orgs/{_path(org_id)}/assets",
-            query=_query({"pageSize": page_size, "spaceId": space_id, "type": type, "search": search, "page": page, "cursor": cursor, "limit": limit}, extra_query),
+            query=_query({"pageSize": page_size, "spaceId": space_id, "type": type, "search": search, "folderId": folder_id, "tag": tag, "page": page, "cursor": cursor, "limit": limit}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -156,6 +158,8 @@ class SpacesAssetsResource:
         space_id: Union[str, NotGiven] = NOT_GIVEN,
         type: Union[str, NotGiven] = NOT_GIVEN,
         search: Union[str, NotGiven] = NOT_GIVEN,
+        folder_id: Union[str, NotGiven] = NOT_GIVEN,
+        tag: Union[str, NotGiven] = NOT_GIVEN,
         page: Union[int, NotGiven] = NOT_GIVEN,
         limit: Union[int, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
@@ -166,7 +170,7 @@ class SpacesAssetsResource:
         yield from self._client._paginate(
             "GET",
             f"/orgs/{_path(org_id)}/assets",
-            query=_query({"pageSize": page_size, "spaceId": space_id, "type": type, "search": search, "page": page, "limit": limit}, extra_query),
+            query=_query({"pageSize": page_size, "spaceId": space_id, "type": type, "search": search, "folderId": folder_id, "tag": tag, "page": page, "limit": limit}, extra_query),
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",
@@ -204,6 +208,8 @@ class SpacesAssetsResource:
         *,
         share: Union[str, NotGiven] = NOT_GIVEN,
         w: Union[str, NotGiven] = NOT_GIVEN,
+        ar: Union[str, NotGiven] = NOT_GIVEN,
+        fit: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
@@ -215,7 +221,7 @@ class SpacesAssetsResource:
         return self._client._request(
             "GET",
             f"/assets/{_path(id)}",
-            query=_query({"share": share, "w": w}, extra_query),
+            query=_query({"share": share, "w": w, "ar": ar, "fit": fit}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -237,7 +243,7 @@ class SpacesDomainsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> DomainListDto:
+    ) -> DomainListDtoPaged:
         """List domains in a space
 
         ``GET /orgs/{orgId}/spaces/{spaceId}/domains``
@@ -2001,6 +2007,7 @@ class SpacesShapeResource:
         space: Union[SpacesShapePutParamsSpace, NotGiven] = NOT_GIVEN,
         sections: Union[SpacesShapePutParamsSections, NotGiven] = NOT_GIVEN,
         params: Union[SpacesShapePutParamsParams, NotGiven] = NOT_GIVEN,
+        block_types: Union[SpacesShapePutParamsBlockTypes, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -2016,7 +2023,7 @@ class SpacesShapeResource:
             "PUT",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/shape",
             query=_query({}, extra_query),
-            body=_body({"space": space, "sections": sections, "params": params}, extra_body),
+            body=_body({"space": space, "sections": sections, "params": params, "blockTypes": block_types}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -2030,6 +2037,7 @@ class SpacesShapeResource:
         space: Union[SpacesShapePatchParamsSpace, NotGiven] = NOT_GIVEN,
         sections: Union[SpacesShapePatchParamsSections, NotGiven] = NOT_GIVEN,
         params: Union[SpacesShapePatchParamsParams, NotGiven] = NOT_GIVEN,
+        block_types: Union[SpacesShapePatchParamsBlockTypes, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -2045,7 +2053,7 @@ class SpacesShapeResource:
             "PATCH",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/shape",
             query=_query({}, extra_query),
-            body=_body({"space": space, "sections": sections, "params": params}, extra_body),
+            body=_body({"space": space, "sections": sections, "params": params, "blockTypes": block_types}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -2087,6 +2095,7 @@ class SpacesShapeResource:
         patch: SpacesShapeSetKindParamsPatch,
         idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
         description: Union[str, NotGiven] = NOT_GIVEN,
+        settings: Union[SpacesShapeSetKindParamsSettings, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -2102,7 +2111,7 @@ class SpacesShapeResource:
             "PUT",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/shape/kinds/{_path(name)}",
             query=_query({}, extra_query),
-            body=_body({"label": label, "description": description, "patch": patch}, extra_body),
+            body=_body({"label": label, "description": description, "patch": patch, "settings": settings}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )

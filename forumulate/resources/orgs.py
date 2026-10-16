@@ -749,7 +749,7 @@ class OrgsResource:
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> OrgsPlanResponse:
+    ) -> PlanSummary:
         """Get the plan in an organization
 
         ``GET /orgs/{orgId}/plan``
@@ -772,7 +772,7 @@ class OrgsResource:
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> OrgsSetPlanResponse:
+    ) -> Any:
         """Update the plan in an organization
 
         ``PATCH /orgs/{orgId}/plan``
@@ -799,7 +799,7 @@ class OrgsResource:
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
-    ) -> OrgsSetOverrideResponse:
+    ) -> Any:
         """Update overrides in an organization
 
         ``PATCH /orgs/{orgId}/plan/overrides``

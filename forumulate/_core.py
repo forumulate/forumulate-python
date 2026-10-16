@@ -6,7 +6,7 @@ from urllib.parse import quote
 
 import requests
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 
 # Named environments -> base URL. Pass environment="name" to the client.
 ENVIRONMENTS: Dict[str, str] = {}
@@ -14,7 +14,7 @@ ENVIRONMENTS: Dict[str, str] = {}
 # Sent on every request. A library's default User-Agent (python-requests/…) is
 # exactly what edge firewalls challenge, so a first call would fail with an
 # HTML block page instead of JSON; an identifying UA passes.
-USER_AGENT = "forumulate-sdk-python/1.0.0"
+USER_AGENT = "forumulate-sdk-python/1.1.0"
 DEFAULT_HEADERS: Dict[str, str] = {"Forumulate-Version":"2026-11-01"}
 
 

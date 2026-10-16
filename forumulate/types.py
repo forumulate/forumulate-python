@@ -182,8 +182,6 @@ class DomainSummaryDto(TypedDict, total=False):
 
 class DomainListDto(TypedDict, total=False):
     domains: List["DomainSummaryDto"]
-    page: "PageInfo"
-    data: List["DomainSummaryDto"]
 
 
 class DomainResponseDto(TypedDict, total=False):
@@ -471,6 +469,16 @@ class AgentRunResult(TypedDict, total=False):
     turns: float
 
 
+class AiContentStatus(TypedDict, total=False):
+    configured: bool
+    enabled: bool
+
+
+class AiDraft(TypedDict, total=False):
+    fieldKey: str
+    rows: List[Dict[str, Any]]
+
+
 class AiInsights(TypedDict, total=False):
     answered: float
     helpful: float
@@ -490,12 +498,37 @@ class AiProviderStatus(TypedDict, total=False):
     verifiedAt: Any
 
 
+class AiSeoSuggestion(TypedDict, total=False):
+    description: str
+    title: str
+
+
 class AiSourceSummary(TypedDict, total=False):
     id: str
     kind: str
     spaceId: Any
     title: str
     url: Any
+
+
+class AiTranslateEntryResult(TypedDict, total=False):
+    entryId: str
+    error: Any
+    ok: bool
+    skipped: float
+    translated: float
+    translationEntryId: Any
+
+
+class AiTranslateResult(TypedDict, total=False):
+    locale: str
+    results: List["AiTranslateEntryResult"]
+
+
+class AltTextSuggestion(TypedDict, total=False):
+    alt: Any
+    assetId: str
+    error: Any
 
 
 class AnalyticsSummary(TypedDict, total=False):
@@ -752,6 +785,15 @@ class AssetCopyNotice(TypedDict, total=False):
     url: str
 
 
+class AssetFolderDto(TypedDict, total=False):
+    assetCount: float
+    createdAt: str
+    id: str
+    name: str
+    parentId: Any
+    updatedAt: str
+
+
 AtlasSyncResult = TypedDict("AtlasSyncResult", {"errors": List[str], "import": "AtlasSyncResultImport", "memberships": "AtlasSyncResultMemberships", "orgs": "AtlasSyncResultOrgs", "skipped": str}, total=False)
 
 
@@ -952,6 +994,37 @@ class BlockNodeSpec(TypedDict, total=False):
     type: str
 
 
+class BlockTemplateRow(TypedDict, total=False):
+    blockType: str
+    values: Dict[str, Any]
+    variant: str
+
+
+class BlockType(TypedDict, total=False):
+    description: str
+    fields: List["SpaceTypeField"]
+    group: str
+    icon: str
+    key: str
+    label: str
+    variants: List["BlockVariant"]
+
+
+class BlockTypeSet(TypedDict, total=False):
+    description: str
+    fields: "BlockTypeSetFields"
+    group: str
+    icon: str
+    label: str
+    variants: "BlockTypeSetVariants"
+
+
+class BlockVariant(TypedDict, total=False):
+    fields: "BlockVariantFields"
+    key: str
+    label: str
+
+
 class BlogAuthorProfile(TypedDict, total=False):
     avatarUrl: Any
     bio: Any
@@ -991,6 +1064,24 @@ class BrokenLink(TypedDict, total=False):
     pageSlug: str
     reason: str
     url: str
+
+
+class BulkEntriesResult(TypedDict, total=False):
+    action: str
+    failed: float
+    results: List["BulkEntryResult"]
+    succeeded: float
+
+
+class BulkEntryResult(TypedDict, total=False):
+    code: str
+    entryId: str
+    message: str
+    ok: bool
+    reason: str
+    skipped: bool
+    status: float
+    twinId: str
 
 
 class BulkInviteResult(TypedDict, total=False):
@@ -1085,14 +1176,22 @@ class CareersPipeline(TypedDict, total=False):
 
 
 class CatalogedAsset(TypedDict, total=False):
+    alt: Any
+    caption: Any
     contentType: str
     createdAt: str
     filename: str
+    focal: Any
+    folderId: Any
+    height: Any
     id: str
+    placeholder: Any
     size: float
     spaceId: Any
+    tags: List[str]
     uploaderId: Any
     url: str
+    width: Any
 
 
 class CategoryDetail(TypedDict, total=False):
@@ -2011,10 +2110,155 @@ class ContactSubjectMessage(TypedDict, total=False):
     subject: Any
 
 
+class ContentBlockTemplate(TypedDict, total=False):
+    description: str
+    id: str
+    label: str
+    rows: List["BlockTemplateRow"]
+    source: str
+
+
+class ContentChangeRequest(TypedDict, total=False):
+    actions: List[str]
+    approvedAt: Any
+    approvedBy: Any
+    assigneeIds: List[str]
+    authorId: Any
+    changedSinceApproval: bool
+    contentType: str
+    createdAt: str
+    entryId: str
+    entryTitle: str
+    gated: bool
+    id: str
+    libraryId: str
+    locale: str
+    note: Any
+    scheduledFor: Any
+    stage: str
+    title: str
+    updatedAt: str
+
+
+class ContentEnvironment(TypedDict, total=False):
+    forkedAt: Any
+    libraryId: str
+    name: str
+    promotedAt: Any
+    role: str
+    slug: str
+    sourceLibraryId: Any
+    sourceName: Any
+
+
+class ContentEnvironments(TypedDict, total=False):
+    sandboxes: List["ContentEnvironment"]
+    self: Optional["ContentEnvironment"]
+
+
+class ContentLibrary(TypedDict, total=False):
+    createdAt: str
+    id: str
+    name: str
+    settings: Dict[str, Any]
+    siteId: Any
+    slug: str
+    spaceId: str
+    updatedAt: str
+
+
+class ContentModel(TypedDict, total=False):
+    shape: Dict[str, Any]
+    types: Dict[str, Any]
+    version: float
+
+
+class ContentModelExport(TypedDict, total=False):
+    content: str
+    filename: str
+    format: str
+    issues: List["ModelFileIssue"]
+    version: float
+
+
+class ContentModelImportResult(TypedDict, total=False):
+    applied: bool
+    changed: bool
+    diff: List["ModelChangeLine"]
+    issues: List["ModelFileIssue"]
+    ops: List["ContentModelImportResultOp"]
+    storageOnly: bool
+    version: float
+
+
+class ContentModelVersion(TypedDict, total=False):
+    createdAt: str
+    createdBy: Any
+    migratedAt: Any
+    ops: List["ContentModelVersionOp"]
+    version: float
+
+
 class ContentPoint(TypedDict, total=False):
     period: str
     posts: float
     topics: float
+
+
+class ContentRelease(TypedDict, total=False):
+    createdAt: str
+    createdBy: Any
+    description: str
+    failure: Any
+    id: str
+    itemCount: float
+    items: List["ContentReleaseItem"]
+    name: str
+    publishAt: Any
+    publishedAt: Any
+    publishedBy: Any
+    rolledBackAt: Any
+    rolledBackBy: Any
+    scheduledBy: Any
+    status: str
+    updatedAt: str
+
+
+class ContentReleaseItem(TypedDict, total=False):
+    addedAt: str
+    containerName: Any
+    contentType: Any
+    id: str
+    kind: str
+    libraryId: Any
+    locale: str
+    problem: Any
+    revisionId: Any
+    slug: Any
+    spaceId: Any
+    state: str
+    surface: str
+    targetId: str
+    title: Any
+
+
+class ContentReleaseSummary(TypedDict, total=False):
+    createdAt: str
+    description: str
+    failure: Any
+    id: str
+    itemCount: float
+    name: str
+    publishAt: Any
+    publishedAt: Any
+    rolledBackAt: Any
+    status: str
+    updatedAt: str
+
+
+class ContentReviewGate(TypedDict, total=False):
+    required: bool
+    selfApproval: bool
 
 
 class ContentRule(TypedDict, total=False):
@@ -2024,6 +2268,70 @@ class ContentRule(TypedDict, total=False):
     message: str
     pattern: str
     severity: str
+
+
+class ContentSdkLanguageStatus(TypedDict, total=False):
+    language: str
+    latestVersion: Any
+    packageId: Any
+    packageName: str
+    publishes: List["ContentSdkPublish"]
+    targets: List[str]
+
+
+class ContentSdkPublish(TypedDict, total=False):
+    createdAt: str
+    error: Any
+    id: str
+    resultUrl: Any
+    status: str
+    target: str
+    version: str
+
+
+class ContentSdkStatus(TypedDict, total=False):
+    languages: List["ContentSdkLanguageStatus"]
+    libraryId: str
+
+
+class ContentTypeSettings(TypedDict, total=False):
+    blockLibrary: bool
+    defaultSort: str
+    defaultVisibility: str
+    group: str
+    icon: str
+    listColumns: List[str]
+    orderable: bool
+    previewUrl: str
+    routable: bool
+    searchableFields: List[str]
+    singleton: bool
+    slugField: str
+    strict: bool
+    titleField: str
+    versions: "ContentTypeSettingsVersions"
+
+
+class ContentTypeSettingsPatch(TypedDict, total=False):
+    blockLibrary: bool
+    defaultSort: str
+    defaultVisibility: str
+    group: str
+    icon: str
+    listColumns: List[str]
+    orderable: bool
+    previewUrl: str
+    routable: bool
+    searchableFields: List[str]
+    singleton: bool
+    slugField: str
+    strict: bool
+    titleField: str
+    versions: "ContentTypeSettingsPatchVersions"
+
+
+class ContentWorkflowSettings(TypedDict, total=False):
+    gates: Dict[str, Any]
 
 
 class ConversationDetail(TypedDict, total=False):
@@ -2273,6 +2581,51 @@ class DayThresholds(TypedDict, total=False):
     partial: float
 
 
+class DeliveryKeyInfo(TypedDict, total=False):
+    contentTypes: Any
+    id: str
+    kind: str
+    libraryId: str
+    locales: Any
+    organizationId: str
+    stage: str
+
+
+class DeliveryKeySummary(TypedDict, total=False):
+    contentTypes: Any
+    createdAt: str
+    expiresAt: Any
+    id: str
+    kind: str
+    lastUsedAt: Any
+    libraryId: str
+    locales: Any
+    name: str
+    origins: Any
+    prefix: str
+    requests: "DeliveryKeySummaryRequests"
+    retiresAt: Any
+    stage: str
+
+
+class DeployHookBuildStatus(TypedDict, total=False):
+    active: bool
+    id: str
+    lastError: Any
+    lastStatusCode: Any
+    lastTriggeredAt: Any
+    libraryId: Any
+    pendingUntil: Any
+    provider: str
+
+
+class DeployHookStatus(TypedDict, total=False):
+    lastError: Any
+    lastStatusCode: Any
+    lastTriggeredAt: Any
+    provider: str
+
+
 class DerivedCounters(TypedDict, total=False):
     likesGiven: float
     likesReceived: float
@@ -2456,8 +2809,10 @@ class EeoSummary(TypedDict, total=False):
 
 
 class EffectiveShape(TypedDict, total=False):
+    blockTypes: List["BlockType"]
     params: List["SpaceTypeField"]
     sections: List["SpaceTypeSection"]
+    settings: "ContentTypeSettings"
     space: "SpaceShape"
     unknown: List[str]
 
@@ -2537,6 +2892,163 @@ class EmbedSpec(TypedDict, total=False):
     src: str
     themeInit: "EmbedSpecThemeInit"
     themeSupport: List[str]
+
+
+class EntryAllLocaleFields(TypedDict, total=False):
+    contentType: Any
+    entryId: str
+    locales: Dict[str, Any]
+    sourceLocale: str
+
+
+class EntryDeliveryPreview(TypedDict, total=False):
+    body: Any
+    reason: str
+    stage: str
+    url: str
+
+
+class EntryFields(TypedDict, total=False):
+    draft: bool
+    entryId: str
+    etag: str
+    fields: Dict[str, Any]
+    libraryId: str
+
+
+class EntryFieldsWrite(TypedDict, total=False):
+    draft: bool
+    entryId: str
+    etag: str
+    fields: Dict[str, Any]
+    libraryId: str
+    ops: List["EntryFieldsWriteOp"]
+
+
+class EntryLocaleFields(TypedDict, total=False):
+    contentType: Any
+    entryId: str
+    fields: Dict[str, Any]
+    locale: str
+    sourceLocale: str
+
+
+class EntryLocaleTwin(TypedDict, total=False):
+    code: str
+    entryId: Any
+    label: str
+    source: bool
+    status: Any
+
+
+class EntryLock(TypedDict, total=False):
+    expiresAt: str
+    lockedAt: str
+    lockedBy: str
+    lockedByName: str
+
+
+class EntryLockState(TypedDict, total=False):
+    held: bool
+    lock: Optional["EntryLock"]
+
+
+class EntryOverview(TypedDict, total=False):
+    contentType: Any
+    draftRevisionId: Any
+    entryId: str
+    libraryId: str
+    liveRevisionId: Any
+    locale: str
+    locales: List["EntryLocaleTwin"]
+    modelVersion: float
+    schedule: Optional["EntrySchedule"]
+    slug: str
+    source: bool
+    sourceEntryId: str
+    status: str
+    title: str
+    updatedAt: str
+
+
+class EntryReferrer(TypedDict, total=False):
+    contentType: Any
+    entryId: str
+    fieldPath: str
+    libraryId: str
+    stage: str
+    title: str
+
+
+class EntryRevision(TypedDict, total=False):
+    authorId: Any
+    authorName: Any
+    createdAt: str
+    draft: bool
+    id: str
+    live: bool
+    modelVersion: Any
+    status: str
+    title: str
+
+
+class EntryRevisionFields(TypedDict, total=False):
+    fields: Dict[str, Any]
+    modelVersion: float
+    revision: "EntryRevision"
+
+
+class EntrySchedule(TypedDict, total=False):
+    publishAt: str
+    scheduledBy: Any
+
+
+class EntryTranslationWrite(TypedDict, total=False):
+    created: bool
+    draft: bool
+    entryId: str
+    etag: str
+    fields: Dict[str, Any]
+    libraryId: str
+    locale: str
+    sourceEntryId: str
+
+
+class EntryUsage(TypedDict, total=False):
+    hidden: float
+    usedIn: List["EntryReferrer"]
+
+
+class EnvironmentCompare(TypedDict, total=False):
+    canPromote: bool
+    changes: List["EnvironmentTypeChange"]
+    conflicts: List["EnvironmentConflict"]
+    ops: List["EnvironmentCompareOp"]
+    sandboxLibraryId: str
+    sourceChangedSinceFork: bool
+    sourceLibraryId: str
+
+
+class EnvironmentConflict(TypedDict, total=False):
+    message: str
+    unit: str
+
+
+class EnvironmentFieldChange(TypedDict, total=False):
+    change: str
+    key: str
+
+
+class EnvironmentPromoteResult(TypedDict, total=False):
+    changes: List["EnvironmentTypeChange"]
+    library: "ContentLibrary"
+    version: float
+
+
+class EnvironmentTypeChange(TypedDict, total=False):
+    change: str
+    fields: List["EnvironmentFieldChange"]
+    type: Any
 
 
 class EventAgenda(TypedDict, total=False):
@@ -3031,6 +3543,13 @@ class FeedbackComment(TypedDict, total=False):
     score: Any
 
 
+class FieldAdminLayout(TypedDict, total=False):
+    collapsed: bool
+    collapsible: str
+    row: str
+    tab: str
+
+
 class FieldDef(TypedDict, total=False):
     editableByUser: bool
     entityType: str
@@ -3043,6 +3562,9 @@ class FieldDef(TypedDict, total=False):
     sortOrder: float
     type: str
     visibility: str
+
+
+FieldSet = TypedDict("FieldSet", {"accept": List[str], "admin": "FieldAdminLayout", "allowed": List[str], "allowedBlocks": List[str], "allowedGroups": List[str], "column": bool, "condition": Any, "default": Dict[str, Any], "expr": Any, "facet": bool, "fields": "FieldSetFields", "from": str, "hasMany": bool, "hint": str, "indexed": bool, "internal": bool, "label": str, "language": str, "localized": bool, "max": float, "maxLength": float, "meta": bool, "min": float, "minLength": float, "options": List[str], "pattern": str, "placeholder": str, "relationSpaceId": str, "required": bool, "rowLabelField": str, "schema": Dict[str, Any], "schemaProperty": str, "sortable": bool, "to": List["ReferenceTarget"], "type": str, "unique": bool, "visibility": str}, total=False)
 
 
 class FieldValue(TypedDict, total=False):
@@ -3469,6 +3991,17 @@ class HealthReport(TypedDict, total=False):
     usage: "StorageUsage"
 
 
+class HostedSitemap(TypedDict, total=False):
+    entries: List["HostedSitemapEntry"]
+    locales: "PathLocales"
+
+
+class HostedType(TypedDict, total=False):
+    fields: List["SpaceTypeField"]
+    key: str
+    label: str
+
+
 class HostOriginPolicy(TypedDict, total=False):
     contributes: "HostOriginPolicyContributes"
     host: str
@@ -3741,6 +4274,11 @@ class InviteRow(TypedDict, total=False):
     spaceId: Any
 
 
+class IssuedDeliveryKey(TypedDict, total=False):
+    key: "DeliveryKeySummary"
+    secret: str
+
+
 class ItemMovementResult(TypedDict, total=False):
     delta: float
     itemKey: str
@@ -3903,12 +4441,94 @@ class LevelProgress(TypedDict, total=False):
     xpIntoLevel: float
 
 
+class LibraryAsset(TypedDict, total=False):
+    alt: Any
+    caption: Any
+    contentType: str
+    filename: str
+    focal: Any
+    height: Any
+    id: str
+    placeholder: Any
+    size: float
+    url: str
+    width: Any
+
+
+class LibraryAssetPage(TypedDict, total=False):
+    altTextAi: bool
+    assets: List["LibraryAssetPageAsset"]
+    page: "PageInfo"
+    tags: List[str]
+    totalBytes: float
+
+
 class LibraryBlock(TypedDict, total=False):
     attrs: Dict[str, Any]
     content: List["LibraryBlock"]
     marks: List["LibraryBlockMark"]
     text: str
     type: str
+
+
+class LibraryLocale(TypedDict, total=False):
+    code: str
+    fallbacks: List[str]
+    label: str
+    source: bool
+
+
+class LibraryLocales(TypedDict, total=False):
+    localeFallbacks: Dict[str, Any]
+    locales: List["LibraryLocale"]
+    sourceLocale: str
+
+
+class LibraryMember(TypedDict, total=False):
+    customRoleId: Any
+    effect: str
+    email: str
+    name: str
+    role: Any
+    scope: "LibraryMemberScope"
+    userId: str
+
+
+class LibraryMenu(TypedDict, total=False):
+    contentType: str
+    contentTypeLabel: str
+    depth: float
+    entryId: str
+    field: str
+    slug: str
+    status: str
+    title: str
+    updatedAt: str
+
+
+class LibraryMenuType(TypedDict, total=False):
+    depth: float
+    field: str
+    key: str
+    label: str
+
+
+LibraryPlanFeature = TypedDict("LibraryPlanFeature", {"enabled": bool, "from": str, "key": str}, total=False)
+
+
+class LibraryUsage(TypedDict, total=False):
+    features: List["LibraryPlanFeature"]
+    libraryId: str
+    metrics: List["LibraryUsageMetric"]
+    plan: str
+
+
+class LibraryUsageMetric(TypedDict, total=False):
+    limit: Any
+    metric: str
+    nearLimit: bool
+    scope: str
+    used: Any
 
 
 class LinkedTopic(TypedDict, total=False):
@@ -4048,6 +4668,23 @@ class MessageView(TypedDict, total=False):
 class MintedPat(TypedDict, total=False):
     pat: "MintedPatPat"
     token: str
+
+
+class ModelChangeLine(TypedDict, total=False):
+    after: Dict[str, Any]
+    before: Dict[str, Any]
+    blockType: str
+    op: str
+    path: str
+    property: str
+    target: str
+    type: str
+
+
+class ModelFileIssue(TypedDict, total=False):
+    kind: str
+    message: str
+    path: str
 
 
 class ModeratorActivityPoint(TypedDict, total=False):
@@ -4664,6 +5301,11 @@ class ParticipantView(TypedDict, total=False):
     userId: str
 
 
+class PathLocales(TypedDict, total=False):
+    source: str
+    twins: List[str]
+
+
 class PatScopeDefinition(TypedDict, total=False):
     capabilities: List[str]
     description: str
@@ -4754,6 +5396,12 @@ class PlanEntry(TypedDict, total=False):
     collision: bool
     slug: str
     title: str
+
+
+class PlanSummary(TypedDict, total=False):
+    limits: Dict[str, Any]
+    metrics: List["QuotaStatus"]
+    plan: str
 
 
 class PointsLeader(TypedDict, total=False):
@@ -4872,6 +5520,12 @@ class PrefsSummary(TypedDict, total=False):
     timezone: str
 
 
+class PreviewExchange(TypedDict, total=False):
+    credential: str
+    expiresAt: str
+    libraryId: str
+
+
 class PreviewLink(TypedDict, total=False):
     expiresAt: str
     token: str
@@ -4886,6 +5540,22 @@ class PreviewPage(TypedDict, total=False):
     status: str
     title: str
     unpublished: bool
+
+
+class PreviewSession(TypedDict, total=False):
+    entryId: str
+    expiresAt: str
+    libraryId: str
+    path: str
+    releaseId: str
+    token: str
+
+
+class PreviewStatus(TypedDict, total=False):
+    allowLoopback: bool
+    origins: List[str]
+    previewKey: bool
+    route: str
 
 
 class Problem(TypedDict, total=False):
@@ -5653,6 +6323,22 @@ class RecomputedTrust(TypedDict, total=False):
 RedirectRule = TypedDict("RedirectRule", {"from": str, "match": "RedirectRuleMatch", "passQuery": bool, "status": Any, "to": str, "type": str}, total=False)
 
 
+class ReferenceCandidate(TypedDict, total=False):
+    contentType: str
+    id: str
+    kind: str
+    locale: str
+    published: bool
+    resolvable: bool
+    spaceName: str
+    title: str
+
+
+class ReferenceTarget(TypedDict, total=False):
+    kind: str
+    types: List[str]
+
+
 class ReferredPage(TypedDict, total=False):
     count: float
     pageId: str
@@ -5725,6 +6411,20 @@ class RelationshipRow(TypedDict, total=False):
     targetUserId: str
 
 
+class ReleaseCandidate(TypedDict, total=False):
+    containerName: Any
+    contentType: Any
+    kind: str
+    libraryId: Any
+    locale: str
+    slug: str
+    spaceId: Any
+    surface: str
+    targetId: str
+    title: str
+    updatedAt: str
+
+
 class ReleaseLocaleLink(TypedDict, total=False):
     available: bool
     code: str
@@ -5743,6 +6443,25 @@ class ReleaseNeighbours(TypedDict, total=False):
     more: List["ReleaseNeighbour"]
     next: Optional["ReleaseNeighbour"]
     previous: Optional["ReleaseNeighbour"]
+
+
+class ReleasePreview(TypedDict, total=False):
+    expiresAt: str
+    libraries: List["ReleasePreviewLibrary"]
+    surfaces: List["ReleasePreviewSurface"]
+    token: str
+
+
+class ReleasePublishResult(TypedDict, total=False):
+    published: float
+    release: "ContentRelease"
+
+
+class ReleaseRollbackResult(TypedDict, total=False):
+    release: "ContentRelease"
+    restored: float
+    skipped: float
+    unpublished: float
 
 
 class ReleaseTranslation(TypedDict, total=False):
@@ -6079,6 +6798,7 @@ class ShadowSnapshot(TypedDict, total=False):
 
 
 class ShapeOverride(TypedDict, total=False):
+    blockTypes: "ShapeOverrideBlockTypes"
     params: "ShapeOverrideParams"
     sections: "ShapeOverrideSections"
     space: "ShapeOverrideSpace"
@@ -6392,23 +7112,7 @@ class SpaceSummary(TypedDict, total=False):
     visibility: str
 
 
-class SpaceTypeField(TypedDict, total=False):
-    column: bool
-    default: Dict[str, Any]
-    facet: bool
-    hint: str
-    internal: bool
-    key: str
-    label: str
-    max: float
-    meta: bool
-    min: float
-    options: List[str]
-    placeholder: str
-    relationSpaceId: str
-    required: bool
-    schemaProperty: str
-    type: str
+SpaceTypeField = TypedDict("SpaceTypeField", {"accept": List[str], "admin": "FieldAdminLayout", "allowed": List[str], "allowedBlocks": List[str], "allowedGroups": List[str], "column": bool, "condition": Any, "default": Dict[str, Any], "expr": Any, "facet": bool, "fields": List["SpaceTypeField"], "from": str, "hasMany": bool, "hint": str, "indexed": bool, "internal": bool, "key": str, "label": str, "language": str, "localized": bool, "max": float, "maxLength": float, "meta": bool, "min": float, "minLength": float, "options": List[str], "pattern": str, "placeholder": str, "relationSpaceId": str, "required": bool, "rowLabelField": str, "schema": Dict[str, Any], "schemaProperty": str, "sortable": bool, "to": List["ReferenceTarget"], "type": str, "unique": bool, "visibility": str}, total=False)
 
 
 class SpaceTypeSection(TypedDict, total=False):
@@ -6427,6 +7131,7 @@ class SpaceTypeSpec(TypedDict, total=False):
     backing: str
     description: str
     fields: List["SpaceTypeField"]
+    forcedVisibility: str
     icon: str
     name: str
     pageKinds: List["SpacePageKind"]
@@ -6744,12 +7449,83 @@ class StoredPiecePage(TypedDict, total=False):
     sidebar: "StoredPiecePageSidebar"
 
 
+StoredRedirect = TypedDict("StoredRedirect", {"auto": bool, "from": str, "match": "StoredRedirectMatch", "passQuery": bool, "status": Any, "to": str, "type": str}, total=False)
+
+
 class StoredSpecSummary(TypedDict, total=False):
     createdAt: str
     id: str
     lastSyncedAt: Any
     name: str
     sourceUrl: str
+
+
+class StudioCapabilities(TypedDict, total=False):
+    members: bool
+    model: bool
+    publish: bool
+    scope: "StudioCapabilitiesScope"
+    write: bool
+
+
+class StudioContentType(TypedDict, total=False):
+    description: Any
+    entryCount: float
+    fields: List["SpaceTypeField"]
+    globalEntryId: Any
+    group: Any
+    icon: Any
+    key: str
+    label: str
+    routable: bool
+    settings: "ContentTypeSettings"
+    singleton: bool
+
+
+class StudioEntryListBody(TypedDict, total=False):
+    data: List["StudioEntryRow"]
+    locksUnavailable: bool
+    page: "PageInfo"
+
+
+class StudioEntryLock(TypedDict, total=False):
+    expiresAt: str
+    name: str
+    userId: str
+    you: bool
+
+
+class StudioEntryRow(TypedDict, total=False):
+    fields: Dict[str, Any]
+    id: str
+    locale: str
+    locales: List[str]
+    lock: Optional["StudioEntryLock"]
+    publishedAt: Any
+    route: Any
+    scheduledAt: Any
+    slug: Any
+    status: str
+    title: str
+    type: str
+    updatedAt: str
+    usedIn: float
+
+
+class StudioLocale(TypedDict, total=False):
+    code: str
+    label: str
+    source: bool
+
+
+class StudioModel(TypedDict, total=False):
+    blockTemplates: List["ContentBlockTemplate"]
+    blockTypes: List["BlockType"]
+    can: "StudioCapabilities"
+    libraryId: str
+    locales: List["StudioLocale"]
+    sourceLocale: str
+    types: List["StudioContentType"]
 
 
 class SubmissionRow(TypedDict, total=False):
@@ -7213,6 +7989,12 @@ class TitleDedupeResult(TypedDict, total=False):
     scanned: float
 
 
+class TokenFeedback(TypedDict, total=False):
+    label: str
+    token_raw: str
+    token_type: str
+
+
 class TopicMap(TypedDict, total=False):
     createdAt: str
     lastPostAt: str
@@ -7376,11 +8158,19 @@ class UnifiedSearchResult(TypedDict, total=False):
 
 
 class UploadedAsset(TypedDict, total=False):
+    alt: Any
+    caption: Any
     contentType: str
     filename: str
+    focal: Any
+    folderId: Any
+    height: Any
     id: str
+    placeholder: Any
     size: float
+    tags: List[str]
     url: str
+    width: Any
 
 
 class UptimeWindow(TypedDict, total=False):
@@ -7588,11 +8378,16 @@ class WebhookSummary(TypedDict, total=False):
     active: bool
     bodyEncoding: str
     categoryIds: Any
+    contentTypes: Any
     createdAt: str
+    deploy: Optional["DeployHookStatus"]
     events: List[str]
     format: str
     groupIds: Any
     id: str
+    kind: str
+    libraryId: Any
+    locales: Any
     signatureVersion: str
     spaceId: Any
     tagIds: Any
@@ -7628,6 +8423,12 @@ class PageInfo(TypedDict, total=False):
     total: int
 
 
+class DomainListDtoPaged(TypedDict, total=False):
+    domains: List["DomainSummaryDto"]
+    page: "PageInfo"
+    data: List["DomainSummaryDto"]
+
+
 class EventMyAgendaPaged(TypedDict, total=False):
     sessionIds: List[str]
     page: "PageInfo"
@@ -7646,6 +8447,11 @@ class SpaceListDtoLegacy(TypedDict, total=False):
     spaces: List["SpaceSummaryDto"]
 
 
+class ErrorEnvelopeErrorConflict(TypedDict, total=False):
+    etag: str
+    ops: Any
+
+
 class ErrorEnvelopeError(TypedDict, total=False):
     code: str
     message: str
@@ -7653,6 +8459,7 @@ class ErrorEnvelopeError(TypedDict, total=False):
     docs: str
     reason: str
     slugs: List[str]
+    conflict: "ErrorEnvelopeErrorConflict"
 
 
 class ConsentConfigCustom(TypedDict, total=False):
@@ -7796,6 +8603,30 @@ class AtsSourceLastCounts(TypedDict, total=False):
     skipped: float
     unchanged: float
     updated: float
+
+
+class BlockTypeSetFields(TypedDict, total=False):
+    add: List["SpaceTypeField"]
+    omit: List[str]
+    order: List[str]
+    set: Dict[str, Any]
+    unset: Dict[str, Any]
+
+
+class BlockTypeSetVariants(TypedDict, total=False):
+    add: List["BlockVariant"]
+    omit: List[str]
+    order: List[str]
+    set: Dict[str, Any]
+    unset: Dict[str, Any]
+
+
+class BlockVariantFields(TypedDict, total=False):
+    add: List["SpaceTypeField"]
+    omit: List[str]
+    order: List[str]
+    set: Dict[str, Any]
+    unset: Dict[str, Any]
 
 
 class BlogAuthorProfileLink(TypedDict, total=False):
@@ -8985,6 +9816,20 @@ class ContactSubjectMessageAttachment(TypedDict, total=False):
     size: float
 
 
+ContentModelImportResultOp = TypedDict("ContentModelImportResultOp", {"blockType": str, "from": str, "op": str, "to": str, "type": str, "variant": str, "path": str}, total=False)
+
+
+ContentModelVersionOp = TypedDict("ContentModelVersionOp", {"blockType": str, "from": str, "op": str, "to": str, "type": str, "variant": str, "path": str}, total=False)
+
+
+class ContentTypeSettingsVersions(TypedDict, total=False):
+    max: float
+
+
+class ContentTypeSettingsPatchVersions(TypedDict, total=False):
+    max: float
+
+
 class CourseAccessViewDripItem(TypedDict, total=False):
     afterDays: float
     module: str
@@ -9042,6 +9887,11 @@ class CourseViewTestimonial(TypedDict, total=False):
     name: str
     quote: str
     role: str
+
+
+class DeliveryKeySummaryRequests(TypedDict, total=False):
+    last30Days: float
+    today: float
 
 
 class DocsThemeApiExamples(TypedDict, total=False):
@@ -9551,6 +10401,16 @@ class EmbedSpecThemeInit(TypedDict, total=False):
     primaryColor: Any
 
 
+class EntryFieldsWriteOp(TypedDict, total=False):
+    op: str
+    path: str
+    value: Dict[str, Any]
+    before: str
+
+
+EnvironmentCompareOp = TypedDict("EnvironmentCompareOp", {"blockType": str, "from": str, "op": str, "to": str, "type": str, "variant": str, "path": str}, total=False)
+
+
 class EventAgendaEvent(TypedDict, total=False):
     id: str
     slug: str
@@ -9655,6 +10515,14 @@ class ExportedTopicPost(TypedDict, total=False):
     wiki: bool
 
 
+class FieldSetFields(TypedDict, total=False):
+    add: List["SpaceTypeField"]
+    omit: List[str]
+    order: List[str]
+    set: Dict[str, Any]
+    unset: Dict[str, Any]
+
+
 class FrontPageDocJsonContentItem(TypedDict, total=False):
     attrs: Dict[str, Any]
     content: List[Any]
@@ -9745,6 +10613,12 @@ class GrowthReportWindow(TypedDict, total=False):
     days: float
     months: float
     weeks: float
+
+
+class HostedSitemapEntry(TypedDict, total=False):
+    alternates: Dict[str, Any]
+    lastmod: str
+    path: str
 
 
 HostOriginPolicyContributes = TypedDict("HostOriginPolicyContributes", {"font-src": Any, "frame-src": Any, "img-src": Any, "media-src": Any, "script-src": Any, "style-src": Any}, total=False)
@@ -9846,9 +10720,36 @@ class LegalStatusDocument(TypedDict, total=False):
     version: float
 
 
+class LibraryAssetPageAsset(TypedDict, total=False):
+    alt: Any
+    caption: Any
+    contentType: str
+    createdAt: str
+    filename: str
+    focal: Any
+    folderId: Any
+    height: Any
+    id: str
+    placeholder: Any
+    size: float
+    spaceId: Any
+    tags: List[str]
+    uploaderId: Any
+    url: str
+    usage: float
+    width: Any
+
+
 class LibraryBlockMark(TypedDict, total=False):
     attrs: Dict[str, Any]
     type: str
+
+
+class LibraryMemberScope(TypedDict, total=False):
+    contentTypes: Any
+    denyContentTypes: List[str]
+    denyLocales: List[str]
+    locales: Any
 
 
 class LintReportCounts(TypedDict, total=False):
@@ -10424,7 +11325,7 @@ class PublishedPageContributor(TypedDict, total=False):
 
 
 class PublishedShapePresetLayoutItemColumn(TypedDict, total=False):
-    content: List[Dict[str, Any]]
+    content: List[Any]
     width: float
 
 
@@ -11093,6 +11994,20 @@ class RegistryListingVersion(TypedDict, total=False):
     version: str
 
 
+class ReleasePreviewLibrary(TypedDict, total=False):
+    entryIds: List[str]
+    libraryId: str
+    name: str
+
+
+class ReleasePreviewSurface(TypedDict, total=False):
+    kind: str
+    spaceId: str
+    surface: str
+    title: Any
+    url: str
+
+
 class RoadmapSettingsViewStatuseTone(TypedDict, total=False):
     color: str
     colorDark: str
@@ -11132,11 +12047,20 @@ class SearchHitHeading(TypedDict, total=False):
     text: str
 
 
+class ShapeOverrideBlockTypes(TypedDict, total=False):
+    add: List["BlockType"]
+    omit: List[str]
+    order: List[str]
+    set: Dict[str, Any]
+    unset: Dict[str, Any]
+
+
 class ShapeOverrideParams(TypedDict, total=False):
     add: List["SpaceTypeField"]
     omit: List[str]
     order: List[str]
     set: Dict[str, Any]
+    unset: Dict[str, Any]
 
 
 class ShapeOverrideSections(TypedDict, total=False):
@@ -11144,6 +12068,7 @@ class ShapeOverrideSections(TypedDict, total=False):
     omit: List[str]
     order: List[str]
     set: Dict[str, Any]
+    unset: Dict[str, Any]
 
 
 class ShapeOverrideSpace(TypedDict, total=False):
@@ -11335,6 +12260,7 @@ class SpaceShapeViewPreset(TypedDict, total=False):
     name: str
     own: bool
     sections: List["KindSlot"]
+    settings: "ContentTypeSettingsPatch"
 
 
 class SpaceTypeSpecReaderTools(TypedDict, total=False):
@@ -11449,6 +12375,17 @@ class StatusWidgetAnswerWidget(TypedDict, total=False):
 class StoredPiecePageSidebar(TypedDict, total=False):
     doc: "FrontPageDocJson"
     position: str
+
+
+class StoredRedirectMatch(TypedDict, total=False):
+    query: Any
+
+
+class StudioCapabilitiesScope(TypedDict, total=False):
+    contentTypes: Any
+    denyContentTypes: List[str]
+    denyLocales: List[str]
+    locales: Any
 
 
 class SubmissionRowAttachment(TypedDict, total=False):
@@ -12292,7 +13229,82 @@ class SectionLibraryOneResponse(TypedDict, total=False):
     section: "SectionLibraryEntry"
 
 
-class SpacesShapePutParamsSpace(TypedDict, total=False):
+class ContentLibraryListResponse(TypedDict, total=False):
+    libraries: List["ContentLibrary"]
+    page: "PageInfo"
+    data: List["ContentLibrary"]
+
+
+class ContentLibraryCreateParams(TypedDict, total=False):
+    name: str
+    slug: str
+    siteId: Optional[str]
+    settings: Dict[str, Any]
+    template: str
+
+
+class ContentLibraryCreateResponse(TypedDict, total=False):
+    library: "ContentLibrary"
+    data: "ContentLibrary"
+    warnings: List[str]
+
+
+class ContentLibraryGetResponse(TypedDict, total=False):
+    library: "ContentLibrary"
+
+
+class ContentLibraryUpdateParams(TypedDict, total=False):
+    name: str
+    slug: str
+    siteId: Optional[str]
+    settings: Dict[str, Any]
+
+
+class ContentLibraryUpdateResponse(TypedDict, total=False):
+    library: "ContentLibrary"
+    warnings: List[str]
+
+
+class ContentLibraryRemoveResponse(TypedDict, total=False):
+    ok: bool
+
+
+class ContentLibraryListMembersResponse(TypedDict, total=False):
+    members: List["LibraryMember"]
+    page: "PageInfo"
+    data: List["LibraryMember"]
+
+
+class ContentLibraryPutMemberParamsScope(TypedDict, total=False):
+    contentTypes: Optional[List[str]]
+    locales: Optional[List[str]]
+    denyContentTypes: List[str]
+    denyLocales: List[str]
+
+
+class ContentLibraryPutMemberParams(TypedDict, total=False):
+    userId: str
+    role: str
+    customRoleId: str
+    effect: str
+    scope: "ContentLibraryPutMemberParamsScope"
+
+
+class ContentLibraryPutMemberResponse(TypedDict, total=False):
+    member: "LibraryMember"
+    data: "LibraryMember"
+    warnings: List[str]
+
+
+class ContentLibraryRemoveMemberResponse(TypedDict, total=False):
+    ok: bool
+
+
+class ContentModelGetResponse(TypedDict, total=False):
+    model: "ContentModel"
+
+
+class ContentModelPutParamsShapeSpace(TypedDict, total=False):
     index: str
     order: str
     nav: str
@@ -12300,7 +13312,7 @@ class SpacesShapePutParamsSpace(TypedDict, total=False):
     summary: List[str]
 
 
-class SpacesShapePutParamsSectionsAddItem(TypedDict, total=False):
+class ContentModelPutParamsShapeSectionsAddItem(TypedDict, total=False):
     key: str
     label: str
     kind: str
@@ -12311,160 +13323,298 @@ class SpacesShapePutParamsSectionsAddItem(TypedDict, total=False):
     render: str
 
 
-class SpacesShapePutParamsSections(TypedDict, total=False):
-    add: List["SpacesShapePutParamsSectionsAddItem"]
+class ContentModelPutParamsShapeSections(TypedDict, total=False):
+    add: List["ContentModelPutParamsShapeSectionsAddItem"]
     omit: List[str]
     order: List[str]
     set: Dict[str, Any]
+    unset: Dict[str, Any]
 
 
-class SpacesShapePutParamsParamsAddItem(TypedDict, total=False):
-    key: str
-    label: str
-    type: str
-    options: List[str]
-    relationSpaceId: str
-    hint: str
-    placeholder: str
-    internal: bool
-    facet: bool
-    meta: bool
-    required: bool
-    default: Any
-    schemaProperty: str
-
-
-class SpacesShapePutParamsParams(TypedDict, total=False):
-    add: List["SpacesShapePutParamsParamsAddItem"]
-    omit: List[str]
-    order: List[str]
-    set: Dict[str, Any]
-
-
-class SpacesShapePutParams(TypedDict, total=False):
-    space: "SpacesShapePutParamsSpace"
-    sections: "SpacesShapePutParamsSections"
-    params: "SpacesShapePutParamsParams"
-
-
-class SpacesShapePatchParamsSpace(TypedDict, total=False):
-    index: str
-    order: str
-    nav: str
-    whoCreates: str
-    summary: List[str]
-
-
-class SpacesShapePatchParamsSectionsAddItem(TypedDict, total=False):
-    key: str
-    label: str
+class ContentModelPutParamsShapeParamsAddItemToItem(TypedDict, total=False):
     kind: str
-    required: bool
-    hint: str
-    example: str
-    schemaProperty: str
-    render: str
+    types: List[str]
 
 
-class SpacesShapePatchParamsSections(TypedDict, total=False):
-    add: List["SpacesShapePatchParamsSectionsAddItem"]
-    omit: List[str]
-    order: List[str]
-    set: Dict[str, Any]
+class ContentModelPutParamsShapeParamsAddItemAdmin(TypedDict, total=False):
+    tab: str
+    row: str
+    collapsible: str
+    collapsed: bool
 
 
-class SpacesShapePatchParamsParamsAddItem(TypedDict, total=False):
-    key: str
-    label: str
-    type: str
-    options: List[str]
-    relationSpaceId: str
-    hint: str
-    placeholder: str
-    internal: bool
-    facet: bool
-    meta: bool
-    required: bool
-    default: Any
-    schemaProperty: str
-
-
-class SpacesShapePatchParamsParams(TypedDict, total=False):
-    add: List["SpacesShapePatchParamsParamsAddItem"]
-    omit: List[str]
-    order: List[str]
-    set: Dict[str, Any]
-
-
-class SpacesShapePatchParams(TypedDict, total=False):
-    space: "SpacesShapePatchParamsSpace"
-    sections: "SpacesShapePatchParamsSections"
-    params: "SpacesShapePatchParamsParams"
-
-
-class SpacesShapeSetDefaultKindParams(TypedDict, total=False):
-    kind: Optional[str]
-
-
-class SpacesShapeSetKindParamsPatchSpace(TypedDict, total=False):
-    index: str
-    order: str
-    nav: str
-    whoCreates: str
-    summary: List[str]
-
-
-class SpacesShapeSetKindParamsPatchSectionsAddItem(TypedDict, total=False):
-    key: str
-    label: str
+class ContentModelPutParamsShapeParamsAddItemFieldToItem(TypedDict, total=False):
     kind: str
-    required: bool
-    hint: str
-    example: str
-    schemaProperty: str
-    render: str
+    types: List[str]
 
 
-class SpacesShapeSetKindParamsPatchSections(TypedDict, total=False):
-    add: List["SpacesShapeSetKindParamsPatchSectionsAddItem"]
+class ContentModelPutParamsShapeParamsAddItemFieldAdmin(TypedDict, total=False):
+    tab: str
+    row: str
+    collapsible: str
+    collapsed: bool
+
+
+ContentModelPutParamsShapeParamsAddItemFieldField = TypedDict("ContentModelPutParamsShapeParamsAddItemFieldField", {"key": str, "label": str, "type": str, "options": List[str], "relationSpaceId": str, "hint": str, "placeholder": str, "internal": bool, "facet": bool, "meta": bool, "required": bool, "default": Any, "schemaProperty": str, "min": float, "max": float, "visibility": str, "localized": bool, "unique": bool, "indexed": bool, "sortable": bool, "minLength": int, "maxLength": int, "pattern": str, "condition": Any, "expr": Any, "schema": Dict[str, Any], "allowedBlocks": List[str], "allowed": List[str], "allowedGroups": List[str], "to": List[Dict[str, Any]], "hasMany": bool, "rowLabelField": str, "language": str, "from": str, "accept": List[str], "admin": Dict[str, Any], "fields": List[Dict[str, Any]]}, total=False)
+
+
+ContentModelPutParamsShapeParamsAddItemField = TypedDict("ContentModelPutParamsShapeParamsAddItemField", {"key": str, "label": str, "type": str, "options": List[str], "relationSpaceId": str, "hint": str, "placeholder": str, "internal": bool, "facet": bool, "meta": bool, "required": bool, "default": Any, "schemaProperty": str, "min": float, "max": float, "visibility": str, "localized": bool, "unique": bool, "indexed": bool, "sortable": bool, "minLength": int, "maxLength": int, "pattern": str, "condition": Any, "expr": Any, "schema": Dict[str, Any], "allowedBlocks": List[str], "allowed": List[str], "allowedGroups": List[str], "to": List["ContentModelPutParamsShapeParamsAddItemFieldToItem"], "hasMany": bool, "rowLabelField": str, "language": str, "from": str, "accept": List[str], "admin": "ContentModelPutParamsShapeParamsAddItemFieldAdmin", "fields": List["ContentModelPutParamsShapeParamsAddItemFieldField"]}, total=False)
+
+
+ContentModelPutParamsShapeParamsAddItem = TypedDict("ContentModelPutParamsShapeParamsAddItem", {"key": str, "label": str, "type": str, "options": List[str], "relationSpaceId": str, "hint": str, "placeholder": str, "internal": bool, "facet": bool, "meta": bool, "required": bool, "default": Any, "schemaProperty": str, "min": float, "max": float, "visibility": str, "localized": bool, "unique": bool, "indexed": bool, "sortable": bool, "minLength": int, "maxLength": int, "pattern": str, "condition": Any, "expr": Any, "schema": Dict[str, Any], "allowedBlocks": List[str], "allowed": List[str], "allowedGroups": List[str], "to": List["ContentModelPutParamsShapeParamsAddItemToItem"], "hasMany": bool, "rowLabelField": str, "language": str, "from": str, "accept": List[str], "admin": "ContentModelPutParamsShapeParamsAddItemAdmin", "fields": List["ContentModelPutParamsShapeParamsAddItemField"]}, total=False)
+
+
+class ContentModelPutParamsShapeParams(TypedDict, total=False):
+    add: List["ContentModelPutParamsShapeParamsAddItem"]
     omit: List[str]
     order: List[str]
     set: Dict[str, Any]
+    unset: Dict[str, Any]
 
 
-class SpacesShapeSetKindParamsPatchParamsAddItem(TypedDict, total=False):
+class ContentModelPutParamsShapeBlockTypesAddItemFieldToItem(TypedDict, total=False):
+    kind: str
+    types: List[str]
+
+
+class ContentModelPutParamsShapeBlockTypesAddItemFieldAdmin(TypedDict, total=False):
+    tab: str
+    row: str
+    collapsible: str
+    collapsed: bool
+
+
+ContentModelPutParamsShapeBlockTypesAddItemFieldField = TypedDict("ContentModelPutParamsShapeBlockTypesAddItemFieldField", {"key": str, "label": str, "type": str, "options": List[str], "relationSpaceId": str, "hint": str, "placeholder": str, "internal": bool, "facet": bool, "meta": bool, "required": bool, "default": Any, "schemaProperty": str, "min": float, "max": float, "visibility": str, "localized": bool, "unique": bool, "indexed": bool, "sortable": bool, "minLength": int, "maxLength": int, "pattern": str, "condition": Any, "expr": Any, "schema": Dict[str, Any], "allowedBlocks": List[str], "allowed": List[str], "allowedGroups": List[str], "to": List[Dict[str, Any]], "hasMany": bool, "rowLabelField": str, "language": str, "from": str, "accept": List[str], "admin": Dict[str, Any], "fields": List[Dict[str, Any]]}, total=False)
+
+
+ContentModelPutParamsShapeBlockTypesAddItemField = TypedDict("ContentModelPutParamsShapeBlockTypesAddItemField", {"key": str, "label": str, "type": str, "options": List[str], "relationSpaceId": str, "hint": str, "placeholder": str, "internal": bool, "facet": bool, "meta": bool, "required": bool, "default": Any, "schemaProperty": str, "min": float, "max": float, "visibility": str, "localized": bool, "unique": bool, "indexed": bool, "sortable": bool, "minLength": int, "maxLength": int, "pattern": str, "condition": Any, "expr": Any, "schema": Dict[str, Any], "allowedBlocks": List[str], "allowed": List[str], "allowedGroups": List[str], "to": List["ContentModelPutParamsShapeBlockTypesAddItemFieldToItem"], "hasMany": bool, "rowLabelField": str, "language": str, "from": str, "accept": List[str], "admin": "ContentModelPutParamsShapeBlockTypesAddItemFieldAdmin", "fields": List["ContentModelPutParamsShapeBlockTypesAddItemFieldField"]}, total=False)
+
+
+class ContentModelPutParamsShapeBlockTypesAddItemVariantFields(TypedDict, total=False):
+    add: List[Dict[str, Any]]
+    omit: List[str]
+    order: List[str]
+    set: Dict[str, Any]
+    unset: Dict[str, Any]
+
+
+class ContentModelPutParamsShapeBlockTypesAddItemVariant(TypedDict, total=False):
     key: str
     label: str
-    type: str
-    options: List[str]
-    relationSpaceId: str
-    hint: str
-    placeholder: str
-    internal: bool
-    facet: bool
-    meta: bool
-    required: bool
-    default: Any
-    schemaProperty: str
+    fields: "ContentModelPutParamsShapeBlockTypesAddItemVariantFields"
 
 
-class SpacesShapeSetKindParamsPatchParams(TypedDict, total=False):
-    add: List["SpacesShapeSetKindParamsPatchParamsAddItem"]
-    omit: List[str]
-    order: List[str]
-    set: Dict[str, Any]
-
-
-class SpacesShapeSetKindParamsPatch(TypedDict, total=False):
-    space: "SpacesShapeSetKindParamsPatchSpace"
-    sections: "SpacesShapeSetKindParamsPatchSections"
-    params: "SpacesShapeSetKindParamsPatchParams"
-
-
-class SpacesShapeSetKindParams(TypedDict, total=False):
+class ContentModelPutParamsShapeBlockTypesAddItem(TypedDict, total=False):
+    key: str
     label: str
     description: str
-    patch: "SpacesShapeSetKindParamsPatch"
+    icon: str
+    group: str
+    fields: List["ContentModelPutParamsShapeBlockTypesAddItemField"]
+    variants: List["ContentModelPutParamsShapeBlockTypesAddItemVariant"]
+
+
+class ContentModelPutParamsShapeBlockTypes(TypedDict, total=False):
+    add: List["ContentModelPutParamsShapeBlockTypesAddItem"]
+    omit: List[str]
+    order: List[str]
+    set: Dict[str, Any]
+    unset: Dict[str, Any]
+
+
+class ContentModelPutParamsShape(TypedDict, total=False):
+    space: "ContentModelPutParamsShapeSpace"
+    sections: "ContentModelPutParamsShapeSections"
+    params: "ContentModelPutParamsShapeParams"
+    blockTypes: "ContentModelPutParamsShapeBlockTypes"
+
+
+ContentModelPutParamsOp = TypedDict("ContentModelPutParamsOp", {"op": str, "type": str, "blockType": str, "variant": str, "from": str, "to": str, "path": str}, total=False)
+
+
+class ContentModelPutParams(TypedDict, total=False):
+    shape: "ContentModelPutParamsShape"
+    types: Dict[str, Any]
+    ops: List["ContentModelPutParamsOp"]
+
+
+class ContentModelPutResponse(TypedDict, total=False):
+    model: "ContentModel"
+    warnings: List[str]
+
+
+class ContentModelVersionsResponse(TypedDict, total=False):
+    versions: List["ContentModelVersion"]
+    page: "PageInfo"
+    data: List["ContentModelVersion"]
+
+
+class ContentLocalesAddParams(TypedDict, total=False):
+    code: Any
+    label: str
+
+
+class ContentLocalesSettingsParams(TypedDict, total=False):
+    sourceLocale: Any
+    localeFallbacks: Optional[Dict[str, Any]]
+
+
+class ContentLocalesRelabelParams(TypedDict, total=False):
+    label: str
+
+
+class ContentEntryLocalesWriteParams(TypedDict, total=False):
+    fields: Dict[str, Any]
+
+
+class EntryFieldsPatchParamsOp(TypedDict, total=False):
+    op: str
+    path: str
+    value: Any
+    before: str
+
+
+class EntryFieldsPatchParams(TypedDict, total=False):
+    ops: List["EntryFieldsPatchParamsOp"]
+
+
+class EntryFieldsTakeLockParams(TypedDict, total=False):
+    takeOver: bool
+
+
+class EntryCardGetScheduleResponse(TypedDict, total=False):
+    schedule: Optional["EntrySchedule"]
+
+
+class EntryCardScheduleParams(TypedDict, total=False):
+    publishAt: str
+
+
+class EntryCardScheduleResponse(TypedDict, total=False):
+    schedule: "EntrySchedule"
+    warnings: List[str]
+
+
+class EntryCardCancelScheduleResponse(TypedDict, total=False):
+    ok: bool
+
+
+class EntryCardRevisionsResponse(TypedDict, total=False):
+    revisions: List["EntryRevision"]
+    page: "PageInfo"
+    data: List["EntryRevision"]
+
+
+class EntryCardRestoreParams(TypedDict, total=False):
+    mode: str
+
+
+class EntryCardRestoreResponse(TypedDict, total=False):
+    revision: "EntryRevision"
+    warnings: List[str]
+
+
+class EntryCardTranslateParams(TypedDict, total=False):
+    locale: Any
+
+
+class PreviewSessionsMintParams(TypedDict, total=False):
+    entryId: str
+    releaseId: str
+    path: str
+
+
+class PreviewSessionsMintResponse(TypedDict, total=False):
+    session: "PreviewSession"
+    data: "PreviewSession"
+    warnings: List[str]
+
+
+class PreviewExchangeExchangeParams(TypedDict, total=False):
+    token: str
+    path: str
+    library: str
+
+
+class LibrarySiteListMenusResponse(TypedDict, total=False):
+    menus: List["LibraryMenu"]
+    types: List["LibraryMenuType"]
+
+
+class LibrarySiteGetRedirectsResponse(TypedDict, total=False):
+    redirects: List["StoredRedirect"]
+    page: "PageInfo"
+    data: List["StoredRedirect"]
+
+
+class LibrarySiteSetRedirectsParamsRedirectMatch(TypedDict, total=False):
+    query: Any
+
+
+LibrarySiteSetRedirectsParamsRedirect = TypedDict("LibrarySiteSetRedirectsParamsRedirect", {"from": str, "to": Any, "type": str, "status": float, "match": "LibrarySiteSetRedirectsParamsRedirectMatch", "passQuery": bool}, total=False)
+
+
+class LibrarySiteSetRedirectsParams(TypedDict, total=False):
+    redirects: List["LibrarySiteSetRedirectsParamsRedirect"]
+
+
+class LibrarySiteSetRedirectsResponse(TypedDict, total=False):
+    redirects: List["StoredRedirect"]
+    warnings: List[str]
+
+
+class ReferenceCandidatesSearchResponse(TypedDict, total=False):
+    candidates: List["ReferenceCandidate"]
+
+
+ModelIoImportParamsOp = TypedDict("ModelIoImportParamsOp", {"op": str, "type": str, "blockType": str, "variant": str, "from": str, "to": str, "path": str}, total=False)
+
+
+class ModelIoImportParams(TypedDict, total=False):
+    format: str
+    content: str
+    dryRun: bool
+    baseVersion: int
+    force: bool
+    ops: List["ModelIoImportParamsOp"]
+
+
+class EnvironmentsListResponse(TypedDict, total=False):
+    environments: "ContentEnvironments"
+
+
+class EnvironmentsForkParams(TypedDict, total=False):
+    name: str
+    slug: str
+    includeContent: bool
+
+
+class EnvironmentsForkResponse(TypedDict, total=False):
+    environment: "ContentEnvironment"
+    data: "ContentEnvironment"
+    warnings: List[str]
+
+
+class EnvironmentsCompareResponse(TypedDict, total=False):
+    compare: "EnvironmentCompare"
+
+
+class EnvironmentsPromoteResponse(TypedDict, total=False):
+    promoted: "EnvironmentPromoteResult"
+
+
+class ContentAiTranslateParams(TypedDict, total=False):
+    entryIds: List[str]
+    locale: str
+
+
+class ContentAiSeoParams(TypedDict, total=False):
+    locale: str
+
+
+class ContentAiDraftParams(TypedDict, total=False):
+    fieldKey: str
+    brief: str
 
 
 class LegalUpdatesSubscribeParamsScope(TypedDict, total=False):
@@ -14675,30 +15825,13 @@ class OrgsReorderLegalResponse(TypedDict, total=False):
     warnings: List[str]
 
 
-class OrgsPlanResponse(TypedDict, total=False):
-    metrics: List["QuotaStatus"]
-    plan: str
-
-
 class OrgsSetPlanParams(TypedDict, total=False):
     plan: str
-
-
-class OrgsSetPlanResponse(TypedDict, total=False):
-    metrics: List["QuotaStatus"]
-    plan: str
-    warnings: List[str]
 
 
 class OrgsSetOverrideParams(TypedDict, total=False):
     metric: str
     extra: Optional[int]
-
-
-class OrgsSetOverrideResponse(TypedDict, total=False):
-    metrics: List["QuotaStatus"]
-    plan: str
-    warnings: List[str]
 
 
 class OrgsImportParamsMember(TypedDict, total=False):
@@ -22645,16 +23778,16 @@ class SpacesSettingsPatchThemeParamsForumTopicMap(TypedDict, total=False):
 class SpacesSettingsPatchThemeParamsForumTopicShare(TypedDict, total=False):
     mode: Optional[str]
     align: Optional[str]
-    networks: Optional[Any]
-    frame: Optional[Any]
-    radius: Optional[Any]
+    networks: Optional[List[str]]
+    frame: Optional[str]
+    radius: Optional[int]
     borderColor: Optional[Any]
     label: Optional[Any]
     labelEnd: Optional[Any]
-    labelStyle: Optional[Any]
-    marks: Optional[Any]
-    comments: Optional[Any]
-    size: Optional[Any]
+    labelStyle: Optional[str]
+    marks: Optional[bool]
+    comments: Optional[bool]
+    size: Optional[int]
 
 
 class SpacesSettingsPatchThemeParamsForumTopicTimeline(TypedDict, total=False):
@@ -23154,6 +24287,15 @@ class SpacesSettingsPatchThemeParamsDocsSidebarFooterLink(TypedDict, total=False
     audience: str
 
 
+class SpacesSettingsPatchThemeParamsDocsSidebarStatus(TypedDict, total=False):
+    monitorSpaceId: Optional[str]
+    style: Optional[str]
+    color: Optional[str]
+    case: Optional[str]
+    font: Optional[str]
+    dot: Optional[bool]
+
+
 class SpacesSettingsPatchThemeParamsDocsSidebar(TypedDict, total=False):
     groups: Optional[str]
     accordion: Optional[bool]
@@ -23176,7 +24318,7 @@ class SpacesSettingsPatchThemeParamsDocsSidebar(TypedDict, total=False):
     icons: Optional["SpacesSettingsPatchThemeParamsDocsSidebarIcons"]
     anchors: Optional[List["SpacesSettingsPatchThemeParamsDocsSidebarAnchor"]]
     footerLinks: Optional[List["SpacesSettingsPatchThemeParamsDocsSidebarFooterLink"]]
-    status: Optional[Any]
+    status: Optional["SpacesSettingsPatchThemeParamsDocsSidebarStatus"]
     drilldown: Optional[bool]
     search: Optional[str]
     searchHeight: Optional[int]
@@ -32780,16 +33922,16 @@ class SpacesSettingsPatchThemeDraftParamsForumTopicMap(TypedDict, total=False):
 class SpacesSettingsPatchThemeDraftParamsForumTopicShare(TypedDict, total=False):
     mode: Optional[str]
     align: Optional[str]
-    networks: Optional[Any]
-    frame: Optional[Any]
-    radius: Optional[Any]
+    networks: Optional[List[str]]
+    frame: Optional[str]
+    radius: Optional[int]
     borderColor: Optional[Any]
     label: Optional[Any]
     labelEnd: Optional[Any]
-    labelStyle: Optional[Any]
-    marks: Optional[Any]
-    comments: Optional[Any]
-    size: Optional[Any]
+    labelStyle: Optional[str]
+    marks: Optional[bool]
+    comments: Optional[bool]
+    size: Optional[int]
 
 
 class SpacesSettingsPatchThemeDraftParamsForumTopicTimeline(TypedDict, total=False):
@@ -33289,6 +34431,15 @@ class SpacesSettingsPatchThemeDraftParamsDocsSidebarFooterLink(TypedDict, total=
     audience: str
 
 
+class SpacesSettingsPatchThemeDraftParamsDocsSidebarStatus(TypedDict, total=False):
+    monitorSpaceId: Optional[str]
+    style: Optional[str]
+    color: Optional[str]
+    case: Optional[str]
+    font: Optional[str]
+    dot: Optional[bool]
+
+
 class SpacesSettingsPatchThemeDraftParamsDocsSidebar(TypedDict, total=False):
     groups: Optional[str]
     accordion: Optional[bool]
@@ -33311,7 +34462,7 @@ class SpacesSettingsPatchThemeDraftParamsDocsSidebar(TypedDict, total=False):
     icons: Optional["SpacesSettingsPatchThemeDraftParamsDocsSidebarIcons"]
     anchors: Optional[List["SpacesSettingsPatchThemeDraftParamsDocsSidebarAnchor"]]
     footerLinks: Optional[List["SpacesSettingsPatchThemeDraftParamsDocsSidebarFooterLink"]]
-    status: Optional[Any]
+    status: Optional["SpacesSettingsPatchThemeDraftParamsDocsSidebarStatus"]
     drilldown: Optional[bool]
     search: Optional[str]
     searchHeight: Optional[int]
@@ -42723,10 +43874,20 @@ class ServiceAccountsTokensResponse(TypedDict, total=False):
     data: List["PatSummary"]
 
 
+class ServiceAccountsMintParamsConstraintsDelivery(TypedDict, total=False):
+    stage: str
+    libraryIds: List[str]
+    publishable: bool
+    origins: List[str]
+    contentTypes: List[str]
+    locales: List[str]
+
+
 class ServiceAccountsMintParamsConstraints(TypedDict, total=False):
     spaceIds: List[str]
     categoryIds: List[str]
     orgIds: List[str]
+    delivery: "ServiceAccountsMintParamsConstraintsDelivery"
 
 
 class ServiceAccountsMintParams(TypedDict, total=False):
@@ -46357,6 +47518,7 @@ class DocsPagesEmptyTrashResponse(TypedDict, total=False):
 
 class DocsPagesRestoreResponse(TypedDict, total=False):
     detached: bool
+    notice: str
     ok: bool
     reattachedChildren: float
     renamedFrom: Any
@@ -47471,12 +48633,16 @@ class WebhooksCreateParams(TypedDict, total=False):
     url: str
     events: List[str]
     spaceId: Optional[str]
+    libraryId: Optional[str]
     format: str
     categoryIds: Optional[List[str]]
     tagIds: Optional[List[str]]
     groupIds: Optional[List[str]]
+    contentTypes: Optional[List[str]]
+    locales: Optional[List[str]]
     bodyEncoding: str
     signatureVersion: str
+    kind: str
 
 
 class WebhooksCreateResponse(TypedDict, total=False):
@@ -47491,9 +48657,12 @@ class WebhooksUpdateParams(TypedDict, total=False):
     events: List[str]
     active: bool
     spaceId: Optional[str]
+    libraryId: Optional[str]
     categoryIds: Optional[List[str]]
     tagIds: Optional[List[str]]
     groupIds: Optional[List[str]]
+    contentTypes: Optional[List[str]]
+    locales: Optional[List[str]]
     bodyEncoding: str
     signatureVersion: str
 
@@ -47549,6 +48718,12 @@ class WebhooksRotateResponse(TypedDict, total=False):
     previousValidUntil: str
     secret: str
     warnings: List[str]
+
+
+class DeployStatusStatusResponse(TypedDict, total=False):
+    deployHooks: List["DeployHookBuildStatus"]
+    page: "PageInfo"
+    data: List["DeployHookBuildStatus"]
 
 
 class NotificationsGetDndResponse(TypedDict, total=False):
@@ -47776,8 +48951,59 @@ class SpacesAssetsCatalogResponse(TypedDict, total=False):
     data: List["CatalogedAsset"]
 
 
+class AssetLibraryUpdateParams(TypedDict, total=False):
+    alt: Optional[str]
+    caption: Optional[str]
+    focalX: Optional[float]
+    focalY: Optional[float]
+    folderId: Optional[str]
+    tags: List[str]
+
+
+class AssetLibraryUpdateResponse(TypedDict, total=False):
+    asset: "UploadedAsset"
+    warnings: List[str]
+
+
 class SpacesAssetsRemoveResponse(TypedDict, total=False):
     ok: bool
+
+
+class AssetLibraryListFoldersResponse(TypedDict, total=False):
+    folders: List["AssetFolderDto"]
+    page: "PageInfo"
+    data: List["AssetFolderDto"]
+
+
+class AssetLibraryCreateFolderParams(TypedDict, total=False):
+    name: str
+    parentId: Optional[str]
+
+
+class AssetLibraryCreateFolderResponse(TypedDict, total=False):
+    folder: "AssetFolderDto"
+    data: "AssetFolderDto"
+    warnings: List[str]
+
+
+class AssetLibraryUpdateFolderParams(TypedDict, total=False):
+    name: str
+    parentId: Optional[str]
+
+
+class AssetLibraryUpdateFolderResponse(TypedDict, total=False):
+    folder: "AssetFolderDto"
+    warnings: List[str]
+
+
+class AssetLibraryDeleteFolderResponse(TypedDict, total=False):
+    ok: bool
+
+
+class LibraryAssetListResponse(TypedDict, total=False):
+    assets: List["LibraryAsset"]
+    page: "PageInfo"
+    data: List["LibraryAsset"]
 
 
 class SpacesDomainsAddParams(TypedDict, total=False):
@@ -47841,6 +49067,7 @@ class PublicDomainsPrimaryResponse(TypedDict, total=False):
 
 
 class PublicDomainsResolveResponse(TypedDict, total=False):
+    library: Any
     mounts: List[str]
     site: Any
     space: Any
@@ -47849,6 +49076,51 @@ class PublicDomainsResolveResponse(TypedDict, total=False):
 class SpacesAddressesListResponse(TypedDict, total=False):
     addresses: List["SpaceAddress"]
     sitemapUrl: str
+
+
+class LibraryDomainAddParams(TypedDict, total=False):
+    hostname: str
+    basePath: str
+    alsoRedirectWww: bool
+
+
+class LibraryDomainAllocateSubdomainParams(TypedDict, total=False):
+    subdomain: str
+
+
+class LibraryDomainPreviewParams(TypedDict, total=False):
+    hostname: str
+    basePath: str
+
+
+class LibraryDomainVerifyParams(TypedDict, total=False):
+    activate: bool
+
+
+class LibraryDomainRemoveResponse(TypedDict, total=False):
+    ok: bool
+
+
+class LibraryDomainSetWwwParams(TypedDict, total=False):
+    alsoRedirectWww: bool
+
+
+class LibraryDomainSetIpAllowListParams(TypedDict, total=False):
+    ipAllowList: List[str]
+
+
+class LibraryDomainSetIpAllowListResponse(TypedDict, total=False):
+    ipAllowList: List[str]
+    warnings: List[str]
+
+
+class LibraryDomainSetRedirectParams(TypedDict, total=False):
+    redirectTo: Optional[str]
+
+
+class LibraryDomainSetRedirectResponse(TypedDict, total=False):
+    ok: bool
+    warnings: List[str]
 
 
 class IntegrationsCloudflareSetParams(TypedDict, total=False):
@@ -74457,6 +75729,635 @@ class MessagesRemoveParticipantResponse(TypedDict, total=False):
     ok: bool
 
 
+class ContentStudioRunBulkParams(TypedDict, total=False):
+    action: str
+    entryIds: List[str]
+    locale: str
+    overwrite: bool
+    force: bool
+
+
+class DeliveryKeysListResponse(TypedDict, total=False):
+    keys: List["DeliveryKeySummary"]
+    page: "PageInfo"
+    data: List["DeliveryKeySummary"]
+
+
+class DeliveryKeysCreateParams(TypedDict, total=False):
+    name: str
+    kind: str
+    origins: List[str]
+    contentTypes: List[str]
+    locales: List[str]
+    expiresInDays: int
+
+
+class DeliveryKeysUpdateParams(TypedDict, total=False):
+    name: str
+    origins: Optional[List[str]]
+    contentTypes: Optional[List[str]]
+    locales: Optional[List[str]]
+
+
+class DeliveryKeysUpdateResponse(TypedDict, total=False):
+    key: "DeliveryKeySummary"
+    warnings: List[str]
+
+
+class DeliveryKeysRevokeResponse(TypedDict, total=False):
+    ok: bool
+
+
+class DeliveryKeysRotateParams(TypedDict, total=False):
+    graceMinutes: int
+
+
+class DeliveryKeyKeyResponse(TypedDict, total=False):
+    key: "DeliveryKeyInfo"
+
+
+class DeliveryKeyKeyByKeyIdResponse(TypedDict, total=False):
+    key: "DeliveryKeyInfo"
+
+
+class DeliveryEntriesTypes0ResponseTypeLinks(TypedDict, total=False):
+    entries: str
+    schema: str
+
+
+class DeliveryEntriesTypes0ResponseType(TypedDict, total=False):
+    key: str
+    label: str
+    singleton: bool
+    routable: bool
+    fields: List[Dict[str, Any]]
+    _links: "DeliveryEntriesTypes0ResponseTypeLinks"
+
+
+class DeliveryEntriesTypes0Response(TypedDict, total=False):
+    libraryId: str
+    sourceLocale: str
+    types: List["DeliveryEntriesTypes0ResponseType"]
+    blockTypes: List[Dict[str, Any]]
+
+
+class DeliveryEntriesTypes1ResponseTypeLinks(TypedDict, total=False):
+    entries: str
+    schema: str
+
+
+class DeliveryEntriesTypes1ResponseType(TypedDict, total=False):
+    key: str
+    label: str
+    singleton: bool
+    routable: bool
+    fields: List[Dict[str, Any]]
+    _links: "DeliveryEntriesTypes1ResponseTypeLinks"
+
+
+class DeliveryEntriesTypes1Response(TypedDict, total=False):
+    libraryId: str
+    sourceLocale: str
+    types: List["DeliveryEntriesTypes1ResponseType"]
+    blockTypes: List[Dict[str, Any]]
+
+
+class DeliveryEntriesList0ResponseDataItemLinks(TypedDict, total=False):
+    self: str
+
+
+class DeliveryEntriesList0ResponseDataItem(TypedDict, total=False):
+    id: str
+    type: str
+    slug: Any
+    title: str
+    locale: str
+    status: str
+    publishedAt: Any
+    updatedAt: str
+    modelVersion: int
+    fields: Dict[str, Any]
+    route: Any
+    locales: List[str]
+    _unresolved: List[str]
+    _links: "DeliveryEntriesList0ResponseDataItemLinks"
+
+
+class DeliveryEntriesList0Response(TypedDict, total=False):
+    data: List["DeliveryEntriesList0ResponseDataItem"]
+    page: "PageInfo"
+
+
+class DeliveryEntriesList1ResponseDataItemLinks(TypedDict, total=False):
+    self: str
+
+
+class DeliveryEntriesList1ResponseDataItem(TypedDict, total=False):
+    id: str
+    type: str
+    slug: Any
+    title: str
+    locale: str
+    status: str
+    publishedAt: Any
+    updatedAt: str
+    modelVersion: int
+    fields: Dict[str, Any]
+    route: Any
+    locales: List[str]
+    _unresolved: List[str]
+    _links: "DeliveryEntriesList1ResponseDataItemLinks"
+
+
+class DeliveryEntriesList1Response(TypedDict, total=False):
+    data: List["DeliveryEntriesList1ResponseDataItem"]
+    page: "PageInfo"
+
+
+class DeliveryEntriesQuery0Params(TypedDict, total=False):
+    where: Any
+    sort: Any
+    select: Any
+    limit: Any
+    cursor: Any
+    count: bool
+
+
+class DeliveryEntriesQuery0ResponseDataItemLinks(TypedDict, total=False):
+    self: str
+
+
+class DeliveryEntriesQuery0ResponseDataItem(TypedDict, total=False):
+    id: str
+    type: str
+    slug: Any
+    title: str
+    locale: str
+    status: str
+    publishedAt: Any
+    updatedAt: str
+    modelVersion: int
+    fields: Dict[str, Any]
+    route: Any
+    locales: List[str]
+    _unresolved: List[str]
+    _links: "DeliveryEntriesQuery0ResponseDataItemLinks"
+
+
+class DeliveryEntriesQuery0Response(TypedDict, total=False):
+    data: List["DeliveryEntriesQuery0ResponseDataItem"]
+    page: "PageInfo"
+    warnings: List[str]
+
+
+class DeliveryEntriesQuery1Params(TypedDict, total=False):
+    where: Any
+    sort: Any
+    select: Any
+    limit: Any
+    cursor: Any
+    count: bool
+
+
+class DeliveryEntriesQuery1ResponseDataItemLinks(TypedDict, total=False):
+    self: str
+
+
+class DeliveryEntriesQuery1ResponseDataItem(TypedDict, total=False):
+    id: str
+    type: str
+    slug: Any
+    title: str
+    locale: str
+    status: str
+    publishedAt: Any
+    updatedAt: str
+    modelVersion: int
+    fields: Dict[str, Any]
+    route: Any
+    locales: List[str]
+    _unresolved: List[str]
+    _links: "DeliveryEntriesQuery1ResponseDataItemLinks"
+
+
+class DeliveryEntriesQuery1Response(TypedDict, total=False):
+    data: List["DeliveryEntriesQuery1ResponseDataItem"]
+    page: "PageInfo"
+    warnings: List[str]
+
+
+class DeliveryEntriesOne0ResponseLinks(TypedDict, total=False):
+    self: str
+
+
+class DeliveryEntriesOne0Response(TypedDict, total=False):
+    id: str
+    type: str
+    slug: Any
+    title: str
+    locale: str
+    status: str
+    publishedAt: Any
+    updatedAt: str
+    modelVersion: int
+    fields: Dict[str, Any]
+    route: Any
+    locales: List[str]
+    _unresolved: List[str]
+    _links: "DeliveryEntriesOne0ResponseLinks"
+
+
+class DeliveryEntriesOne1ResponseLinks(TypedDict, total=False):
+    self: str
+
+
+class DeliveryEntriesOne1Response(TypedDict, total=False):
+    id: str
+    type: str
+    slug: Any
+    title: str
+    locale: str
+    status: str
+    publishedAt: Any
+    updatedAt: str
+    modelVersion: int
+    fields: Dict[str, Any]
+    route: Any
+    locales: List[str]
+    _unresolved: List[str]
+    _links: "DeliveryEntriesOne1ResponseLinks"
+
+
+class DeliveryEntriesResolveParams(TypedDict, total=False):
+    fields: Dict[str, Any]
+
+
+class DeliveryEntriesResolveResponseLinks(TypedDict, total=False):
+    self: str
+
+
+class DeliveryEntriesResolveResponse(TypedDict, total=False):
+    id: str
+    type: str
+    slug: Any
+    title: str
+    locale: str
+    status: str
+    publishedAt: Any
+    updatedAt: str
+    modelVersion: int
+    fields: Dict[str, Any]
+    route: Any
+    locales: List[str]
+    _unresolved: List[str]
+    _links: "DeliveryEntriesResolveResponseLinks"
+    warnings: List[str]
+
+
+class DeliveryEntriesGlobal0ResponseLinks(TypedDict, total=False):
+    self: str
+
+
+class DeliveryEntriesGlobal0Response(TypedDict, total=False):
+    id: str
+    type: str
+    slug: Any
+    title: str
+    locale: str
+    status: str
+    publishedAt: Any
+    updatedAt: str
+    modelVersion: int
+    fields: Dict[str, Any]
+    route: Any
+    locales: List[str]
+    _unresolved: List[str]
+    _links: "DeliveryEntriesGlobal0ResponseLinks"
+
+
+class DeliveryEntriesGlobal1ResponseLinks(TypedDict, total=False):
+    self: str
+
+
+class DeliveryEntriesGlobal1Response(TypedDict, total=False):
+    id: str
+    type: str
+    slug: Any
+    title: str
+    locale: str
+    status: str
+    publishedAt: Any
+    updatedAt: str
+    modelVersion: int
+    fields: Dict[str, Any]
+    route: Any
+    locales: List[str]
+    _unresolved: List[str]
+    _links: "DeliveryEntriesGlobal1ResponseLinks"
+
+
+class DeliverySiteRoutes0ResponseDataItem(TypedDict, total=False):
+    id: str
+    path: str
+    entry: Any
+    title: Any
+    layout: Any
+    updatedAt: str
+
+
+class DeliverySiteRoutes0Response(TypedDict, total=False):
+    data: List["DeliverySiteRoutes0ResponseDataItem"]
+    page: "PageInfo"
+
+
+class DeliverySiteRoutes1ResponseDataItem(TypedDict, total=False):
+    id: str
+    path: str
+    entry: Any
+    title: Any
+    layout: Any
+    updatedAt: str
+
+
+class DeliverySiteRoutes1Response(TypedDict, total=False):
+    data: List["DeliverySiteRoutes1ResponseDataItem"]
+    page: "PageInfo"
+
+
+class DeliverySiteResolve0ResponseRouteLinks(TypedDict, total=False):
+    self: str
+
+
+class DeliverySiteResolve0ResponseRoute(TypedDict, total=False):
+    id: str
+    type: str
+    slug: Any
+    title: str
+    locale: str
+    status: str
+    publishedAt: Any
+    updatedAt: str
+    modelVersion: int
+    fields: Dict[str, Any]
+    route: Any
+    locales: List[str]
+    _unresolved: List[str]
+    _links: "DeliverySiteResolve0ResponseRouteLinks"
+
+
+class DeliverySiteResolve0ResponseEntryLinks(TypedDict, total=False):
+    self: str
+
+
+class DeliverySiteResolve0ResponseEntry(TypedDict, total=False):
+    id: str
+    type: str
+    slug: Any
+    title: str
+    locale: str
+    status: str
+    publishedAt: Any
+    updatedAt: str
+    modelVersion: int
+    fields: Dict[str, Any]
+    route: Any
+    locales: List[str]
+    _unresolved: List[str]
+    _links: "DeliverySiteResolve0ResponseEntryLinks"
+
+
+class DeliverySiteResolve0Response(TypedDict, total=False):
+    kind: str
+    path: str
+    route: "DeliverySiteResolve0ResponseRoute"
+    entry: "DeliverySiteResolve0ResponseEntry"
+    to: str
+    status: int
+
+
+class DeliverySiteResolve1ResponseRouteLinks(TypedDict, total=False):
+    self: str
+
+
+class DeliverySiteResolve1ResponseRoute(TypedDict, total=False):
+    id: str
+    type: str
+    slug: Any
+    title: str
+    locale: str
+    status: str
+    publishedAt: Any
+    updatedAt: str
+    modelVersion: int
+    fields: Dict[str, Any]
+    route: Any
+    locales: List[str]
+    _unresolved: List[str]
+    _links: "DeliverySiteResolve1ResponseRouteLinks"
+
+
+class DeliverySiteResolve1ResponseEntryLinks(TypedDict, total=False):
+    self: str
+
+
+class DeliverySiteResolve1ResponseEntry(TypedDict, total=False):
+    id: str
+    type: str
+    slug: Any
+    title: str
+    locale: str
+    status: str
+    publishedAt: Any
+    updatedAt: str
+    modelVersion: int
+    fields: Dict[str, Any]
+    route: Any
+    locales: List[str]
+    _unresolved: List[str]
+    _links: "DeliverySiteResolve1ResponseEntryLinks"
+
+
+class DeliverySiteResolve1Response(TypedDict, total=False):
+    kind: str
+    path: str
+    route: "DeliverySiteResolve1ResponseRoute"
+    entry: "DeliverySiteResolve1ResponseEntry"
+    to: str
+    status: int
+
+
+DeliverySiteRedirects0ResponseRedirect = TypedDict("DeliverySiteRedirects0ResponseRedirect", {"from": str, "to": str, "status": int, "type": str, "auto": bool}, total=False)
+
+
+DeliverySiteRedirects0ResponseDataItem = TypedDict("DeliverySiteRedirects0ResponseDataItem", {"from": str, "to": str, "status": int, "type": str, "auto": bool}, total=False)
+
+
+class DeliverySiteRedirects0Response(TypedDict, total=False):
+    redirects: List["DeliverySiteRedirects0ResponseRedirect"]
+    page: "PageInfo"
+    data: List["DeliverySiteRedirects0ResponseDataItem"]
+
+
+DeliverySiteRedirects1ResponseRedirect = TypedDict("DeliverySiteRedirects1ResponseRedirect", {"from": str, "to": str, "status": int, "type": str, "auto": bool}, total=False)
+
+
+DeliverySiteRedirects1ResponseDataItem = TypedDict("DeliverySiteRedirects1ResponseDataItem", {"from": str, "to": str, "status": int, "type": str, "auto": bool}, total=False)
+
+
+class DeliverySiteRedirects1Response(TypedDict, total=False):
+    redirects: List["DeliverySiteRedirects1ResponseRedirect"]
+    page: "PageInfo"
+    data: List["DeliverySiteRedirects1ResponseDataItem"]
+
+
+class DeliverySiteSitemap0ResponseEntry(TypedDict, total=False):
+    path: str
+    lastmod: str
+    alternates: Dict[str, Any]
+
+
+class DeliverySiteSitemap0ResponseDataItem(TypedDict, total=False):
+    path: str
+    lastmod: str
+    alternates: Dict[str, Any]
+
+
+class DeliverySiteSitemap0Response(TypedDict, total=False):
+    entries: List["DeliverySiteSitemap0ResponseEntry"]
+    page: "PageInfo"
+    data: List["DeliverySiteSitemap0ResponseDataItem"]
+
+
+class DeliverySiteSitemap1ResponseEntry(TypedDict, total=False):
+    path: str
+    lastmod: str
+    alternates: Dict[str, Any]
+
+
+class DeliverySiteSitemap1ResponseDataItem(TypedDict, total=False):
+    path: str
+    lastmod: str
+    alternates: Dict[str, Any]
+
+
+class DeliverySiteSitemap1Response(TypedDict, total=False):
+    entries: List["DeliverySiteSitemap1ResponseEntry"]
+    page: "PageInfo"
+    data: List["DeliverySiteSitemap1ResponseDataItem"]
+
+
+class DeliverySiteSearch0ResponseDataItemEntryLinks(TypedDict, total=False):
+    self: str
+
+
+class DeliverySiteSearch0ResponseDataItemEntry(TypedDict, total=False):
+    id: str
+    type: str
+    slug: Any
+    title: str
+    locale: str
+    status: str
+    publishedAt: Any
+    updatedAt: str
+    modelVersion: int
+    fields: Dict[str, Any]
+    route: Any
+    locales: List[str]
+    _unresolved: List[str]
+    _links: "DeliverySiteSearch0ResponseDataItemEntryLinks"
+
+
+class DeliverySiteSearch0ResponseDataItem(TypedDict, total=False):
+    entry: "DeliverySiteSearch0ResponseDataItemEntry"
+    score: float
+
+
+class DeliverySiteSearch0Response(TypedDict, total=False):
+    data: List["DeliverySiteSearch0ResponseDataItem"]
+    page: "PageInfo"
+
+
+class DeliverySiteSearch1ResponseDataItemEntryLinks(TypedDict, total=False):
+    self: str
+
+
+class DeliverySiteSearch1ResponseDataItemEntry(TypedDict, total=False):
+    id: str
+    type: str
+    slug: Any
+    title: str
+    locale: str
+    status: str
+    publishedAt: Any
+    updatedAt: str
+    modelVersion: int
+    fields: Dict[str, Any]
+    route: Any
+    locales: List[str]
+    _unresolved: List[str]
+    _links: "DeliverySiteSearch1ResponseDataItemEntryLinks"
+
+
+class DeliverySiteSearch1ResponseDataItem(TypedDict, total=False):
+    entry: "DeliverySiteSearch1ResponseDataItemEntry"
+    score: float
+
+
+class DeliverySiteSearch1Response(TypedDict, total=False):
+    data: List["DeliverySiteSearch1ResponseDataItem"]
+    page: "PageInfo"
+
+
+class SecretScanningGithubParamsItem(TypedDict, total=False):
+    token: str
+    type: str
+    url: str
+    source: str
+
+
+class HostedOutputResolveResponse(TypedDict, total=False):
+    blockTypes: List["BlockType"]
+    entry: Dict[str, Any]
+    kind: str
+    locale: str
+    locales: "PathLocales"
+    path: str
+    route: Dict[str, Any]
+    types: List["HostedType"]
+    status: float
+    to: str
+
+
+class EntryDeliveryPreviewResolveParams(TypedDict, total=False):
+    fields: Dict[str, Any]
+
+
+class EntryDeliveryPreviewResolveResponseEntryLinks(TypedDict, total=False):
+    self: str
+
+
+class EntryDeliveryPreviewResolveResponseEntry(TypedDict, total=False):
+    _links: "EntryDeliveryPreviewResolveResponseEntryLinks"
+    _unresolved: List[str]
+    fields: Dict[str, Any]
+    id: str
+    locale: str
+    locales: List[str]
+    modelVersion: float
+    publishedAt: Any
+    route: Any
+    slug: Any
+    status: str
+    title: str
+    type: str
+    updatedAt: str
+
+
+class EntryDeliveryPreviewResolveResponse(TypedDict, total=False):
+    entry: "EntryDeliveryPreviewResolveResponseEntry"
+    warnings: List[str]
+
+
 class ItemsCreateParamsContent(TypedDict, total=False):
     type: str
     content: List[Any]
@@ -74555,6 +76456,86 @@ class ItemsPutSectionParams(TypedDict, total=False):
 class ItemsPutSectionResponse(TypedDict, total=False):
     conformance: "Conformance"
     warnings: List[str]
+
+
+class LibraryItemCreateParamsContent(TypedDict, total=False):
+    type: str
+    content: List[Any]
+
+
+class LibraryItemCreateParams(TypedDict, total=False):
+    title: str
+    slug: str
+    preset: Optional[str]
+    sections: Dict[str, Any]
+    body: str
+    content: "LibraryItemCreateParamsContent"
+    params: Dict[str, Any]
+
+
+class LibraryItemCreateResponse(TypedDict, total=False):
+    item: "ItemRef"
+    warnings: List[str]
+    data: "ItemRef"
+
+
+class LibraryItemLookupParams(TypedDict, total=False):
+    keys: List[str]
+
+
+class LibraryItemLookupResponse(TypedDict, total=False):
+    found: Dict[str, Any]
+    warnings: List[str]
+
+
+class LibraryItemPatchParams(TypedDict, total=False):
+    title: str
+    slug: str
+    params: Dict[str, Any]
+
+
+class LibraryItemPatchResponse(TypedDict, total=False):
+    item: "ItemRef"
+    warnings: List[str]
+
+
+class LibraryItemRemoveResponse(TypedDict, total=False):
+    ok: bool
+
+
+class LibraryItemFieldsResponse(TypedDict, total=False):
+    fields: Dict[str, Any]
+
+
+class LibraryItemSetFieldsParams(TypedDict, total=False):
+    fields: Dict[str, Any]
+
+
+class LibraryItemSetFieldsResponse(TypedDict, total=False):
+    fields: Dict[str, Any]
+    warnings: List[str]
+
+
+class LibraryItemPublishResponse(TypedDict, total=False):
+    conformance: "Conformance"
+    note: str
+    published: bool
+    warnings: List[str]
+
+
+class LibraryItemTrashResponse(TypedDict, total=False):
+    entries: List["PageTrashRow"]
+    page: "PageInfo"
+    data: List["PageTrashRow"]
+
+
+class LibraryItemRestoreResponse(TypedDict, total=False):
+    detached: bool
+    notice: str
+    ok: bool
+    reattachedChildren: float
+    renamedFrom: Any
+    slug: str
 
 
 class QuestionsListResponse(TypedDict, total=False):
@@ -75406,6 +77387,636 @@ class ReaderDomainRemoveResponse(TypedDict, total=False):
 class ReaderDomainVerifyResponse(TypedDict, total=False):
     domain: "ReaderDomain"
     data: "ReaderDomain"
+
+
+class ContentWorkflowSettingsResponse(TypedDict, total=False):
+    workflow: "ContentWorkflowSettings"
+
+
+class ContentWorkflowPutSettingsParams(TypedDict, total=False):
+    gates: Dict[str, Any]
+
+
+class ContentWorkflowPutSettingsResponse(TypedDict, total=False):
+    workflow: "ContentWorkflowSettings"
+    warnings: List[str]
+
+
+class ContentWorkflowListResponse(TypedDict, total=False):
+    changeRequests: List["ContentChangeRequest"]
+    page: "PageInfo"
+    data: List["ContentChangeRequest"]
+
+
+class ContentWorkflowCreateParams(TypedDict, total=False):
+    entryId: str
+    title: str
+    assigneeIds: List[str]
+    submit: bool
+
+
+class ContentWorkflowCreateResponse(TypedDict, total=False):
+    changeRequest: "ContentChangeRequest"
+    data: "ContentChangeRequest"
+    warnings: List[str]
+
+
+class ContentWorkflowGetResponse(TypedDict, total=False):
+    changeRequest: "ContentChangeRequest"
+
+
+class ContentWorkflowUpdateParams(TypedDict, total=False):
+    title: str
+    assigneeIds: List[str]
+
+
+class ContentWorkflowUpdateResponse(TypedDict, total=False):
+    changeRequest: "ContentChangeRequest"
+    warnings: List[str]
+
+
+class ContentWorkflowTransitionParams(TypedDict, total=False):
+    action: str
+    publishAt: str
+    note: str
+
+
+class ContentWorkflowTransitionResponse(TypedDict, total=False):
+    changeRequest: "ContentChangeRequest"
+    warnings: List[str]
+
+
+class ReleasesListResponse(TypedDict, total=False):
+    releases: List["ContentReleaseSummary"]
+    page: "PageInfo"
+    data: List["ContentReleaseSummary"]
+
+
+class ReleasesCreateParams(TypedDict, total=False):
+    name: str
+    description: str
+
+
+class ReleasesCreateResponse(TypedDict, total=False):
+    release: "ContentRelease"
+    data: "ContentRelease"
+    warnings: List[str]
+
+
+class ReleasesCandidatesResponse(TypedDict, total=False):
+    candidates: List["ReleaseCandidate"]
+    page: "PageInfo"
+    data: List["ReleaseCandidate"]
+
+
+class ReleasesGetResponse(TypedDict, total=False):
+    release: "ContentRelease"
+
+
+class ReleasesUpdateParams(TypedDict, total=False):
+    name: str
+    description: str
+
+
+class ReleasesUpdateResponse(TypedDict, total=False):
+    release: "ContentRelease"
+    warnings: List[str]
+
+
+class ReleasesRemoveResponse(TypedDict, total=False):
+    ok: bool
+
+
+class ReleasesAddItemParams(TypedDict, total=False):
+    kind: str
+    libraryId: str
+    entryId: str
+    pageId: str
+    topicId: str
+
+
+class ReleasesAddItemResponse(TypedDict, total=False):
+    release: "ContentRelease"
+    data: "ContentRelease"
+    warnings: List[str]
+
+
+class ReleasesRemoveItemResponse(TypedDict, total=False):
+    release: "ContentRelease"
+
+
+class ReleasesScheduleParams(TypedDict, total=False):
+    publishAt: str
+
+
+class ReleasesScheduleResponse(TypedDict, total=False):
+    release: "ContentRelease"
+    warnings: List[str]
+
+
+class ReleasesUnscheduleResponse(TypedDict, total=False):
+    release: "ContentRelease"
+
+
+class ReleasesPreviewResponse(TypedDict, total=False):
+    preview: "ReleasePreview"
+
+
+class LibraryMediaUploadParams(TypedDict, total=False):
+    file: str
+
+
+class LibraryMediaUploadResponse(TypedDict, total=False):
+    asset: "UploadedAsset"
+    data: "UploadedAsset"
+    warnings: List[str]
+
+
+class LibraryMediaBulkUpdateParamsUpdate(TypedDict, total=False):
+    assetId: str
+    alt: Optional[str]
+    caption: Optional[str]
+    folderId: Optional[str]
+    tags: List[str]
+
+
+class LibraryMediaBulkUpdateParams(TypedDict, total=False):
+    updates: List["LibraryMediaBulkUpdateParamsUpdate"]
+
+
+class LibraryMediaBulkUpdateResponse(TypedDict, total=False):
+    assets: List["UploadedAsset"]
+    warnings: List[str]
+
+
+class LibraryMediaSuggestAltTextParams(TypedDict, total=False):
+    assetIds: List[str]
+    locale: str
+
+
+class LibraryMediaSuggestAltTextResponse(TypedDict, total=False):
+    suggestions: List["AltTextSuggestion"]
+    warnings: List[str]
+
+
+class LibraryMediaUpdateParams(TypedDict, total=False):
+    alt: Optional[str]
+    caption: Optional[str]
+    focalX: Optional[float]
+    focalY: Optional[float]
+    folderId: Optional[str]
+    tags: List[str]
+
+
+class LibraryMediaUpdateResponse(TypedDict, total=False):
+    asset: "UploadedAsset"
+    warnings: List[str]
+
+
+class LibraryMediaRemoveResponse(TypedDict, total=False):
+    ok: bool
+
+
+class SpacesShapePutParamsSpace(TypedDict, total=False):
+    index: str
+    order: str
+    nav: str
+    whoCreates: str
+    summary: List[str]
+
+
+class SpacesShapePutParamsSectionsAddItem(TypedDict, total=False):
+    key: str
+    label: str
+    kind: str
+    required: bool
+    hint: str
+    example: str
+    schemaProperty: str
+    render: str
+
+
+class SpacesShapePutParamsSections(TypedDict, total=False):
+    add: List["SpacesShapePutParamsSectionsAddItem"]
+    omit: List[str]
+    order: List[str]
+    set: Dict[str, Any]
+    unset: Dict[str, Any]
+
+
+class SpacesShapePutParamsParamsAddItemToItem(TypedDict, total=False):
+    kind: str
+    types: List[str]
+
+
+class SpacesShapePutParamsParamsAddItemAdmin(TypedDict, total=False):
+    tab: str
+    row: str
+    collapsible: str
+    collapsed: bool
+
+
+class SpacesShapePutParamsParamsAddItemFieldToItem(TypedDict, total=False):
+    kind: str
+    types: List[str]
+
+
+class SpacesShapePutParamsParamsAddItemFieldAdmin(TypedDict, total=False):
+    tab: str
+    row: str
+    collapsible: str
+    collapsed: bool
+
+
+class SpacesShapePutParamsParamsAddItemFieldFieldAdmin(TypedDict, total=False):
+    tab: str
+    row: str
+    collapsible: str
+    collapsed: bool
+
+
+SpacesShapePutParamsParamsAddItemFieldField = TypedDict("SpacesShapePutParamsParamsAddItemFieldField", {"key": str, "label": str, "type": str, "options": List[str], "relationSpaceId": str, "hint": str, "placeholder": str, "internal": bool, "facet": bool, "meta": bool, "required": bool, "default": Any, "schemaProperty": str, "min": float, "max": float, "visibility": str, "localized": bool, "unique": bool, "indexed": bool, "sortable": bool, "minLength": int, "maxLength": int, "pattern": str, "condition": Any, "expr": Any, "schema": Dict[str, Any], "allowedBlocks": List[str], "allowed": List[str], "allowedGroups": List[str], "to": List[Dict[str, Any]], "hasMany": bool, "rowLabelField": str, "language": str, "from": str, "accept": List[str], "admin": "SpacesShapePutParamsParamsAddItemFieldFieldAdmin", "fields": List[Dict[str, Any]]}, total=False)
+
+
+SpacesShapePutParamsParamsAddItemField = TypedDict("SpacesShapePutParamsParamsAddItemField", {"key": str, "label": str, "type": str, "options": List[str], "relationSpaceId": str, "hint": str, "placeholder": str, "internal": bool, "facet": bool, "meta": bool, "required": bool, "default": Any, "schemaProperty": str, "min": float, "max": float, "visibility": str, "localized": bool, "unique": bool, "indexed": bool, "sortable": bool, "minLength": int, "maxLength": int, "pattern": str, "condition": Any, "expr": Any, "schema": Dict[str, Any], "allowedBlocks": List[str], "allowed": List[str], "allowedGroups": List[str], "to": List["SpacesShapePutParamsParamsAddItemFieldToItem"], "hasMany": bool, "rowLabelField": str, "language": str, "from": str, "accept": List[str], "admin": "SpacesShapePutParamsParamsAddItemFieldAdmin", "fields": List["SpacesShapePutParamsParamsAddItemFieldField"]}, total=False)
+
+
+SpacesShapePutParamsParamsAddItem = TypedDict("SpacesShapePutParamsParamsAddItem", {"key": str, "label": str, "type": str, "options": List[str], "relationSpaceId": str, "hint": str, "placeholder": str, "internal": bool, "facet": bool, "meta": bool, "required": bool, "default": Any, "schemaProperty": str, "min": float, "max": float, "visibility": str, "localized": bool, "unique": bool, "indexed": bool, "sortable": bool, "minLength": int, "maxLength": int, "pattern": str, "condition": Any, "expr": Any, "schema": Dict[str, Any], "allowedBlocks": List[str], "allowed": List[str], "allowedGroups": List[str], "to": List["SpacesShapePutParamsParamsAddItemToItem"], "hasMany": bool, "rowLabelField": str, "language": str, "from": str, "accept": List[str], "admin": "SpacesShapePutParamsParamsAddItemAdmin", "fields": List["SpacesShapePutParamsParamsAddItemField"]}, total=False)
+
+
+class SpacesShapePutParamsParams(TypedDict, total=False):
+    add: List["SpacesShapePutParamsParamsAddItem"]
+    omit: List[str]
+    order: List[str]
+    set: Dict[str, Any]
+    unset: Dict[str, Any]
+
+
+class SpacesShapePutParamsBlockTypesAddItemFieldToItem(TypedDict, total=False):
+    kind: str
+    types: List[str]
+
+
+class SpacesShapePutParamsBlockTypesAddItemFieldAdmin(TypedDict, total=False):
+    tab: str
+    row: str
+    collapsible: str
+    collapsed: bool
+
+
+class SpacesShapePutParamsBlockTypesAddItemFieldFieldAdmin(TypedDict, total=False):
+    tab: str
+    row: str
+    collapsible: str
+    collapsed: bool
+
+
+SpacesShapePutParamsBlockTypesAddItemFieldField = TypedDict("SpacesShapePutParamsBlockTypesAddItemFieldField", {"key": str, "label": str, "type": str, "options": List[str], "relationSpaceId": str, "hint": str, "placeholder": str, "internal": bool, "facet": bool, "meta": bool, "required": bool, "default": Any, "schemaProperty": str, "min": float, "max": float, "visibility": str, "localized": bool, "unique": bool, "indexed": bool, "sortable": bool, "minLength": int, "maxLength": int, "pattern": str, "condition": Any, "expr": Any, "schema": Dict[str, Any], "allowedBlocks": List[str], "allowed": List[str], "allowedGroups": List[str], "to": List[Dict[str, Any]], "hasMany": bool, "rowLabelField": str, "language": str, "from": str, "accept": List[str], "admin": "SpacesShapePutParamsBlockTypesAddItemFieldFieldAdmin", "fields": List[Dict[str, Any]]}, total=False)
+
+
+SpacesShapePutParamsBlockTypesAddItemField = TypedDict("SpacesShapePutParamsBlockTypesAddItemField", {"key": str, "label": str, "type": str, "options": List[str], "relationSpaceId": str, "hint": str, "placeholder": str, "internal": bool, "facet": bool, "meta": bool, "required": bool, "default": Any, "schemaProperty": str, "min": float, "max": float, "visibility": str, "localized": bool, "unique": bool, "indexed": bool, "sortable": bool, "minLength": int, "maxLength": int, "pattern": str, "condition": Any, "expr": Any, "schema": Dict[str, Any], "allowedBlocks": List[str], "allowed": List[str], "allowedGroups": List[str], "to": List["SpacesShapePutParamsBlockTypesAddItemFieldToItem"], "hasMany": bool, "rowLabelField": str, "language": str, "from": str, "accept": List[str], "admin": "SpacesShapePutParamsBlockTypesAddItemFieldAdmin", "fields": List["SpacesShapePutParamsBlockTypesAddItemFieldField"]}, total=False)
+
+
+SpacesShapePutParamsBlockTypesAddItemVariantFieldsAddItem = TypedDict("SpacesShapePutParamsBlockTypesAddItemVariantFieldsAddItem", {"key": str, "label": str, "type": str, "options": List[str], "relationSpaceId": str, "hint": str, "placeholder": str, "internal": bool, "facet": bool, "meta": bool, "required": bool, "default": Any, "schemaProperty": str, "min": float, "max": float, "visibility": str, "localized": bool, "unique": bool, "indexed": bool, "sortable": bool, "minLength": int, "maxLength": int, "pattern": str, "condition": Any, "expr": Any, "schema": Dict[str, Any], "allowedBlocks": List[str], "allowed": List[str], "allowedGroups": List[str], "to": List[Dict[str, Any]], "hasMany": bool, "rowLabelField": str, "language": str, "from": str, "accept": List[str], "admin": Dict[str, Any], "fields": List[Dict[str, Any]]}, total=False)
+
+
+class SpacesShapePutParamsBlockTypesAddItemVariantFields(TypedDict, total=False):
+    add: List["SpacesShapePutParamsBlockTypesAddItemVariantFieldsAddItem"]
+    omit: List[str]
+    order: List[str]
+    set: Dict[str, Any]
+    unset: Dict[str, Any]
+
+
+class SpacesShapePutParamsBlockTypesAddItemVariant(TypedDict, total=False):
+    key: str
+    label: str
+    fields: "SpacesShapePutParamsBlockTypesAddItemVariantFields"
+
+
+class SpacesShapePutParamsBlockTypesAddItem(TypedDict, total=False):
+    key: str
+    label: str
+    description: str
+    icon: str
+    group: str
+    fields: List["SpacesShapePutParamsBlockTypesAddItemField"]
+    variants: List["SpacesShapePutParamsBlockTypesAddItemVariant"]
+
+
+class SpacesShapePutParamsBlockTypes(TypedDict, total=False):
+    add: List["SpacesShapePutParamsBlockTypesAddItem"]
+    omit: List[str]
+    order: List[str]
+    set: Dict[str, Any]
+    unset: Dict[str, Any]
+
+
+class SpacesShapePutParams(TypedDict, total=False):
+    space: "SpacesShapePutParamsSpace"
+    sections: "SpacesShapePutParamsSections"
+    params: "SpacesShapePutParamsParams"
+    blockTypes: "SpacesShapePutParamsBlockTypes"
+
+
+class SpacesShapePatchParamsSpace(TypedDict, total=False):
+    index: str
+    order: str
+    nav: str
+    whoCreates: str
+    summary: List[str]
+
+
+class SpacesShapePatchParamsSectionsAddItem(TypedDict, total=False):
+    key: str
+    label: str
+    kind: str
+    required: bool
+    hint: str
+    example: str
+    schemaProperty: str
+    render: str
+
+
+class SpacesShapePatchParamsSections(TypedDict, total=False):
+    add: List["SpacesShapePatchParamsSectionsAddItem"]
+    omit: List[str]
+    order: List[str]
+    set: Dict[str, Any]
+    unset: Dict[str, Any]
+
+
+class SpacesShapePatchParamsParamsAddItemToItem(TypedDict, total=False):
+    kind: str
+    types: List[str]
+
+
+class SpacesShapePatchParamsParamsAddItemAdmin(TypedDict, total=False):
+    tab: str
+    row: str
+    collapsible: str
+    collapsed: bool
+
+
+class SpacesShapePatchParamsParamsAddItemFieldToItem(TypedDict, total=False):
+    kind: str
+    types: List[str]
+
+
+class SpacesShapePatchParamsParamsAddItemFieldAdmin(TypedDict, total=False):
+    tab: str
+    row: str
+    collapsible: str
+    collapsed: bool
+
+
+class SpacesShapePatchParamsParamsAddItemFieldFieldAdmin(TypedDict, total=False):
+    tab: str
+    row: str
+    collapsible: str
+    collapsed: bool
+
+
+SpacesShapePatchParamsParamsAddItemFieldField = TypedDict("SpacesShapePatchParamsParamsAddItemFieldField", {"key": str, "label": str, "type": str, "options": List[str], "relationSpaceId": str, "hint": str, "placeholder": str, "internal": bool, "facet": bool, "meta": bool, "required": bool, "default": Any, "schemaProperty": str, "min": float, "max": float, "visibility": str, "localized": bool, "unique": bool, "indexed": bool, "sortable": bool, "minLength": int, "maxLength": int, "pattern": str, "condition": Any, "expr": Any, "schema": Dict[str, Any], "allowedBlocks": List[str], "allowed": List[str], "allowedGroups": List[str], "to": List[Dict[str, Any]], "hasMany": bool, "rowLabelField": str, "language": str, "from": str, "accept": List[str], "admin": "SpacesShapePatchParamsParamsAddItemFieldFieldAdmin", "fields": List[Dict[str, Any]]}, total=False)
+
+
+SpacesShapePatchParamsParamsAddItemField = TypedDict("SpacesShapePatchParamsParamsAddItemField", {"key": str, "label": str, "type": str, "options": List[str], "relationSpaceId": str, "hint": str, "placeholder": str, "internal": bool, "facet": bool, "meta": bool, "required": bool, "default": Any, "schemaProperty": str, "min": float, "max": float, "visibility": str, "localized": bool, "unique": bool, "indexed": bool, "sortable": bool, "minLength": int, "maxLength": int, "pattern": str, "condition": Any, "expr": Any, "schema": Dict[str, Any], "allowedBlocks": List[str], "allowed": List[str], "allowedGroups": List[str], "to": List["SpacesShapePatchParamsParamsAddItemFieldToItem"], "hasMany": bool, "rowLabelField": str, "language": str, "from": str, "accept": List[str], "admin": "SpacesShapePatchParamsParamsAddItemFieldAdmin", "fields": List["SpacesShapePatchParamsParamsAddItemFieldField"]}, total=False)
+
+
+SpacesShapePatchParamsParamsAddItem = TypedDict("SpacesShapePatchParamsParamsAddItem", {"key": str, "label": str, "type": str, "options": List[str], "relationSpaceId": str, "hint": str, "placeholder": str, "internal": bool, "facet": bool, "meta": bool, "required": bool, "default": Any, "schemaProperty": str, "min": float, "max": float, "visibility": str, "localized": bool, "unique": bool, "indexed": bool, "sortable": bool, "minLength": int, "maxLength": int, "pattern": str, "condition": Any, "expr": Any, "schema": Dict[str, Any], "allowedBlocks": List[str], "allowed": List[str], "allowedGroups": List[str], "to": List["SpacesShapePatchParamsParamsAddItemToItem"], "hasMany": bool, "rowLabelField": str, "language": str, "from": str, "accept": List[str], "admin": "SpacesShapePatchParamsParamsAddItemAdmin", "fields": List["SpacesShapePatchParamsParamsAddItemField"]}, total=False)
+
+
+class SpacesShapePatchParamsParams(TypedDict, total=False):
+    add: List["SpacesShapePatchParamsParamsAddItem"]
+    omit: List[str]
+    order: List[str]
+    set: Dict[str, Any]
+    unset: Dict[str, Any]
+
+
+class SpacesShapePatchParamsBlockTypesAddItemFieldToItem(TypedDict, total=False):
+    kind: str
+    types: List[str]
+
+
+class SpacesShapePatchParamsBlockTypesAddItemFieldAdmin(TypedDict, total=False):
+    tab: str
+    row: str
+    collapsible: str
+    collapsed: bool
+
+
+class SpacesShapePatchParamsBlockTypesAddItemFieldFieldAdmin(TypedDict, total=False):
+    tab: str
+    row: str
+    collapsible: str
+    collapsed: bool
+
+
+SpacesShapePatchParamsBlockTypesAddItemFieldField = TypedDict("SpacesShapePatchParamsBlockTypesAddItemFieldField", {"key": str, "label": str, "type": str, "options": List[str], "relationSpaceId": str, "hint": str, "placeholder": str, "internal": bool, "facet": bool, "meta": bool, "required": bool, "default": Any, "schemaProperty": str, "min": float, "max": float, "visibility": str, "localized": bool, "unique": bool, "indexed": bool, "sortable": bool, "minLength": int, "maxLength": int, "pattern": str, "condition": Any, "expr": Any, "schema": Dict[str, Any], "allowedBlocks": List[str], "allowed": List[str], "allowedGroups": List[str], "to": List[Dict[str, Any]], "hasMany": bool, "rowLabelField": str, "language": str, "from": str, "accept": List[str], "admin": "SpacesShapePatchParamsBlockTypesAddItemFieldFieldAdmin", "fields": List[Dict[str, Any]]}, total=False)
+
+
+SpacesShapePatchParamsBlockTypesAddItemField = TypedDict("SpacesShapePatchParamsBlockTypesAddItemField", {"key": str, "label": str, "type": str, "options": List[str], "relationSpaceId": str, "hint": str, "placeholder": str, "internal": bool, "facet": bool, "meta": bool, "required": bool, "default": Any, "schemaProperty": str, "min": float, "max": float, "visibility": str, "localized": bool, "unique": bool, "indexed": bool, "sortable": bool, "minLength": int, "maxLength": int, "pattern": str, "condition": Any, "expr": Any, "schema": Dict[str, Any], "allowedBlocks": List[str], "allowed": List[str], "allowedGroups": List[str], "to": List["SpacesShapePatchParamsBlockTypesAddItemFieldToItem"], "hasMany": bool, "rowLabelField": str, "language": str, "from": str, "accept": List[str], "admin": "SpacesShapePatchParamsBlockTypesAddItemFieldAdmin", "fields": List["SpacesShapePatchParamsBlockTypesAddItemFieldField"]}, total=False)
+
+
+SpacesShapePatchParamsBlockTypesAddItemVariantFieldsAddItem = TypedDict("SpacesShapePatchParamsBlockTypesAddItemVariantFieldsAddItem", {"key": str, "label": str, "type": str, "options": List[str], "relationSpaceId": str, "hint": str, "placeholder": str, "internal": bool, "facet": bool, "meta": bool, "required": bool, "default": Any, "schemaProperty": str, "min": float, "max": float, "visibility": str, "localized": bool, "unique": bool, "indexed": bool, "sortable": bool, "minLength": int, "maxLength": int, "pattern": str, "condition": Any, "expr": Any, "schema": Dict[str, Any], "allowedBlocks": List[str], "allowed": List[str], "allowedGroups": List[str], "to": List[Dict[str, Any]], "hasMany": bool, "rowLabelField": str, "language": str, "from": str, "accept": List[str], "admin": Dict[str, Any], "fields": List[Dict[str, Any]]}, total=False)
+
+
+class SpacesShapePatchParamsBlockTypesAddItemVariantFields(TypedDict, total=False):
+    add: List["SpacesShapePatchParamsBlockTypesAddItemVariantFieldsAddItem"]
+    omit: List[str]
+    order: List[str]
+    set: Dict[str, Any]
+    unset: Dict[str, Any]
+
+
+class SpacesShapePatchParamsBlockTypesAddItemVariant(TypedDict, total=False):
+    key: str
+    label: str
+    fields: "SpacesShapePatchParamsBlockTypesAddItemVariantFields"
+
+
+class SpacesShapePatchParamsBlockTypesAddItem(TypedDict, total=False):
+    key: str
+    label: str
+    description: str
+    icon: str
+    group: str
+    fields: List["SpacesShapePatchParamsBlockTypesAddItemField"]
+    variants: List["SpacesShapePatchParamsBlockTypesAddItemVariant"]
+
+
+class SpacesShapePatchParamsBlockTypes(TypedDict, total=False):
+    add: List["SpacesShapePatchParamsBlockTypesAddItem"]
+    omit: List[str]
+    order: List[str]
+    set: Dict[str, Any]
+    unset: Dict[str, Any]
+
+
+class SpacesShapePatchParams(TypedDict, total=False):
+    space: "SpacesShapePatchParamsSpace"
+    sections: "SpacesShapePatchParamsSections"
+    params: "SpacesShapePatchParamsParams"
+    blockTypes: "SpacesShapePatchParamsBlockTypes"
+
+
+class SpacesShapeSetDefaultKindParams(TypedDict, total=False):
+    kind: Optional[str]
+
+
+class SpacesShapeSetKindParamsPatchSpace(TypedDict, total=False):
+    index: str
+    order: str
+    nav: str
+    whoCreates: str
+    summary: List[str]
+
+
+class SpacesShapeSetKindParamsPatchSectionsAddItem(TypedDict, total=False):
+    key: str
+    label: str
+    kind: str
+    required: bool
+    hint: str
+    example: str
+    schemaProperty: str
+    render: str
+
+
+class SpacesShapeSetKindParamsPatchSections(TypedDict, total=False):
+    add: List["SpacesShapeSetKindParamsPatchSectionsAddItem"]
+    omit: List[str]
+    order: List[str]
+    set: Dict[str, Any]
+    unset: Dict[str, Any]
+
+
+class SpacesShapeSetKindParamsPatchParamsAddItemToItem(TypedDict, total=False):
+    kind: str
+    types: List[str]
+
+
+class SpacesShapeSetKindParamsPatchParamsAddItemAdmin(TypedDict, total=False):
+    tab: str
+    row: str
+    collapsible: str
+    collapsed: bool
+
+
+class SpacesShapeSetKindParamsPatchParamsAddItemFieldToItem(TypedDict, total=False):
+    kind: str
+    types: List[str]
+
+
+class SpacesShapeSetKindParamsPatchParamsAddItemFieldAdmin(TypedDict, total=False):
+    tab: str
+    row: str
+    collapsible: str
+    collapsed: bool
+
+
+SpacesShapeSetKindParamsPatchParamsAddItemFieldField = TypedDict("SpacesShapeSetKindParamsPatchParamsAddItemFieldField", {"key": str, "label": str, "type": str, "options": List[str], "relationSpaceId": str, "hint": str, "placeholder": str, "internal": bool, "facet": bool, "meta": bool, "required": bool, "default": Any, "schemaProperty": str, "min": float, "max": float, "visibility": str, "localized": bool, "unique": bool, "indexed": bool, "sortable": bool, "minLength": int, "maxLength": int, "pattern": str, "condition": Any, "expr": Any, "schema": Dict[str, Any], "allowedBlocks": List[str], "allowed": List[str], "allowedGroups": List[str], "to": List[Dict[str, Any]], "hasMany": bool, "rowLabelField": str, "language": str, "from": str, "accept": List[str], "admin": Dict[str, Any], "fields": List[Dict[str, Any]]}, total=False)
+
+
+SpacesShapeSetKindParamsPatchParamsAddItemField = TypedDict("SpacesShapeSetKindParamsPatchParamsAddItemField", {"key": str, "label": str, "type": str, "options": List[str], "relationSpaceId": str, "hint": str, "placeholder": str, "internal": bool, "facet": bool, "meta": bool, "required": bool, "default": Any, "schemaProperty": str, "min": float, "max": float, "visibility": str, "localized": bool, "unique": bool, "indexed": bool, "sortable": bool, "minLength": int, "maxLength": int, "pattern": str, "condition": Any, "expr": Any, "schema": Dict[str, Any], "allowedBlocks": List[str], "allowed": List[str], "allowedGroups": List[str], "to": List["SpacesShapeSetKindParamsPatchParamsAddItemFieldToItem"], "hasMany": bool, "rowLabelField": str, "language": str, "from": str, "accept": List[str], "admin": "SpacesShapeSetKindParamsPatchParamsAddItemFieldAdmin", "fields": List["SpacesShapeSetKindParamsPatchParamsAddItemFieldField"]}, total=False)
+
+
+SpacesShapeSetKindParamsPatchParamsAddItem = TypedDict("SpacesShapeSetKindParamsPatchParamsAddItem", {"key": str, "label": str, "type": str, "options": List[str], "relationSpaceId": str, "hint": str, "placeholder": str, "internal": bool, "facet": bool, "meta": bool, "required": bool, "default": Any, "schemaProperty": str, "min": float, "max": float, "visibility": str, "localized": bool, "unique": bool, "indexed": bool, "sortable": bool, "minLength": int, "maxLength": int, "pattern": str, "condition": Any, "expr": Any, "schema": Dict[str, Any], "allowedBlocks": List[str], "allowed": List[str], "allowedGroups": List[str], "to": List["SpacesShapeSetKindParamsPatchParamsAddItemToItem"], "hasMany": bool, "rowLabelField": str, "language": str, "from": str, "accept": List[str], "admin": "SpacesShapeSetKindParamsPatchParamsAddItemAdmin", "fields": List["SpacesShapeSetKindParamsPatchParamsAddItemField"]}, total=False)
+
+
+class SpacesShapeSetKindParamsPatchParams(TypedDict, total=False):
+    add: List["SpacesShapeSetKindParamsPatchParamsAddItem"]
+    omit: List[str]
+    order: List[str]
+    set: Dict[str, Any]
+    unset: Dict[str, Any]
+
+
+class SpacesShapeSetKindParamsPatchBlockTypesAddItemFieldToItem(TypedDict, total=False):
+    kind: str
+    types: List[str]
+
+
+class SpacesShapeSetKindParamsPatchBlockTypesAddItemFieldAdmin(TypedDict, total=False):
+    tab: str
+    row: str
+    collapsible: str
+    collapsed: bool
+
+
+SpacesShapeSetKindParamsPatchBlockTypesAddItemFieldField = TypedDict("SpacesShapeSetKindParamsPatchBlockTypesAddItemFieldField", {"key": str, "label": str, "type": str, "options": List[str], "relationSpaceId": str, "hint": str, "placeholder": str, "internal": bool, "facet": bool, "meta": bool, "required": bool, "default": Any, "schemaProperty": str, "min": float, "max": float, "visibility": str, "localized": bool, "unique": bool, "indexed": bool, "sortable": bool, "minLength": int, "maxLength": int, "pattern": str, "condition": Any, "expr": Any, "schema": Dict[str, Any], "allowedBlocks": List[str], "allowed": List[str], "allowedGroups": List[str], "to": List[Dict[str, Any]], "hasMany": bool, "rowLabelField": str, "language": str, "from": str, "accept": List[str], "admin": Dict[str, Any], "fields": List[Dict[str, Any]]}, total=False)
+
+
+SpacesShapeSetKindParamsPatchBlockTypesAddItemField = TypedDict("SpacesShapeSetKindParamsPatchBlockTypesAddItemField", {"key": str, "label": str, "type": str, "options": List[str], "relationSpaceId": str, "hint": str, "placeholder": str, "internal": bool, "facet": bool, "meta": bool, "required": bool, "default": Any, "schemaProperty": str, "min": float, "max": float, "visibility": str, "localized": bool, "unique": bool, "indexed": bool, "sortable": bool, "minLength": int, "maxLength": int, "pattern": str, "condition": Any, "expr": Any, "schema": Dict[str, Any], "allowedBlocks": List[str], "allowed": List[str], "allowedGroups": List[str], "to": List["SpacesShapeSetKindParamsPatchBlockTypesAddItemFieldToItem"], "hasMany": bool, "rowLabelField": str, "language": str, "from": str, "accept": List[str], "admin": "SpacesShapeSetKindParamsPatchBlockTypesAddItemFieldAdmin", "fields": List["SpacesShapeSetKindParamsPatchBlockTypesAddItemFieldField"]}, total=False)
+
+
+class SpacesShapeSetKindParamsPatchBlockTypesAddItemVariantFields(TypedDict, total=False):
+    add: List[Dict[str, Any]]
+    omit: List[str]
+    order: List[str]
+    set: Dict[str, Any]
+    unset: Dict[str, Any]
+
+
+class SpacesShapeSetKindParamsPatchBlockTypesAddItemVariant(TypedDict, total=False):
+    key: str
+    label: str
+    fields: "SpacesShapeSetKindParamsPatchBlockTypesAddItemVariantFields"
+
+
+class SpacesShapeSetKindParamsPatchBlockTypesAddItem(TypedDict, total=False):
+    key: str
+    label: str
+    description: str
+    icon: str
+    group: str
+    fields: List["SpacesShapeSetKindParamsPatchBlockTypesAddItemField"]
+    variants: List["SpacesShapeSetKindParamsPatchBlockTypesAddItemVariant"]
+
+
+class SpacesShapeSetKindParamsPatchBlockTypes(TypedDict, total=False):
+    add: List["SpacesShapeSetKindParamsPatchBlockTypesAddItem"]
+    omit: List[str]
+    order: List[str]
+    set: Dict[str, Any]
+    unset: Dict[str, Any]
+
+
+class SpacesShapeSetKindParamsPatch(TypedDict, total=False):
+    space: "SpacesShapeSetKindParamsPatchSpace"
+    sections: "SpacesShapeSetKindParamsPatchSections"
+    params: "SpacesShapeSetKindParamsPatchParams"
+    blockTypes: "SpacesShapeSetKindParamsPatchBlockTypes"
+
+
+class SpacesShapeSetKindParamsSettingsVersions(TypedDict, total=False):
+    max: Optional[int]
+
+
+class SpacesShapeSetKindParamsSettings(TypedDict, total=False):
+    singleton: Any
+    slugField: Optional[str]
+    titleField: Optional[str]
+    previewUrl: Optional[str]
+    orderable: Any
+    defaultSort: Optional[str]
+    listColumns: Optional[List[str]]
+    searchableFields: Optional[List[str]]
+    strict: Any
+    versions: Optional["SpacesShapeSetKindParamsSettingsVersions"]
+    routable: Any
+    blockLibrary: Any
+    defaultVisibility: Optional[str]
+    icon: Optional[str]
+    group: Optional[str]
+
+
+class SpacesShapeSetKindParams(TypedDict, total=False):
+    label: str
+    description: str
+    patch: "SpacesShapeSetKindParamsPatch"
+    settings: "SpacesShapeSetKindParamsSettings"
 
 
 class UsersProgressionSignalParams(TypedDict, total=False):
@@ -97729,16 +100340,16 @@ class ThemesBundlesPatchSiteDraftParamsForumTopicMap(TypedDict, total=False):
 class ThemesBundlesPatchSiteDraftParamsForumTopicShare(TypedDict, total=False):
     mode: Optional[str]
     align: Optional[str]
-    networks: Optional[Any]
-    frame: Optional[Any]
-    radius: Optional[Any]
+    networks: Optional[List[str]]
+    frame: Optional[str]
+    radius: Optional[int]
     borderColor: Optional[Any]
     label: Optional[Any]
     labelEnd: Optional[Any]
-    labelStyle: Optional[Any]
-    marks: Optional[Any]
-    comments: Optional[Any]
-    size: Optional[Any]
+    labelStyle: Optional[str]
+    marks: Optional[bool]
+    comments: Optional[bool]
+    size: Optional[int]
 
 
 class ThemesBundlesPatchSiteDraftParamsForumTopicTimeline(TypedDict, total=False):
@@ -98238,6 +100849,15 @@ class ThemesBundlesPatchSiteDraftParamsDocsSidebarFooterLink(TypedDict, total=Fa
     audience: str
 
 
+class ThemesBundlesPatchSiteDraftParamsDocsSidebarStatus(TypedDict, total=False):
+    monitorSpaceId: Optional[str]
+    style: Optional[str]
+    color: Optional[str]
+    case: Optional[str]
+    font: Optional[str]
+    dot: Optional[bool]
+
+
 class ThemesBundlesPatchSiteDraftParamsDocsSidebar(TypedDict, total=False):
     groups: Optional[str]
     accordion: Optional[bool]
@@ -98260,7 +100880,7 @@ class ThemesBundlesPatchSiteDraftParamsDocsSidebar(TypedDict, total=False):
     icons: Optional["ThemesBundlesPatchSiteDraftParamsDocsSidebarIcons"]
     anchors: Optional[List["ThemesBundlesPatchSiteDraftParamsDocsSidebarAnchor"]]
     footerLinks: Optional[List["ThemesBundlesPatchSiteDraftParamsDocsSidebarFooterLink"]]
-    status: Optional[Any]
+    status: Optional["ThemesBundlesPatchSiteDraftParamsDocsSidebarStatus"]
     drilldown: Optional[bool]
     search: Optional[str]
     searchHeight: Optional[int]
@@ -107783,7 +110403,7 @@ class ExtensionsRenderRenderBlockParams(TypedDict, total=False):
 
 
 class ExtensionsRenderRenderBlockResponseUiChildrenItem(TypedDict, total=False):
-    children: List[Dict[str, Any]]
+    children: List[Any]
     type: str
     muted: bool
     text: str
@@ -107816,7 +110436,7 @@ class ExtensionsRenderRenderBlockResponseUi(TypedDict, total=False):
 
 
 class ExtensionsRenderRenderBlockResponseDataChildrenItem(TypedDict, total=False):
-    children: List[Dict[str, Any]]
+    children: List[Any]
     type: str
     muted: bool
     text: str
@@ -107864,7 +110484,7 @@ class ExtensionsRenderActionParams(TypedDict, total=False):
 
 
 class ExtensionsRenderActionResponseUiChildrenItem(TypedDict, total=False):
-    children: List[Dict[str, Any]]
+    children: List[Any]
     type: str
     muted: bool
     text: str
@@ -107897,7 +110517,7 @@ class ExtensionsRenderActionResponseUi(TypedDict, total=False):
 
 
 class ExtensionsRenderActionResponseDataChildrenItem(TypedDict, total=False):
-    children: List[Dict[str, Any]]
+    children: List[Any]
     type: str
     muted: bool
     text: str
@@ -107942,7 +110562,7 @@ class ExtensionsRenderRenderSurfaceParams(TypedDict, total=False):
 
 
 class ExtensionsRenderRenderSurfaceResponseUiChildrenItem(TypedDict, total=False):
-    children: List[Dict[str, Any]]
+    children: List[Any]
     type: str
     muted: bool
     text: str
@@ -107975,7 +110595,7 @@ class ExtensionsRenderRenderSurfaceResponseUi(TypedDict, total=False):
 
 
 class ExtensionsRenderRenderSurfaceResponseDataChildrenItem(TypedDict, total=False):
-    children: List[Dict[str, Any]]
+    children: List[Any]
     type: str
     muted: bool
     text: str
@@ -108022,7 +110642,7 @@ class ExtensionsRenderSurfaceActionParams(TypedDict, total=False):
 
 
 class ExtensionsRenderSurfaceActionResponseUiChildrenItem(TypedDict, total=False):
-    children: List[Dict[str, Any]]
+    children: List[Any]
     type: str
     muted: bool
     text: str
@@ -108055,7 +110675,7 @@ class ExtensionsRenderSurfaceActionResponseUi(TypedDict, total=False):
 
 
 class ExtensionsRenderSurfaceActionResponseDataChildrenItem(TypedDict, total=False):
-    children: List[Dict[str, Any]]
+    children: List[Any]
     type: str
     muted: bool
     text: str
@@ -108716,7 +111336,7 @@ class PublicInteractionsExtRenderParams(TypedDict, total=False):
 
 
 class PublicInteractionsExtRenderResponseUiChildrenItem(TypedDict, total=False):
-    children: List[Dict[str, Any]]
+    children: List[Any]
     type: str
     muted: bool
     text: str
@@ -108763,7 +111383,7 @@ class PublicInteractionsExtActionParams(TypedDict, total=False):
 
 
 class PublicInteractionsExtActionResponseUiChildrenItem(TypedDict, total=False):
-    children: List[Dict[str, Any]]
+    children: List[Any]
     type: str
     muted: bool
     text: str
@@ -109327,6 +111947,24 @@ class ConnectorsKbSuggestParams(TypedDict, total=False):
     slot: str
     markdown: str
     note: str
+
+
+class LibrarySdkPublishParams(TypedDict, total=False):
+    target: str
+    packageName: str
+    goModulePrefix: str
+
+
+class LibrarySdkPublishResponsePublish(TypedDict, total=False):
+    id: str
+    status: str
+
+
+class LibrarySdkPublishResponse(TypedDict, total=False):
+    packageId: str
+    packageName: str
+    publish: "LibrarySdkPublishResponsePublish"
+    warnings: List[str]
 
 
 class IntegrationsCatalogResponse(TypedDict, total=False):
@@ -124062,16 +126700,16 @@ class SitesUpdateParamsConfigThemeForumTopicMap(TypedDict, total=False):
 class SitesUpdateParamsConfigThemeForumTopicShare(TypedDict, total=False):
     mode: Optional[str]
     align: Optional[str]
-    networks: Optional[Any]
-    frame: Optional[Any]
-    radius: Optional[Any]
+    networks: Optional[List[str]]
+    frame: Optional[str]
+    radius: Optional[int]
     borderColor: Optional[Any]
     label: Optional[Any]
     labelEnd: Optional[Any]
-    labelStyle: Optional[Any]
-    marks: Optional[Any]
-    comments: Optional[Any]
-    size: Optional[Any]
+    labelStyle: Optional[str]
+    marks: Optional[bool]
+    comments: Optional[bool]
+    size: Optional[int]
 
 
 class SitesUpdateParamsConfigThemeForumTopicTimeline(TypedDict, total=False):
@@ -124561,6 +127199,15 @@ class SitesUpdateParamsConfigThemeDocsSidebarFooterLink(TypedDict, total=False):
     audience: str
 
 
+class SitesUpdateParamsConfigThemeDocsSidebarStatus(TypedDict, total=False):
+    monitorSpaceId: Optional[str]
+    style: Optional[str]
+    color: Optional[str]
+    case: Optional[str]
+    font: Optional[str]
+    dot: Optional[bool]
+
+
 class SitesUpdateParamsConfigThemeDocsSidebar(TypedDict, total=False):
     groups: Optional[str]
     accordion: Optional[bool]
@@ -124583,7 +127230,7 @@ class SitesUpdateParamsConfigThemeDocsSidebar(TypedDict, total=False):
     icons: Optional["SitesUpdateParamsConfigThemeDocsSidebarIcons"]
     anchors: Optional[List["SitesUpdateParamsConfigThemeDocsSidebarAnchor"]]
     footerLinks: Optional[List["SitesUpdateParamsConfigThemeDocsSidebarFooterLink"]]
-    status: Optional[Any]
+    status: Optional["SitesUpdateParamsConfigThemeDocsSidebarStatus"]
     drilldown: Optional[bool]
     search: Optional[str]
     searchHeight: Optional[int]

@@ -117,7 +117,7 @@ class ItemsResource:
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
     ) -> Any:
-        """Get the item
+        """Get the item (spaces)
 
         ``GET /orgs/{orgId}/spaces/{spaceId}/items/{itemId}``
         """
@@ -145,7 +145,7 @@ class ItemsResource:
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
     ) -> ItemsPatchResponse:
-        """Update the item
+        """Update the item (spaces)
 
         ``PATCH /orgs/{orgId}/spaces/{spaceId}/items/{itemId}``
 
@@ -173,7 +173,7 @@ class ItemsResource:
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
     ) -> ItemsRemoveResponse:
-        """Delete the item
+        """Delete the item (spaces)
 
         ``DELETE /orgs/{orgId}/spaces/{spaceId}/items/{itemId}``
 
@@ -302,7 +302,7 @@ class ItemsResource:
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
     ) -> ItemsPublishResponse:
-        """Publish the item
+        """Publish the item (spaces)
 
         ``POST /orgs/{orgId}/spaces/{spaceId}/items/{itemId}/publish``
 
