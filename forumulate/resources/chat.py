@@ -613,6 +613,7 @@ class ChatResource:
         self,
         org_id: str,
         *,
+        archived: Union[str, NotGiven] = NOT_GIVEN,
         limit: Union[int, NotGiven] = NOT_GIVEN,
         cursor: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
@@ -623,13 +624,14 @@ class ChatResource:
 
         ``GET /orgs/{orgId}/chat/channels``
 
+        :param archived: Use true or false (true/1/yes/on and false/0/no/off are accepted).
         :param limit: Rows per page.
         :param cursor: Where to continue from: pass back the `page.nextCursor` of the previous answer.
         """
         return self._client._request(
             "GET",
             f"/orgs/{_path(org_id)}/chat/channels",
-            query=_query({"limit": limit, "cursor": cursor}, extra_query),
+            query=_query({"archived": archived, "limit": limit, "cursor": cursor}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -638,6 +640,7 @@ class ChatResource:
         self,
         org_id: str,
         *,
+        archived: Union[str, NotGiven] = NOT_GIVEN,
         limit: Union[int, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -647,7 +650,7 @@ class ChatResource:
         yield from self._client._paginate(
             "GET",
             f"/orgs/{_path(org_id)}/chat/channels",
-            query=_query({"limit": limit}, extra_query),
+            query=_query({"archived": archived, "limit": limit}, extra_query),
             headers=extra_headers,
             timeout=timeout,
             page_param="cursor",

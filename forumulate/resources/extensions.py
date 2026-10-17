@@ -116,7 +116,7 @@ class ExtensionsApiResource:
 
         ``POST /ext/v1/pages/{pageId}/draft``
 
-        :param if_match: The content tag you believe this resource is at: the `ETag` header where the matching read sets one, otherwise the `contentHash` that read returned.
+        :param if_match: The tag you believe this resource is at: the `ETag` header the matching read sets.
         :param idempotency_key: Makes this write safe to retry.
         """
         return self._client._request(

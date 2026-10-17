@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 
 class BlogArticlesResource:
-    """``client.blog.articles`` (17 operations)."""
+    """``client.blog.articles`` (16 operations)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
@@ -452,34 +452,6 @@ class BlogArticlesResource:
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/blog/{_path(topic_id)}/pin",
             query=_query({}, extra_query),
             body=_body({"pinned": pinned}, extra_body),
-            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
-            timeout=timeout,
-        )
-
-    def answer(
-        self,
-        org_id: str,
-        space_id: str,
-        topic_id: str,
-        *,
-        post_id: Optional[str],
-        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
-        extra_query: Optional[Mapping[str, Any]] = None,
-        extra_body: Optional[Mapping[str, Any]] = None,
-        extra_headers: Optional[Mapping[str, str]] = None,
-        timeout: Optional[float] = None,
-    ) -> BlogArticlesAnswerResponse:
-        """Create the answer in a space (blog)
-
-        ``POST /orgs/{orgId}/spaces/{spaceId}/blog/{topicId}/answer``
-
-        :param idempotency_key: Makes this write safe to retry.
-        """
-        return self._client._request(
-            "POST",
-            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/blog/{_path(topic_id)}/answer",
-            query=_query({}, extra_query),
-            body=_body({"postId": post_id}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )

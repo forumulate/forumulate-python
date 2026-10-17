@@ -173,6 +173,8 @@ class DomainSummaryDto(TypedDict, total=False):
     verified: bool
     active: bool
     alsoRedirectWww: bool
+    ipAllowList: List[str]
+    redirectTo: Any
     verificationRecord: Any
     verificationFile: Any
     verificationMeta: "VerificationMetaDto"
@@ -270,6 +272,7 @@ class ItemSummaryDto(TypedDict, total=False):
     published: bool
     group: str
     state: str
+    locale: Any
     updatedAt: str
     url: Any
     contentHash: str
@@ -1211,6 +1214,7 @@ class CategoryDetail(TypedDict, total=False):
     defaultTopPeriod: Any
     description: str
     emoji: Any
+    formTemplateId: Any
     icon: Any
     id: str
     logoUrl: Any
@@ -1270,6 +1274,7 @@ class CategorySummary(TypedDict, total=False):
     defaultTopPeriod: Any
     description: str
     emoji: Any
+    formTemplateId: Any
     icon: Any
     id: str
     logoUrl: Any
@@ -1985,6 +1990,20 @@ class ConnectionSummary(TypedDict, total=False):
     path: str
     provider: str
     repo: str
+    signing: str
+    webhookUrl: str
+
+
+class ConnectionWithSecret(TypedDict, total=False):
+    autoExport: bool
+    branch: str
+    commitTemplate: Any
+    lastSyncedAt: Any
+    path: str
+    provider: str
+    repo: str
+    signing: str
+    signingSecret: str
     webhookUrl: str
 
 
@@ -2763,6 +2782,7 @@ class DomainSummary(TypedDict, total=False):
     hostname: str
     id: str
     ipAllowList: List[str]
+    redirectTo: Any
     verificationFile: "DomainSummaryVerificationFile"
     verificationMeta: "DomainSummaryVerificationMeta"
     verificationRecord: "DomainSummaryVerificationRecord"
@@ -4291,6 +4311,7 @@ class ItemRead(TypedDict, total=False):
     contentIn: str
     id: str
     kind: str
+    locale: str
     markdown: str
     preset: str
     sections: Dict[str, Any]
@@ -4302,6 +4323,7 @@ class ItemRef(TypedDict, total=False):
     conformance: "Conformance"
     id: str
     kind: str
+    locale: str
     preset: str
     slug: str
     title: str
@@ -4315,6 +4337,7 @@ class ItemSummary(TypedDict, total=False):
     group: str
     id: str
     kind: str
+    locale: str
     markdown: str
     published: bool
     sections: Dict[str, Any]
@@ -4425,6 +4448,7 @@ class LegalGroup(TypedDict, total=False):
     name: str
     slug: str
     sortKey: str
+    translations: "NamedTranslations"
 
 
 class LegalStatus(TypedDict, total=False):
@@ -5263,6 +5287,15 @@ class PageNode(TypedDict, total=False):
     updatedAt: str
 
 
+class PageTranslationStatus(TypedDict, total=False):
+    code: str
+    id: Any
+    label: str
+    origin: Any
+    state: str
+    updatedAt: Any
+
+
 class PageTrashRow(TypedDict, total=False):
     deletedAt: Any
     id: str
@@ -5685,6 +5718,7 @@ class PublicLegalGroup(TypedDict, total=False):
     name: str
     order: str
     slug: str
+    translations: "NamedTranslations"
 
 
 class PublicStatusBoard(TypedDict, total=False):
@@ -5896,8 +5930,17 @@ class ReaderAuthSetup(TypedDict, total=False):
     requiredConfig: List[str]
     scope: str
     scopes: str
+    spaces: List["ReaderAuthSetupSpace"]
     startUrl: str
     supportedMethods: List[str]
+
+
+class ReaderAuthSetupSpace(TypedDict, total=False):
+    name: str
+    readerEndpoints: List["ReaderEndpoints"]
+    slug: str
+    spaceId: str
+    startUrl: str
 
 
 class ReaderAuthSpaceOverrideSaved(TypedDict, total=False):
@@ -6470,6 +6513,7 @@ class ReleaseTranslation(TypedDict, total=False):
     excerpt: Any
     exists: bool
     label: str
+    markdown: str
     origin: Any
     published: bool
     stale: bool
@@ -6902,6 +6946,7 @@ class SitePublicOverview(TypedDict, total=False):
     config: "SiteConfig"
     frontPage: Optional["StoredFrontPage"]
     name: str
+    orgSlug: Any
     previewing: str
     sections: List["SiteSectionTree"]
     slug: str
@@ -6920,6 +6965,8 @@ class SiteSpaceRef(TypedDict, total=False):
     addresses: List["SiteSpaceRefAddress"]
     aiIngestion: bool
     indexable: bool
+    locales: List[str]
+    localeUrlStyle: str
     name: str
     slug: str
     spaceId: str
@@ -7274,6 +7321,7 @@ class StatusIncidentTemplate(TypedDict, total=False):
 class StatusIncidentTranslation(TypedDict, total=False):
     body: Any
     locale: str
+    markdown: str
     origin: str
     stale: bool
     title: Any
@@ -8048,11 +8096,54 @@ class TranslatedContent(TypedDict, total=False):
     title: Any
 
 
+class TranslationCell(TypedDict, total=False):
+    id: Any
+    origin: Any
+    state: str
+    updatedAt: Any
+
+
+class TranslationCoverage(TypedDict, total=False):
+    items: List["TranslationCoverageItem"]
+    kind: str
+    locales: List["TranslationCoverageLocale"]
+    spaceId: str
+    spaceType: str
+    totals: Dict[str, Any]
+    truncated: bool
+
+
+class TranslationCoverageItem(TypedDict, total=False):
+    id: str
+    kind: str
+    locales: Dict[str, Any]
+    slug: Any
+    title: str
+
+
 class TranslationOverrideView(TypedDict, total=False):
     key: str
     locale: str
     updatedAt: str
     value: str
+
+
+class TrashedReply(TypedDict, total=False):
+    authorName: str
+    deletedAt: str
+    excerpt: str
+    id: str
+    postNumber: float
+    topicId: str
+    topicTitle: str
+
+
+class TrashedTopic(TypedDict, total=False):
+    deletedAt: str
+    id: str
+    kind: str
+    slug: str
+    title: str
 
 
 class TrustLevelPoint(TypedDict, total=False):
@@ -8374,6 +8465,13 @@ class WebhookEventCatalogEntry(TypedDict, total=False):
     subscribe: bool
 
 
+class WebhookHealth(TypedDict, total=False):
+    consecutiveFailures: float
+    disabledAt: Any
+    disabledReason: Any
+    failingSince: Any
+
+
 class WebhookSummary(TypedDict, total=False):
     active: bool
     bodyEncoding: str
@@ -8384,6 +8482,7 @@ class WebhookSummary(TypedDict, total=False):
     events: List[str]
     format: str
     groupIds: Any
+    health: "WebhookHealth"
     id: str
     kind: str
     libraryId: Any
@@ -8661,6 +8760,7 @@ class CategoryDetailChildrenItem(TypedDict, total=False):
     defaultTopPeriod: Any
     description: str
     emoji: Any
+    formTemplateId: Any
     icon: Any
     id: str
     latest: Any
@@ -10561,6 +10661,7 @@ class GatedOutlineModule(TypedDict, total=False):
     name: str
     quiz: "GatedOutlineModuleQuiz"
     slug: str
+    translations: "NamedTranslations"
     week: "GatedOutlineModuleWeek"
 
 
@@ -11234,7 +11335,7 @@ class PieceThemeMotionScrollItem(TypedDict, total=False):
     translateY: List[float]
 
 
-PieceThemeMotionTargets = TypedDict("PieceThemeMotionTargets", {"article": Any, "aside": Any, "ask-entry": Any, "author-card": Any, "brand-name": Any, "brand-prefix": Any, "breadcrumb": Any, "button": Any, "byline": Any, "card": Any, "carousel": Any, "carousel-slide": Any, "compare": Any, "component": Any, "contact-channel": Any, "contact-channels": Any, "contact-deflect": Any, "contact-facts": Any, "contact-field": Any, "contact-form": Any, "contact-office": Any, "contact-offices": Any, "contact-open-now": Any, "contact-success": Any, "contact-topic": Any, "cookie-settings": Any, "course-certificate": Any, "course-end-card": Any, "course-hero": Any, "course-lesson-row": Any, "course-outline": Any, "course-progress": Any, "course-sidebar": Any, "cta": Any, "cta-divider": Any, "cta-secondary": Any, "docs-drawer": Any, "docs-sections": Any, "entry-title": Any, "faq-answer": Any, "faq-category-card": Any, "faq-item": Any, "faq-question": Any, "faq-search": Any, "faq-section": Any, "feed": Any, "feed-item": Any, "footer": Any, "footer-art": Any, "footer-brand": Any, "footer-col": Any, "footer-crumbs": Any, "footer-edge": Any, "footer-heading": Any, "footer-html": Any, "footer-newsletter": Any, "footer-status": Any, "forum-new-topics": Any, "gallery": Any, "header": Any, "header-crumb": Any, "header-search": Any, "header-slot": Any, "header-title": Any, "hero": Any, "index-head": Any, "index-header": Any, "index-title": Any, "input": Any, "kicker": Any, "language-switcher": Any, "layer": Any, "lede": Any, "legal-facts": Any, "legal-kicker": Any, "legal-row": Any, "lightbox": Any, "logo": Any, "logo-wall": Any, "main": Any, "map": Any, "marquee": Any, "masthead": Any, "meta": Any, "modal": Any, "nav": Any, "nav-divider": Any, "nav-featured": Any, "nav-item": Any, "nav-link": Any, "nav-panel": Any, "office": Any, "office-map": Any, "outlet": Any, "page-title": Any, "person": Any, "playground": Any, "post-rail": Any, "pricing": Any, "pricing-plan": Any, "search": Any, "select": Any, "select-menu": Any, "select-option": Any, "series-nav": Any, "sidebar": Any, "sidebar-logo": Any, "stat": Any, "stats": Any, "status-actions": Any, "status-banner": Any, "status-bar": Any, "status-group": Any, "status-incident": Any, "status-kpis": Any, "status-legend": Any, "status-maintenance": Any, "status-row": Any, "status-strip": Any, "status-subscribe": Any, "story": Any, "story-step": Any, "subnav": Any, "suggested": Any, "tags-band": Any, "testimonial": Any, "testimonials": Any, "theme-toggle": Any, "top-bar": Any, "top-bar-label": Any, "top-bar-tab": Any, "topic-title": Any}, total=False)
+PieceThemeMotionTargets = TypedDict("PieceThemeMotionTargets", {"article": Any, "aside": Any, "ask-entry": Any, "author-card": Any, "brand-name": Any, "brand-prefix": Any, "breadcrumb": Any, "button": Any, "byline": Any, "card": Any, "carousel": Any, "carousel-slide": Any, "compare": Any, "component": Any, "contact-channel": Any, "contact-channels": Any, "contact-deflect": Any, "contact-facts": Any, "contact-field": Any, "contact-form": Any, "contact-office": Any, "contact-offices": Any, "contact-open-now": Any, "contact-success": Any, "contact-topic": Any, "cookie-settings": Any, "course-certificate": Any, "course-end-card": Any, "course-hero": Any, "course-lesson-row": Any, "course-outline": Any, "course-progress": Any, "course-sidebar": Any, "cta": Any, "cta-divider": Any, "cta-secondary": Any, "docs-drawer": Any, "docs-sections": Any, "entry-title": Any, "faq-answer": Any, "faq-category-card": Any, "faq-item": Any, "faq-question": Any, "faq-search": Any, "faq-section": Any, "feed": Any, "feed-item": Any, "footer": Any, "footer-art": Any, "footer-brand": Any, "footer-col": Any, "footer-crumbs": Any, "footer-edge": Any, "footer-heading": Any, "footer-html": Any, "footer-newsletter": Any, "footer-status": Any, "forum-new-topics": Any, "gallery": Any, "header": Any, "header-crumb": Any, "header-search": Any, "header-slot": Any, "header-title": Any, "hero": Any, "index-head": Any, "index-header": Any, "index-title": Any, "input": Any, "kicker": Any, "language-option": Any, "language-suggest": Any, "language-switcher": Any, "layer": Any, "lede": Any, "legal-facts": Any, "legal-kicker": Any, "legal-row": Any, "lightbox": Any, "logo": Any, "logo-wall": Any, "main": Any, "map": Any, "marquee": Any, "masthead": Any, "meta": Any, "modal": Any, "nav": Any, "nav-divider": Any, "nav-featured": Any, "nav-item": Any, "nav-link": Any, "nav-panel": Any, "office": Any, "office-map": Any, "outlet": Any, "page-title": Any, "person": Any, "playground": Any, "post-rail": Any, "pricing": Any, "pricing-plan": Any, "search": Any, "select": Any, "select-menu": Any, "select-option": Any, "series-nav": Any, "sidebar": Any, "sidebar-logo": Any, "stat": Any, "stats": Any, "status-actions": Any, "status-banner": Any, "status-bar": Any, "status-group": Any, "status-incident": Any, "status-kpis": Any, "status-legend": Any, "status-maintenance": Any, "status-row": Any, "status-strip": Any, "status-subscribe": Any, "story": Any, "story-step": Any, "subnav": Any, "suggested": Any, "tags-band": Any, "testimonial": Any, "testimonials": Any, "theme-toggle": Any, "top-bar": Any, "top-bar-label": Any, "top-bar-tab": Any, "topic-title": Any}, total=False)
 
 
 class PieceThemeMotion(TypedDict, total=False):
@@ -12828,6 +12929,11 @@ class TopicTimelineMarker(TypedDict, total=False):
     postNumber: float
 
 
+class TranslationCoverageLocale(TypedDict, total=False):
+    code: str
+    label: str
+
+
 class TypeLevelSettingsRule(TypedDict, total=False):
     color: str
     colorDark: str
@@ -13608,6 +13714,11 @@ class ContentAiTranslateParams(TypedDict, total=False):
     locale: str
 
 
+class ContentAiAutoParams(TypedDict, total=False):
+    force: bool
+    published: bool
+
+
 class ContentAiSeoParams(TypedDict, total=False):
     locale: str
 
@@ -13629,6 +13740,7 @@ class LegalUpdatesSubscribeParams(TypedDict, total=False):
     email: str
     captchaToken: str
     scope: "LegalUpdatesSubscribeParamsScope"
+    locale: str
 
 
 class LegalUpdatesSubscribeResponse(TypedDict, total=False):
@@ -19608,8 +19720,16 @@ class SpacesSettingsSetThemeParamsFootnotes(TypedDict, total=False):
 
 
 class SpacesSettingsSetThemeParamsI18nSwitcher(TypedDict, total=False):
+    enabled: bool
     placement: str
     style: str
+    names: str
+    flags: bool
+    flagCountries: Dict[str, Any]
+    locales: List[str]
+    customLabels: Dict[str, Any]
+    missing: str
+    remember: bool
 
 
 class SpacesSettingsSetThemeParamsI18n(TypedDict, total=False):
@@ -20637,6 +20757,7 @@ class SpacesSettingsSetThemeParamsCoursesLanding(TypedDict, total=False):
     showInstructors: bool
     showOutcomes: bool
     showPrereqs: bool
+    showPaths: bool
     ctaStyle: str
     coverAspect: str
     coverRadius: Any
@@ -24683,8 +24804,16 @@ class SpacesSettingsPatchThemeParamsFootnotes(TypedDict, total=False):
 
 
 class SpacesSettingsPatchThemeParamsI18nSwitcher(TypedDict, total=False):
+    enabled: Optional[bool]
     placement: Optional[str]
     style: Optional[str]
+    names: Optional[str]
+    flags: Optional[bool]
+    flagCountries: Optional[Dict[str, Any]]
+    locales: Optional[List[str]]
+    customLabels: Optional[Dict[str, Any]]
+    missing: Optional[str]
+    remember: Optional[bool]
 
 
 class SpacesSettingsPatchThemeParamsI18n(TypedDict, total=False):
@@ -25712,6 +25841,7 @@ class SpacesSettingsPatchThemeParamsCoursesLanding(TypedDict, total=False):
     showInstructors: Optional[bool]
     showOutcomes: Optional[bool]
     showPrereqs: Optional[bool]
+    showPaths: Optional[bool]
     ctaStyle: Optional[str]
     coverAspect: Optional[str]
     coverRadius: Optional[Any]
@@ -29758,8 +29888,16 @@ class SpacesSettingsSetThemeDraftParamsFootnotes(TypedDict, total=False):
 
 
 class SpacesSettingsSetThemeDraftParamsI18nSwitcher(TypedDict, total=False):
+    enabled: bool
     placement: str
     style: str
+    names: str
+    flags: bool
+    flagCountries: Dict[str, Any]
+    locales: List[str]
+    customLabels: Dict[str, Any]
+    missing: str
+    remember: bool
 
 
 class SpacesSettingsSetThemeDraftParamsI18n(TypedDict, total=False):
@@ -30787,6 +30925,7 @@ class SpacesSettingsSetThemeDraftParamsCoursesLanding(TypedDict, total=False):
     showInstructors: bool
     showOutcomes: bool
     showPrereqs: bool
+    showPaths: bool
     ctaStyle: str
     coverAspect: str
     coverRadius: Any
@@ -34827,8 +34966,16 @@ class SpacesSettingsPatchThemeDraftParamsFootnotes(TypedDict, total=False):
 
 
 class SpacesSettingsPatchThemeDraftParamsI18nSwitcher(TypedDict, total=False):
+    enabled: Optional[bool]
     placement: Optional[str]
     style: Optional[str]
+    names: Optional[str]
+    flags: Optional[bool]
+    flagCountries: Optional[Dict[str, Any]]
+    locales: Optional[List[str]]
+    customLabels: Optional[Dict[str, Any]]
+    missing: Optional[str]
+    remember: Optional[bool]
 
 
 class SpacesSettingsPatchThemeDraftParamsI18n(TypedDict, total=False):
@@ -35856,6 +36003,7 @@ class SpacesSettingsPatchThemeDraftParamsCoursesLanding(TypedDict, total=False):
     showInstructors: Optional[bool]
     showOutcomes: Optional[bool]
     showPrereqs: Optional[bool]
+    showPaths: Optional[bool]
     ctaStyle: Optional[str]
     coverAspect: Optional[str]
     coverRadius: Optional[Any]
@@ -39782,8 +39930,16 @@ class SpacesSettingsSetReaderThemesParamsThemeThemeFootnotes(TypedDict, total=Fa
 
 
 class SpacesSettingsSetReaderThemesParamsThemeThemeI18nSwitcher(TypedDict, total=False):
+    enabled: bool
     placement: str
     style: str
+    names: str
+    flags: bool
+    flagCountries: Dict[str, Any]
+    locales: List[str]
+    customLabels: Dict[str, Any]
+    missing: str
+    remember: bool
 
 
 class SpacesSettingsSetReaderThemesParamsThemeThemeI18n(TypedDict, total=False):
@@ -40769,6 +40925,7 @@ class SpacesSettingsSetReaderThemesParamsThemeThemeCoursesLanding(TypedDict, tot
     showInstructors: bool
     showOutcomes: bool
     showPrereqs: bool
+    showPaths: bool
     ctaStyle: str
     coverAspect: str
     coverRadius: Any
@@ -43985,6 +44142,46 @@ class AnalyticsSetParams(TypedDict, total=False):
     posthogHost: Any
 
 
+class OrgLanguageSwitcherGetResponse(TypedDict, total=False):
+    customLabels: Dict[str, Any]
+    enabled: bool
+    flagCountries: Dict[str, Any]
+    flags: bool
+    locales: List[str]
+    missing: str
+    names: str
+    placement: str
+    remember: bool
+    style: str
+
+
+class OrgLanguageSwitcherSetParams(TypedDict, total=False):
+    enabled: bool
+    placement: str
+    style: str
+    names: str
+    flags: bool
+    flagCountries: Dict[str, Any]
+    locales: List[str]
+    customLabels: Dict[str, Any]
+    missing: str
+    remember: bool
+
+
+class OrgLanguageSwitcherSetResponse(TypedDict, total=False):
+    customLabels: Dict[str, Any]
+    enabled: bool
+    flagCountries: Dict[str, Any]
+    flags: bool
+    locales: List[str]
+    missing: str
+    names: str
+    placement: str
+    remember: bool
+    style: str
+    warnings: List[str]
+
+
 class OrgImportJobListResponse(TypedDict, total=False):
     jobs: List["OrgImportJobView"]
     page: "PageInfo"
@@ -44102,6 +44299,133 @@ class OrgImportJobEnqueueRoadmapParams(TypedDict, total=False):
 
 class OrgImportJobGetResponse(TypedDict, total=False):
     job: "OrgImportJobView"
+
+
+class WebhooksEventsResponse(TypedDict, total=False):
+    catalog: List["WebhookEventCatalogEntry"]
+    events: List[str]
+
+
+class WebhooksListResponse(TypedDict, total=False):
+    page: "PageInfo"
+    webhooks: List["WebhookSummary"]
+    data: List["WebhookSummary"]
+
+
+class WebhooksCreateParams(TypedDict, total=False):
+    url: str
+    events: List[str]
+    spaceId: Optional[str]
+    libraryId: Optional[str]
+    format: str
+    categoryIds: Optional[List[str]]
+    tagIds: Optional[List[str]]
+    groupIds: Optional[List[str]]
+    contentTypes: Optional[List[str]]
+    locales: Optional[List[str]]
+    bodyEncoding: str
+    signatureVersion: str
+    kind: str
+
+
+class WebhooksCreateResponse(TypedDict, total=False):
+    secret: str
+    webhook: "WebhookSummary"
+    data: "WebhookSummary"
+    warnings: List[str]
+
+
+class WebhooksUpdateParams(TypedDict, total=False):
+    url: str
+    events: List[str]
+    active: bool
+    spaceId: Optional[str]
+    libraryId: Optional[str]
+    categoryIds: Optional[List[str]]
+    tagIds: Optional[List[str]]
+    groupIds: Optional[List[str]]
+    contentTypes: Optional[List[str]]
+    locales: Optional[List[str]]
+    bodyEncoding: str
+    signatureVersion: str
+
+
+class WebhooksUpdateResponse(TypedDict, total=False):
+    webhook: "WebhookSummary"
+    warnings: List[str]
+
+
+class WebhooksRemoveResponse(TypedDict, total=False):
+    ok: bool
+
+
+class WebhooksDeliveriesResponseDelivery(TypedDict, total=False):
+    attempts: Any
+    completedAt: Any
+    createdAt: Any
+    error: Any
+    event: Any
+    id: Any
+    organizationId: Any
+    payload: Any
+    status: Any
+    statusCode: Any
+    webhookId: Any
+
+
+class WebhooksDeliveriesResponseDataItem(TypedDict, total=False):
+    attempts: Any
+    completedAt: Any
+    createdAt: Any
+    error: Any
+    event: Any
+    id: Any
+    organizationId: Any
+    payload: Any
+    status: Any
+    statusCode: Any
+    webhookId: Any
+
+
+class WebhooksDeliveriesResponse(TypedDict, total=False):
+    deliveries: List["WebhooksDeliveriesResponseDelivery"]
+    page: "PageInfo"
+    data: List["WebhooksDeliveriesResponseDataItem"]
+
+
+class WebhooksRotateParams(TypedDict, total=False):
+    overlapHours: int
+
+
+class WebhooksRotateResponse(TypedDict, total=False):
+    previousValidUntil: str
+    secret: str
+    warnings: List[str]
+
+
+class DeployStatusStatusResponse(TypedDict, total=False):
+    deployHooks: List["DeployHookBuildStatus"]
+    page: "PageInfo"
+    data: List["DeployHookBuildStatus"]
+
+
+class WebhookSettingsGetResponse(TypedDict, total=False):
+    autoDisable: Any
+
+
+class WebhookSettingsSetParamsAutoDisable(TypedDict, total=False):
+    enabled: bool
+    failures: int
+    windowHours: int
+
+
+class WebhookSettingsSetParams(TypedDict, total=False):
+    autoDisable: "WebhookSettingsSetParamsAutoDisable"
+
+
+class WebhookSettingsSetResponse(TypedDict, total=False):
+    autoDisable: Any
+    warnings: List[str]
 
 
 class CoursesCompleteParams(TypedDict, total=False):
@@ -48037,6 +48361,22 @@ class DocsTranslationsRemoveResponse(TypedDict, total=False):
     locales: List["DocLocale"]
 
 
+class PageTranslationListResponse(TypedDict, total=False):
+    translations: List["PageTranslationStatus"]
+    page: "PageInfo"
+    data: List["PageTranslationStatus"]
+
+
+class PageTranslationAutoParams(TypedDict, total=False):
+    force: bool
+    published: bool
+
+
+class PageTranslationAutoResponse(TypedDict, total=False):
+    translation: "PageTranslationStatus"
+    warnings: List[str]
+
+
 class DocsOpenapiListSpecsResponse(TypedDict, total=False):
     specs: List["StoredSpecSummary"]
     page: "PageInfo"
@@ -48616,114 +48956,6 @@ class DocsTemplatesNewPageResponse(TypedDict, total=False):
     page: "DocsTemplatesNewPageResponsePage"
     data: "DocsTemplatesNewPageResponseData"
     warnings: List[str]
-
-
-class WebhooksEventsResponse(TypedDict, total=False):
-    catalog: List["WebhookEventCatalogEntry"]
-    events: List[str]
-
-
-class WebhooksListResponse(TypedDict, total=False):
-    page: "PageInfo"
-    webhooks: List["WebhookSummary"]
-    data: List["WebhookSummary"]
-
-
-class WebhooksCreateParams(TypedDict, total=False):
-    url: str
-    events: List[str]
-    spaceId: Optional[str]
-    libraryId: Optional[str]
-    format: str
-    categoryIds: Optional[List[str]]
-    tagIds: Optional[List[str]]
-    groupIds: Optional[List[str]]
-    contentTypes: Optional[List[str]]
-    locales: Optional[List[str]]
-    bodyEncoding: str
-    signatureVersion: str
-    kind: str
-
-
-class WebhooksCreateResponse(TypedDict, total=False):
-    secret: str
-    webhook: "WebhookSummary"
-    data: "WebhookSummary"
-    warnings: List[str]
-
-
-class WebhooksUpdateParams(TypedDict, total=False):
-    url: str
-    events: List[str]
-    active: bool
-    spaceId: Optional[str]
-    libraryId: Optional[str]
-    categoryIds: Optional[List[str]]
-    tagIds: Optional[List[str]]
-    groupIds: Optional[List[str]]
-    contentTypes: Optional[List[str]]
-    locales: Optional[List[str]]
-    bodyEncoding: str
-    signatureVersion: str
-
-
-class WebhooksUpdateResponse(TypedDict, total=False):
-    webhook: "WebhookSummary"
-    warnings: List[str]
-
-
-class WebhooksRemoveResponse(TypedDict, total=False):
-    ok: bool
-
-
-class WebhooksDeliveriesResponseDelivery(TypedDict, total=False):
-    attempts: Any
-    completedAt: Any
-    createdAt: Any
-    error: Any
-    event: Any
-    id: Any
-    organizationId: Any
-    payload: Any
-    status: Any
-    statusCode: Any
-    webhookId: Any
-
-
-class WebhooksDeliveriesResponseDataItem(TypedDict, total=False):
-    attempts: Any
-    completedAt: Any
-    createdAt: Any
-    error: Any
-    event: Any
-    id: Any
-    organizationId: Any
-    payload: Any
-    status: Any
-    statusCode: Any
-    webhookId: Any
-
-
-class WebhooksDeliveriesResponse(TypedDict, total=False):
-    deliveries: List["WebhooksDeliveriesResponseDelivery"]
-    page: "PageInfo"
-    data: List["WebhooksDeliveriesResponseDataItem"]
-
-
-class WebhooksRotateParams(TypedDict, total=False):
-    overlapHours: int
-
-
-class WebhooksRotateResponse(TypedDict, total=False):
-    previousValidUntil: str
-    secret: str
-    warnings: List[str]
-
-
-class DeployStatusStatusResponse(TypedDict, total=False):
-    deployHooks: List["DeployHookBuildStatus"]
-    page: "PageInfo"
-    data: List["DeployHookBuildStatus"]
 
 
 class NotificationsGetDndResponse(TypedDict, total=False):
@@ -55446,15 +55678,6 @@ class BlogArticlesPinResponse(TypedDict, total=False):
     warnings: List[str]
 
 
-class BlogArticlesAnswerParams(TypedDict, total=False):
-    postId: Optional[str]
-
-
-class BlogArticlesAnswerResponse(TypedDict, total=False):
-    article: "ArticleDetail"
-    warnings: List[str]
-
-
 class BlogArticlesReplyParamsContent(TypedDict, total=False):
     type: str
     content: List[Any]
@@ -55667,6 +55890,7 @@ class PublicBlogSubscribeParams(TypedDict, total=False):
     email: str
     captchaToken: str
     scope: "PublicBlogSubscribeParamsScope"
+    locale: str
 
 
 class PublicBlogSubscribeResponse(TypedDict, total=False):
@@ -58067,6 +58291,11 @@ class ForumUpdateSettingsParams(TypedDict, total=False):
 class ForumUpdateSettingsResponse(TypedDict, total=False):
     settings: "CommunitySettings"
     warnings: List[str]
+
+
+class ForumTrashResponse(TypedDict, total=False):
+    replies: List["TrashedReply"]
+    topics: List["TrashedTopic"]
 
 
 class ForumFlagsResponse(TypedDict, total=False):
@@ -61153,6 +61382,7 @@ class PublicForumTaxonomyCategoriesOverviewResponseCategory(TypedDict, total=Fal
     defaultTopPeriod: Any
     description: str
     emoji: Any
+    formTemplateId: Any
     icon: Any
     id: str
     latest: Any
@@ -61420,6 +61650,7 @@ class PublicForumThreadsTopicResponseReaderSettingsContentLocalization(TypedDict
 
 class PublicForumThreadsTopicResponseReaderSettings(TypedDict, total=False):
     contentLocalization: "PublicForumThreadsTopicResponseReaderSettingsContentLocalization"
+    inlineOnebox: bool
     threadedReplies: bool
 
 
@@ -65583,6 +65814,7 @@ class PublicRoadmapWriteSubscribeParams(TypedDict, total=False):
     email: str
     captchaToken: str
     scope: "PublicRoadmapWriteSubscribeParamsScope"
+    locale: str
 
 
 class PublicRoadmapWriteSubscribeResponse(TypedDict, total=False):
@@ -70333,6 +70565,7 @@ class PublicChangelogSubscribeParams(TypedDict, total=False):
     email: str
     captchaToken: str
     scope: "PublicChangelogSubscribeParamsScope"
+    locale: str
 
 
 class PublicChangelogSubscribeResponse(TypedDict, total=False):
@@ -74351,6 +74584,7 @@ class PublicEventsSubscribeParams(TypedDict, total=False):
     email: str
     captchaToken: str
     scope: "PublicEventsSubscribeParamsScope"
+    locale: str
 
 
 class PublicEventsSubscribeResponse(TypedDict, total=False):
@@ -75055,11 +75289,13 @@ class DocsAiAgentParams(TypedDict, total=False):
 
 class DocsAiAgentResponsePage(TypedDict, total=False):
     id: str
+    slug: str
     title: str
 
 
 class DocsAiAgentResponseData(TypedDict, total=False):
     id: str
+    slug: str
     title: str
 
 
@@ -76383,6 +76619,7 @@ class ItemsPatchParams(TypedDict, total=False):
     title: str
     slug: str
     params: Dict[str, Any]
+    locale: Optional[str]
 
 
 class ItemsPatchResponse(TypedDict, total=False):
@@ -76492,6 +76729,7 @@ class LibraryItemPatchParams(TypedDict, total=False):
     title: str
     slug: str
     params: Dict[str, Any]
+    locale: Optional[str]
 
 
 class LibraryItemPatchResponse(TypedDict, total=False):
@@ -76892,6 +77130,7 @@ class PublicStatusSubscribeParams(TypedDict, total=False):
     email: str
     captchaToken: str
     scope: "PublicStatusSubscribeParamsScope"
+    locale: str
 
 
 class PublicStatusSubscribeResponse(TypedDict, total=False):
@@ -77144,6 +77383,16 @@ class StatusTranslationsMachineParams(TypedDict, total=False):
 
 
 class StatusTranslationsMachineResponse(TypedDict, total=False):
+    translation: "StatusIncidentTranslation"
+    warnings: List[str]
+
+
+class StatusTranslationsAutoParams(TypedDict, total=False):
+    force: bool
+    replace: bool
+
+
+class StatusTranslationsAutoResponse(TypedDict, total=False):
     translation: "StatusIncidentTranslation"
     warnings: List[str]
 
@@ -82241,8 +82490,16 @@ class ThemesBundlesImportSpaceParamsThemeFootnotes(TypedDict, total=False):
 
 
 class ThemesBundlesImportSpaceParamsThemeI18nSwitcher(TypedDict, total=False):
+    enabled: bool
     placement: str
     style: str
+    names: str
+    flags: bool
+    flagCountries: Dict[str, Any]
+    locales: List[str]
+    customLabels: Dict[str, Any]
+    missing: str
+    remember: bool
 
 
 class ThemesBundlesImportSpaceParamsThemeI18n(TypedDict, total=False):
@@ -83260,6 +83517,7 @@ class ThemesBundlesImportSpaceParamsThemeCoursesLanding(TypedDict, total=False):
     showInstructors: bool
     showOutcomes: bool
     showPrereqs: bool
+    showPaths: bool
     ctaStyle: str
     coverAspect: str
     coverRadius: Any
@@ -89173,8 +89431,16 @@ class ThemesBundlesImportSiteParamsThemeFootnotes(TypedDict, total=False):
 
 
 class ThemesBundlesImportSiteParamsThemeI18nSwitcher(TypedDict, total=False):
+    enabled: bool
     placement: str
     style: str
+    names: str
+    flags: bool
+    flagCountries: Dict[str, Any]
+    locales: List[str]
+    customLabels: Dict[str, Any]
+    missing: str
+    remember: bool
 
 
 class ThemesBundlesImportSiteParamsThemeI18n(TypedDict, total=False):
@@ -90192,6 +90458,7 @@ class ThemesBundlesImportSiteParamsThemeCoursesLanding(TypedDict, total=False):
     showInstructors: bool
     showOutcomes: bool
     showPrereqs: bool
+    showPaths: bool
     ctaStyle: str
     coverAspect: str
     coverRadius: Any
@@ -96176,8 +96443,16 @@ class ThemesBundlesSetSiteDraftParamsFootnotes(TypedDict, total=False):
 
 
 class ThemesBundlesSetSiteDraftParamsI18nSwitcher(TypedDict, total=False):
+    enabled: bool
     placement: str
     style: str
+    names: str
+    flags: bool
+    flagCountries: Dict[str, Any]
+    locales: List[str]
+    customLabels: Dict[str, Any]
+    missing: str
+    remember: bool
 
 
 class ThemesBundlesSetSiteDraftParamsI18n(TypedDict, total=False):
@@ -97205,6 +97480,7 @@ class ThemesBundlesSetSiteDraftParamsCoursesLanding(TypedDict, total=False):
     showInstructors: bool
     showOutcomes: bool
     showPrereqs: bool
+    showPaths: bool
     ctaStyle: str
     coverAspect: str
     coverRadius: Any
@@ -101245,8 +101521,16 @@ class ThemesBundlesPatchSiteDraftParamsFootnotes(TypedDict, total=False):
 
 
 class ThemesBundlesPatchSiteDraftParamsI18nSwitcher(TypedDict, total=False):
+    enabled: Optional[bool]
     placement: Optional[str]
     style: Optional[str]
+    names: Optional[str]
+    flags: Optional[bool]
+    flagCountries: Optional[Dict[str, Any]]
+    locales: Optional[List[str]]
+    customLabels: Optional[Dict[str, Any]]
+    missing: Optional[str]
+    remember: Optional[bool]
 
 
 class ThemesBundlesPatchSiteDraftParamsI18n(TypedDict, total=False):
@@ -102274,6 +102558,7 @@ class ThemesBundlesPatchSiteDraftParamsCoursesLanding(TypedDict, total=False):
     showInstructors: Optional[bool]
     showOutcomes: Optional[bool]
     showPrereqs: Optional[bool]
+    showPaths: Optional[bool]
     ctaStyle: Optional[str]
     coverAspect: Optional[str]
     coverRadius: Optional[Any]
@@ -106275,8 +106560,16 @@ class ThemesLibraryImportParamsThemeFootnotes(TypedDict, total=False):
 
 
 class ThemesLibraryImportParamsThemeI18nSwitcher(TypedDict, total=False):
+    enabled: bool
     placement: str
     style: str
+    names: str
+    flags: bool
+    flagCountries: Dict[str, Any]
+    locales: List[str]
+    customLabels: Dict[str, Any]
+    missing: str
+    remember: bool
 
 
 class ThemesLibraryImportParamsThemeI18n(TypedDict, total=False):
@@ -107294,6 +107587,7 @@ class ThemesLibraryImportParamsThemeCoursesLanding(TypedDict, total=False):
     showInstructors: bool
     showOutcomes: bool
     showPrereqs: bool
+    showPaths: bool
     ctaStyle: str
     coverAspect: str
     coverRadius: Any
@@ -110807,6 +111101,15 @@ class SsoAtlasCreateSsoResponse(TypedDict, total=False):
     warnings: List[str]
 
 
+class SsoAtlasSetEnforcedParams(TypedDict, total=False):
+    enforced: bool
+
+
+class SsoAtlasSetEnforcedResponse(TypedDict, total=False):
+    enforced: bool
+    warnings: List[str]
+
+
 class SsoAtlasUpdateSsoParamsOidc(TypedDict, total=False):
     issuer: str
     clientId: str
@@ -110835,15 +111138,6 @@ class SsoAtlasUpdateSsoResponse(TypedDict, total=False):
 
 class SsoAtlasDeleteSsoResponse(TypedDict, total=False):
     deleted: bool
-
-
-class SsoAtlasSetEnforcedParams(TypedDict, total=False):
-    enforced: bool
-
-
-class SsoAtlasSetEnforcedResponse(TypedDict, total=False):
-    enforced: bool
-    warnings: List[str]
 
 
 class SsoAtlasGetScimResponse(TypedDict, total=False):
@@ -111024,7 +111318,7 @@ class IntegrationsGithubConnectParams(TypedDict, total=False):
 
 
 class IntegrationsGithubConnectResponse(TypedDict, total=False):
-    connection: "ConnectionSummary"
+    connection: "ConnectionWithSecret"
     warnings: List[str]
 
 
@@ -111032,6 +111326,10 @@ class IntegrationsGithubEgressIpsResponse(TypedDict, total=False):
     ips: List[str]
     page: "PageInfo"
     data: List[str]
+
+
+class IntegrationsGithubRotateSigningSecretResponse(TypedDict, total=False):
+    connection: "ConnectionWithSecret"
 
 
 class IntegrationsGithubImportResponse(TypedDict, total=False):
@@ -111075,6 +111373,7 @@ class PublicOrgsScriptOriginsResponse(TypedDict, total=False):
 
 
 class PublicOrgsGetResponseOrganization(TypedDict, total=False):
+    id: str
     name: str
     slug: str
 
@@ -111541,6 +111840,7 @@ class PublicSubscribeParams(TypedDict, total=False):
     email: str
     captchaToken: str
     scope: "PublicSubscribeParamsScope"
+    locale: str
 
 
 class PublicSubscribeResponse(TypedDict, total=False):
@@ -116182,8 +116482,16 @@ class SitesCreateParamsConfigThemeFootnotes(TypedDict, total=False):
 
 
 class SitesCreateParamsConfigThemeI18nSwitcher(TypedDict, total=False):
+    enabled: bool
     placement: str
     style: str
+    names: str
+    flags: bool
+    flagCountries: Dict[str, Any]
+    locales: List[str]
+    customLabels: Dict[str, Any]
+    missing: str
+    remember: bool
 
 
 class SitesCreateParamsConfigThemeI18n(TypedDict, total=False):
@@ -117181,6 +117489,7 @@ class SitesCreateParamsConfigThemeCoursesLanding(TypedDict, total=False):
     showInstructors: bool
     showOutcomes: bool
     showPrereqs: bool
+    showPaths: bool
     ctaStyle: str
     coverAspect: str
     coverRadius: Any
@@ -121894,8 +122203,16 @@ class SitesReplaceParamsConfigThemeFootnotes(TypedDict, total=False):
 
 
 class SitesReplaceParamsConfigThemeI18nSwitcher(TypedDict, total=False):
+    enabled: bool
     placement: str
     style: str
+    names: str
+    flags: bool
+    flagCountries: Dict[str, Any]
+    locales: List[str]
+    customLabels: Dict[str, Any]
+    missing: str
+    remember: bool
 
 
 class SitesReplaceParamsConfigThemeI18n(TypedDict, total=False):
@@ -122893,6 +123210,7 @@ class SitesReplaceParamsConfigThemeCoursesLanding(TypedDict, total=False):
     showInstructors: bool
     showOutcomes: bool
     showPrereqs: bool
+    showPaths: bool
     ctaStyle: str
     coverAspect: str
     coverRadius: Any
@@ -127595,8 +127913,16 @@ class SitesUpdateParamsConfigThemeFootnotes(TypedDict, total=False):
 
 
 class SitesUpdateParamsConfigThemeI18nSwitcher(TypedDict, total=False):
+    enabled: Optional[bool]
     placement: Optional[str]
     style: Optional[str]
+    names: Optional[str]
+    flags: Optional[bool]
+    flagCountries: Optional[Dict[str, Any]]
+    locales: Optional[List[str]]
+    customLabels: Optional[Dict[str, Any]]
+    missing: Optional[str]
+    remember: Optional[bool]
 
 
 class SitesUpdateParamsConfigThemeI18n(TypedDict, total=False):
@@ -128594,6 +128920,7 @@ class SitesUpdateParamsConfigThemeCoursesLanding(TypedDict, total=False):
     showInstructors: Optional[bool]
     showOutcomes: Optional[bool]
     showPrereqs: Optional[bool]
+    showPaths: Optional[bool]
     ctaStyle: Optional[str]
     coverAspect: Optional[str]
     coverRadius: Optional[Any]
@@ -131333,6 +131660,11 @@ class PublicMcpInfoResponse(TypedDict, total=False):
 
 
 class McpInfoResponse(TypedDict, total=False):
+    server: str
+    transport: str
+
+
+class McpInfoReadOnlyResponse(TypedDict, total=False):
     server: str
     transport: str
 
@@ -134777,8 +135109,16 @@ class OrgsApplyParamsSpaceThemeFootnotes(TypedDict, total=False):
 
 
 class OrgsApplyParamsSpaceThemeI18nSwitcher(TypedDict, total=False):
+    enabled: bool
     placement: str
     style: str
+    names: str
+    flags: bool
+    flagCountries: Dict[str, Any]
+    locales: List[str]
+    customLabels: Dict[str, Any]
+    missing: str
+    remember: bool
 
 
 class OrgsApplyParamsSpaceThemeI18n(TypedDict, total=False):
@@ -135764,6 +136104,7 @@ class OrgsApplyParamsSpaceThemeCoursesLanding(TypedDict, total=False):
     showInstructors: bool
     showOutcomes: bool
     showPrereqs: bool
+    showPaths: bool
     ctaStyle: str
     coverAspect: str
     coverRadius: Any

@@ -100,9 +100,11 @@ from .newsletter import NewsletterResource
 from .notifications import NotificationsResource
 from .onboarding import OnboardingResource
 from .org_import_job import OrgImportJobResource
+from .org_language_switcher import OrgLanguageSwitcherResource
 from .org_payments import OrgPaymentsResource
 from .orgs import OrgsResource
 from .org_sms import OrgSmsResource
+from .page_translation import PageTranslationResource
 from .preview_exchange import PreviewExchangeResource
 from .preview_sessions import PreviewSessionsResource
 from .preview_status import PreviewStatusResource
@@ -148,7 +150,9 @@ from .status_translations import StatusTranslationsResource
 from .templates import TemplatesResource
 from .themes import ThemesResource
 from .tokens import TokensResource
+from .translation_coverage import TranslationCoverageResource
 from .translations import TranslationsResource
 from .users import UsersResource
 from .versioning import VersioningResource
 from .webhooks import WebhooksResource
+from .webhook_settings import WebhookSettingsResource

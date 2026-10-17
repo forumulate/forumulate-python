@@ -2005,7 +2005,7 @@ class ForumToolsResource:
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
     ) -> ForumToolsAnswerResponse:
-        """Create the answer in a space (forum)
+        """Create the answer in a space
 
         ``POST /orgs/{orgId}/spaces/{spaceId}/forum/{topicId}/answer``
 
@@ -2931,7 +2931,7 @@ class ForumTranslationsResource:
 
 
 class ForumResource:
-    """``client.forum`` (16 operations; automations, taxonomy, tools, topics, translations)."""
+    """``client.forum`` (17 operations; automations, taxonomy, tools, topics, translations)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
@@ -3324,6 +3324,27 @@ class ForumResource:
             query=_query({}, extra_query),
             body=_body({"whoCanPost": who_can_post, "moderateComments": moderate_comments, "moderateAnonymous": moderate_anonymous, "allowAnonymous": allow_anonymous, "anonymousCaptcha": anonymous_captcha, "defaultSort": default_sort, "reactionsEnabled": reactions_enabled, "reactionEmojis": reaction_emojis, "postVotes": post_votes, "pinScope": pin_scope}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+    def trash(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> ForumTrashResponse:
+        """List items in a space (forum trash)
+
+        ``GET /orgs/{orgId}/spaces/{spaceId}/forum/trash/items``
+        """
+        return self._client._request(
+            "GET",
+            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/forum/trash/items",
+            query=_query({}, extra_query),
+            headers=extra_headers,
             timeout=timeout,
         )
 

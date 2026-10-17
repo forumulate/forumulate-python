@@ -94,6 +94,8 @@ class TranslationsOverridesResource:
         self,
         org_id: str,
         *,
+        key: Any,
+        locale: str,
         idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -103,12 +105,14 @@ class TranslationsOverridesResource:
 
         ``DELETE /orgs/{orgId}/translation-overrides``
 
+        :param key: The interface translation key whose override to remove (1 to 120 characters); the built-in copy for that key is served again.
+        :param locale: The language whose override to remove, as set with PUT.
         :param idempotency_key: Makes this write safe to retry.
         """
         return self._client._request(
             "DELETE",
             f"/orgs/{_path(org_id)}/translation-overrides",
-            query=_query({}, extra_query),
+            query=_query({"key": key, "locale": locale}, extra_query),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )

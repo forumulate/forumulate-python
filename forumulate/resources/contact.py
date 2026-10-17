@@ -249,8 +249,8 @@ class ContactResource:
         *,
         limit: Union[int, NotGiven] = NOT_GIVEN,
         unhandled: Union[str, NotGiven] = NOT_GIVEN,
-        folder: Union[str, NotGiven] = NOT_GIVEN,
         cursor: Union[str, NotGiven] = NOT_GIVEN,
+        folder: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
@@ -265,7 +265,7 @@ class ContactResource:
         return self._client._request(
             "GET",
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/contact",
-            query=_query({"limit": limit, "unhandled": unhandled, "folder": folder, "cursor": cursor}, extra_query),
+            query=_query({"limit": limit, "unhandled": unhandled, "cursor": cursor, "folder": folder}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )

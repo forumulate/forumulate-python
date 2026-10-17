@@ -109,9 +109,11 @@ from .resources import (
     NotificationsResource,
     OnboardingResource,
     OrgImportJobResource,
+    OrgLanguageSwitcherResource,
     OrgPaymentsResource,
     OrgsResource,
     OrgSmsResource,
+    PageTranslationResource,
     PreviewExchangeResource,
     PreviewSessionsResource,
     PreviewStatusResource,
@@ -157,10 +159,12 @@ from .resources import (
     TemplatesResource,
     ThemesResource,
     TokensResource,
+    TranslationCoverageResource,
     TranslationsResource,
     UsersResource,
     VersioningResource,
     WebhooksResource,
+    WebhookSettingsResource,
 )
 
 
@@ -297,9 +301,11 @@ class Forumulate(BaseClient):
         self.notifications = NotificationsResource(self)
         self.onboarding = OnboardingResource(self)
         self.org_import_job = OrgImportJobResource(self)
+        self.org_language_switcher = OrgLanguageSwitcherResource(self)
         self.org_payments = OrgPaymentsResource(self)
         self.orgs = OrgsResource(self)
         self.org_sms = OrgSmsResource(self)
+        self.page_translation = PageTranslationResource(self)
         self.preview_exchange = PreviewExchangeResource(self)
         self.preview_sessions = PreviewSessionsResource(self)
         self.preview_status = PreviewStatusResource(self)
@@ -345,10 +351,12 @@ class Forumulate(BaseClient):
         self.templates = TemplatesResource(self)
         self.themes = ThemesResource(self)
         self.tokens = TokensResource(self)
+        self.translation_coverage = TranslationCoverageResource(self)
         self.translations = TranslationsResource(self)
         self.users = UsersResource(self)
         self.versioning = VersioningResource(self)
         self.webhooks = WebhooksResource(self)
+        self.webhook_settings = WebhookSettingsResource(self)
 
     @classmethod
     def from_env(cls, env: Optional[Mapping[str, str]] = None, **kwargs: Any) -> "Forumulate":

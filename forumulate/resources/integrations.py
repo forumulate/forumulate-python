@@ -187,7 +187,7 @@ class IntegrationsDeeplResource:
 
 
 class IntegrationsGithubResource:
-    """``client.integrations.github`` (6 operations)."""
+    """``client.integrations.github`` (7 operations)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
@@ -291,6 +291,30 @@ class IntegrationsGithubResource:
             timeout=timeout,
             page_param="cursor",
             items_key=None,
+        )
+
+    def rotate_signing_secret(
+        self,
+        org_id: str,
+        space_id: str,
+        *,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> IntegrationsGithubRotateSigningSecretResponse:
+        """Create the signing secret in a space
+
+        ``POST /orgs/{orgId}/spaces/{spaceId}/github/signing-secret``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "POST",
+            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/github/signing-secret",
+            query=_query({}, extra_query),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
         )
 
     def import_(

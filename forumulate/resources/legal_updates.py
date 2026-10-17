@@ -24,6 +24,7 @@ class LegalUpdatesResource:
         idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
         captcha_token: Union[str, NotGiven] = NOT_GIVEN,
         scope: Union[LegalUpdatesSubscribeParamsScope, NotGiven] = NOT_GIVEN,
+        locale: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -39,7 +40,7 @@ class LegalUpdatesResource:
             "POST",
             f"/public/orgs/{_path(org_id)}/spaces/{_path(space_id)}/legal/subscribe",
             query=_query({}, extra_query),
-            body=_body({"email": email, "captchaToken": captcha_token, "scope": scope}, extra_body),
+            body=_body({"email": email, "captchaToken": captcha_token, "scope": scope, "locale": locale}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )

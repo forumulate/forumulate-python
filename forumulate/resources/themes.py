@@ -448,9 +448,9 @@ class ThemesComponentMarketplaceResource:
         *,
         q: Union[str, NotGiven] = NOT_GIVEN,
         tag: Union[str, NotGiven] = NOT_GIVEN,
-        outlet: Union[str, NotGiven] = NOT_GIVEN,
         featured: Union[str, NotGiven] = NOT_GIVEN,
         sort: Union[str, NotGiven] = NOT_GIVEN,
+        outlet: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
@@ -464,7 +464,7 @@ class ThemesComponentMarketplaceResource:
         return self._client._request(
             "GET",
             f"/orgs/{_path(org_id)}/component-marketplace",
-            query=_query({"q": q, "tag": tag, "outlet": outlet, "featured": featured, "sort": sort}, extra_query),
+            query=_query({"q": q, "tag": tag, "featured": featured, "sort": sort, "outlet": outlet}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )
@@ -1314,9 +1314,9 @@ class ThemesMarketplaceResource:
         *,
         q: Union[str, NotGiven] = NOT_GIVEN,
         tag: Union[str, NotGiven] = NOT_GIVEN,
-        space_type: Union[str, NotGiven] = NOT_GIVEN,
         featured: Union[str, NotGiven] = NOT_GIVEN,
         sort: Union[str, NotGiven] = NOT_GIVEN,
+        space_type: Union[str, NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
         timeout: Optional[float] = None,
@@ -1330,7 +1330,7 @@ class ThemesMarketplaceResource:
         return self._client._request(
             "GET",
             f"/orgs/{_path(org_id)}/theme-marketplace",
-            query=_query({"q": q, "tag": tag, "spaceType": space_type, "featured": featured, "sort": sort}, extra_query),
+            query=_query({"q": q, "tag": tag, "featured": featured, "sort": sort, "spaceType": space_type}, extra_query),
             headers=extra_headers,
             timeout=timeout,
         )

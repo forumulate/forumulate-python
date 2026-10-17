@@ -90,6 +90,32 @@ class SsoAtlasResource:
             timeout=timeout,
         )
 
+    def set_enforced(
+        self,
+        org_id: str,
+        *,
+        enforced: bool,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> SsoAtlasSetEnforcedResponse:
+        """Update the enforce in an organization
+
+        ``PATCH /orgs/{orgId}/atlas-enterprise/sso/enforce``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "PATCH",
+            f"/orgs/{_path(org_id)}/atlas-enterprise/sso/enforce",
+            query=_query({}, extra_query),
+            body=_body({"enforced": enforced}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
     def update_sso(
         self,
         org_id: str,
@@ -141,32 +167,6 @@ class SsoAtlasResource:
             "DELETE",
             f"/orgs/{_path(org_id)}/atlas-enterprise/sso/{_path(id)}",
             query=_query({}, extra_query),
-            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
-            timeout=timeout,
-        )
-
-    def set_enforced(
-        self,
-        org_id: str,
-        *,
-        enforced: bool,
-        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
-        extra_query: Optional[Mapping[str, Any]] = None,
-        extra_body: Optional[Mapping[str, Any]] = None,
-        extra_headers: Optional[Mapping[str, str]] = None,
-        timeout: Optional[float] = None,
-    ) -> SsoAtlasSetEnforcedResponse:
-        """Update the enforce in an organization
-
-        ``PATCH /orgs/{orgId}/atlas-enterprise/sso/enforce``
-
-        :param idempotency_key: Makes this write safe to retry.
-        """
-        return self._client._request(
-            "PATCH",
-            f"/orgs/{_path(org_id)}/atlas-enterprise/sso/enforce",
-            query=_query({}, extra_query),
-            body=_body({"enforced": enforced}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )

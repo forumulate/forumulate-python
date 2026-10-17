@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 
 class ContentAiResource:
-    """``client.content_ai`` (4 operations)."""
+    """``client.content_ai`` (5 operations)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
@@ -60,6 +60,36 @@ class ContentAiResource:
             f"/orgs/{_path(org_id)}/content/libraries/{_path(library_id)}/ai/translate",
             query=_query({}, extra_query),
             body=_body({"entryIds": entry_ids, "locale": locale}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+    def auto(
+        self,
+        org_id: str,
+        library_id: str,
+        entry_id: str,
+        locale: str,
+        *,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        force: Union[bool, NotGiven] = NOT_GIVEN,
+        published: Union[bool, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> Any:
+        """Machine-translate an entry
+
+        ``POST /orgs/{orgId}/content/libraries/{libraryId}/entries/{entryId}/translations/{locale}/auto``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "POST",
+            f"/orgs/{_path(org_id)}/content/libraries/{_path(library_id)}/entries/{_path(entry_id)}/translations/{_path(locale)}/auto",
+            query=_query({}, extra_query),
+            body=_body({"force": force, "published": published}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )

@@ -108,6 +108,7 @@ class LibraryItemResource:
         title: Union[str, NotGiven] = NOT_GIVEN,
         slug: Union[str, NotGiven] = NOT_GIVEN,
         params: Union[Dict[str, Any], NotGiven] = NOT_GIVEN,
+        locale: Union[Optional[str], NotGiven] = NOT_GIVEN,
         extra_query: Optional[Mapping[str, Any]] = None,
         extra_body: Optional[Mapping[str, Any]] = None,
         extra_headers: Optional[Mapping[str, str]] = None,
@@ -117,14 +118,14 @@ class LibraryItemResource:
 
         ``PATCH /orgs/{orgId}/content/libraries/{libraryId}/items/{itemId}``
 
-        :param if_match: The content tag you believe this resource is at: the `ETag` header where the matching read sets one, otherwise the `contentHash` that read returned.
+        :param if_match: The tag you believe this resource is at: the `ETag` header the matching read sets.
         :param idempotency_key: Makes this write safe to retry.
         """
         return self._client._request(
             "PATCH",
             f"/orgs/{_path(org_id)}/content/libraries/{_path(library_id)}/items/{_path(item_id)}",
             query=_query({}, extra_query),
-            body=_body({"title": title, "slug": slug, "params": params}, extra_body),
+            body=_body({"title": title, "slug": slug, "params": params, "locale": locale}, extra_body),
             headers={**_query({"If-Match": if_match, "Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )
@@ -147,7 +148,7 @@ class LibraryItemResource:
         ``DELETE /orgs/{orgId}/content/libraries/{libraryId}/items/{itemId}``
 
         :param force: Delete even though other entries reference this one.
-        :param if_match: The content tag you believe this resource is at: the `ETag` header where the matching read sets one, otherwise the `contentHash` that read returned.
+        :param if_match: The tag you believe this resource is at: the `ETag` header the matching read sets.
         :param idempotency_key: Makes this write safe to retry.
         """
         return self._client._request(
@@ -198,7 +199,7 @@ class LibraryItemResource:
 
         ``PATCH /orgs/{orgId}/content/libraries/{libraryId}/items/{itemId}/fields``
 
-        :param if_match: The content tag you believe this resource is at: the `ETag` header where the matching read sets one, otherwise the `contentHash` that read returned.
+        :param if_match: The tag you believe this resource is at: the `ETag` header the matching read sets.
         :param idempotency_key: Makes this write safe to retry.
         """
         return self._client._request(
@@ -226,7 +227,7 @@ class LibraryItemResource:
 
         ``POST /orgs/{orgId}/content/libraries/{libraryId}/items/{itemId}/publish``
 
-        :param if_match: The content tag you believe this resource is at: the `ETag` header where the matching read sets one, otherwise the `contentHash` that read returned.
+        :param if_match: The tag you believe this resource is at: the `ETag` header the matching read sets.
         :param idempotency_key: Makes this write safe to retry.
         """
         return self._client._request(

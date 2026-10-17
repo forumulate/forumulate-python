@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 
 class StatusTranslationsResource:
-    """``client.status_translations`` (4 operations)."""
+    """``client.status_translations`` (5 operations)."""
 
     def __init__(self, client: "BaseClient") -> None:
         self._client = client
@@ -147,6 +147,36 @@ class StatusTranslationsResource:
             f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/incidents/{_path(incident_id)}/translations/{_path(locale)}/machine",
             query=_query({}, extra_query),
             body=_body({"replace": replace}, extra_body),
+            headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
+            timeout=timeout,
+        )
+
+    def auto(
+        self,
+        org_id: str,
+        space_id: str,
+        incident_id: str,
+        locale: str,
+        *,
+        idempotency_key: Union[str, NotGiven] = NOT_GIVEN,
+        force: Union[bool, NotGiven] = NOT_GIVEN,
+        replace: Union[bool, NotGiven] = NOT_GIVEN,
+        extra_query: Optional[Mapping[str, Any]] = None,
+        extra_body: Optional[Mapping[str, Any]] = None,
+        extra_headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+    ) -> StatusTranslationsAutoResponse:
+        """Machine-translate an incident (canonical)
+
+        ``POST /orgs/{orgId}/spaces/{spaceId}/status/incidents/{incidentId}/translations/{locale}/auto``
+
+        :param idempotency_key: Makes this write safe to retry.
+        """
+        return self._client._request(
+            "POST",
+            f"/orgs/{_path(org_id)}/spaces/{_path(space_id)}/status/incidents/{_path(incident_id)}/translations/{_path(locale)}/auto",
+            query=_query({}, extra_query),
+            body=_body({"force": force, "replace": replace}, extra_body),
             headers={**_query({"Idempotency-Key": idempotency_key}), **(extra_headers or {})},
             timeout=timeout,
         )

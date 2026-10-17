@@ -2607,7 +2607,7 @@ class DocsPagesRevisionsResource:
 
         ``PUT /orgs/{orgId}/spaces/{spaceId}/pages/{pageId}/content``
 
-        :param if_match: The content tag you believe this resource is at: the `ETag` header where the matching read sets one, otherwise the `contentHash` that read returned.
+        :param if_match: The tag you believe this resource is at: the `ETag` header the matching read sets.
         :param idempotency_key: Makes this write safe to retry.
         """
         return self._client._request(
@@ -2638,7 +2638,7 @@ class DocsPagesRevisionsResource:
 
         ``PUT /orgs/{orgId}/spaces/{spaceId}/pages/{pageId}/sections/{key}``
 
-        :param if_match: The content tag you believe this resource is at: the `ETag` header where the matching read sets one, otherwise the `contentHash` that read returned.
+        :param if_match: The tag you believe this resource is at: the `ETag` header the matching read sets.
         :param idempotency_key: Makes this write safe to retry.
         """
         return self._client._request(
@@ -2668,7 +2668,7 @@ class DocsPagesRevisionsResource:
 
         ``PUT /orgs/{orgId}/spaces/{spaceId}/pages/{pageId}/shape``
 
-        :param if_match: The content tag you believe this resource is at: the `ETag` header where the matching read sets one, otherwise the `contentHash` that read returned.
+        :param if_match: The tag you believe this resource is at: the `ETag` header the matching read sets.
         :param idempotency_key: Makes this write safe to retry.
         """
         return self._client._request(
@@ -2859,7 +2859,7 @@ class DocsPagesRevisionsResource:
 
         ``POST /orgs/{orgId}/spaces/{spaceId}/pages/{pageId}/checkpoints/{checkpointId}/restore``
 
-        :param if_match: The content tag you believe this resource is at: the `ETag` header where the matching read sets one, otherwise the `contentHash` that read returned.
+        :param if_match: The tag you believe this resource is at: the `ETag` header the matching read sets.
         :param idempotency_key: Makes this write safe to retry.
         """
         return self._client._request(
@@ -2908,7 +2908,7 @@ class DocsPagesRevisionsResource:
 
         ``DELETE /orgs/{orgId}/spaces/{spaceId}/pages/{pageId}/schedule``
 
-        :param if_match: The content tag you believe this resource is at: the `ETag` header where the matching read sets one, otherwise the `contentHash` that read returned.
+        :param if_match: The tag you believe this resource is at: the `ETag` header the matching read sets.
         :param idempotency_key: Makes this write safe to retry.
         """
         return self._client._request(
@@ -3010,7 +3010,7 @@ class DocsPagesResource:
 
         ``PATCH /orgs/{orgId}/spaces/{spaceId}/pages/{pageId}``
 
-        :param if_match: The content tag you believe this resource is at: the `ETag` header where the matching read sets one, otherwise the `contentHash` that read returned.
+        :param if_match: The tag you believe this resource is at: the `ETag` header the matching read sets.
         :param idempotency_key: Makes this write safe to retry.
         """
         return self._client._request(
@@ -3038,7 +3038,7 @@ class DocsPagesResource:
 
         ``DELETE /orgs/{orgId}/spaces/{spaceId}/pages/{pageId}``
 
-        :param if_match: The content tag you believe this resource is at: the `ETag` header where the matching read sets one, otherwise the `contentHash` that read returned.
+        :param if_match: The tag you believe this resource is at: the `ETag` header the matching read sets.
         :param idempotency_key: Makes this write safe to retry.
         """
         return self._client._request(
@@ -3135,7 +3135,7 @@ class DocsPagesResource:
 
         ``PATCH /orgs/{orgId}/spaces/{spaceId}/pages/{pageId}/metadata``
 
-        :param if_match: The content tag you believe this resource is at: the `ETag` header where the matching read sets one, otherwise the `contentHash` that read returned.
+        :param if_match: The tag you believe this resource is at: the `ETag` header the matching read sets.
         :param idempotency_key: Makes this write safe to retry.
         """
         return self._client._request(
@@ -3167,7 +3167,7 @@ class DocsPagesResource:
 
         ``POST /orgs/{orgId}/spaces/{spaceId}/pages/{pageId}/reorder``
 
-        :param if_match: The content tag you believe this resource is at: the `ETag` header where the matching read sets one, otherwise the `contentHash` that read returned.
+        :param if_match: The tag you believe this resource is at: the `ETag` header the matching read sets.
         :param idempotency_key: Makes this write safe to retry.
         """
         return self._client._request(
@@ -3361,7 +3361,7 @@ class DocsPagesResource:
 
         ``POST /orgs/{orgId}/spaces/{spaceId}/pages/{pageId}/duplicate``
 
-        :param if_match: The content tag you believe this resource is at: the `ETag` header where the matching read sets one, otherwise the `contentHash` that read returned.
+        :param if_match: The tag you believe this resource is at: the `ETag` header the matching read sets.
         :param idempotency_key: Makes this write safe to retry.
         """
         return self._client._request(
@@ -3459,7 +3459,7 @@ class DocsPagesResource:
 
         ``POST /orgs/{orgId}/spaces/{spaceId}/pages/{pageId}/restore``
 
-        :param if_match: The content tag you believe this resource is at: the `ETag` header where the matching read sets one, otherwise the `contentHash` that read returned.
+        :param if_match: The tag you believe this resource is at: the `ETag` header the matching read sets.
         :param idempotency_key: Makes this write safe to retry.
         """
         return self._client._request(
@@ -3486,7 +3486,7 @@ class DocsPagesResource:
 
         ``POST /orgs/{orgId}/spaces/{spaceId}/pages/{pageId}/unpublish``
 
-        :param if_match: The content tag you believe this resource is at: the `ETag` header where the matching read sets one, otherwise the `contentHash` that read returned.
+        :param if_match: The tag you believe this resource is at: the `ETag` header the matching read sets.
         :param idempotency_key: Makes this write safe to retry.
         """
         return self._client._request(
@@ -3513,7 +3513,7 @@ class DocsPagesResource:
 
         ``DELETE /orgs/{orgId}/spaces/{spaceId}/pages/{pageId}/purge``
 
-        :param if_match: The content tag you believe this resource is at: the `ETag` header where the matching read sets one, otherwise the `contentHash` that read returned.
+        :param if_match: The tag you believe this resource is at: the `ETag` header the matching read sets.
         :param idempotency_key: Makes this write safe to retry.
         """
         return self._client._request(
@@ -3543,7 +3543,7 @@ class DocsPagesResource:
 
         ``POST /orgs/{orgId}/spaces/{spaceId}/pages/{pageId}/publish``
 
-        :param if_match: The content tag you believe this resource is at: the `ETag` header where the matching read sets one, otherwise the `contentHash` that read returned.
+        :param if_match: The tag you believe this resource is at: the `ETag` header the matching read sets.
         :param idempotency_key: Makes this write safe to retry.
         """
         return self._client._request(
@@ -3573,7 +3573,7 @@ class DocsPagesResource:
 
         ``POST /orgs/{orgId}/spaces/{spaceId}/pages/{pageId}/schedule``
 
-        :param if_match: The content tag you believe this resource is at: the `ETag` header where the matching read sets one, otherwise the `contentHash` that read returned.
+        :param if_match: The tag you believe this resource is at: the `ETag` header the matching read sets.
         :param idempotency_key: Makes this write safe to retry.
         """
         return self._client._request(
@@ -3604,7 +3604,7 @@ class DocsPagesResource:
 
         ``POST /orgs/{orgId}/spaces/{spaceId}/pages/{pageId}/rollback``
 
-        :param if_match: The content tag you believe this resource is at: the `ETag` header where the matching read sets one, otherwise the `contentHash` that read returned.
+        :param if_match: The tag you believe this resource is at: the `ETag` header the matching read sets.
         :param idempotency_key: Makes this write safe to retry.
         """
         return self._client._request(
